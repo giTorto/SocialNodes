@@ -3,19 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package modelDB;
 
-package snDatabase;
-
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Giulian
  */
-public class utenteBean {
+public class UtenteBean {
+
     private String email;
     private String username;
     private Date last_access;
+    private int id;
 
     public String getEmail() {
         return email;
@@ -40,7 +44,19 @@ public class utenteBean {
     public void setLast_access(Date last_access) {
         this.last_access = last_access;
     }
-    
-    
-    
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }

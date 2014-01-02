@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package snDatabase;
+package modelDB;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ import java.util.Date;
  *
  * @author Giulian
  */
-public class gruppoBean {
+public class GruppoBean {
     private int idOwner;
     private String nome;
     private Date data_creazione;
