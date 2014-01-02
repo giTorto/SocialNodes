@@ -17,6 +17,8 @@ public class PostBean {
     private Date data_ora;
     private int idwriter;
     private int idgruppo;
+    private String link;
+   
 
     /**
      * @return the testo
@@ -72,6 +74,20 @@ public class PostBean {
      */
     public void setIdgruppo(int idgruppo) {
         this.idgruppo = idgruppo;
+    }
+
+    /**
+     * @return the link
+     */
+    public String getLink() {
+        return link;
+    }
+
+    /**
+     * @param link the link to set
+     */
+    public void setLink(String link) {
+        this.link = link;
     }
     
 }

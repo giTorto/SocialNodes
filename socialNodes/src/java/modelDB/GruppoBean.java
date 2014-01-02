@@ -17,6 +17,7 @@ public class GruppoBean {
     private String nome;
     private Date data_creazione;
     private Boolean isPublic;
+    private int idgruppo;
 
     /**
      * @return the idOwner
@@ -72,6 +73,20 @@ public class GruppoBean {
      */
     public void setIsPublic(Boolean isPublic) {
         this.isPublic = isPublic;
+    }
+
+    /**
+     * @return the idgruppo
+     */
+    public int getIdgruppo() {
+        return idgruppo;
+    }
+
+    /**
+     * @param idgruppo the idgruppo to set
+     */
+    public void setIdgruppo(int idgruppo) {
+        this.idgruppo = idgruppo;
     }
     
     

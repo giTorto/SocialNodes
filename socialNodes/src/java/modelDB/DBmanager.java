@@ -11,6 +11,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -85,6 +87,118 @@ public class DBmanager {
         } finally { // ricordarsi SEMPRE di chiudere i PreparedStatement in un blocco finally
             stm.close();
         }
+
+    }
+    
+    public UtenteBean getMoreUtente(int id) throws SQLException {
+
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM utente WHERE idutente = ?");
+        try {
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+
+            try {
+                if (rs.next()) {
+                    UtenteBean user = new UtenteBean();
+                    user.setUsername(rs.getString("username"));
+
+                    user.setId(rs.getInt("idutente"));
+                    return user;
+                } else {
+                    return null;
+
+                }
+
+            } finally {
+                // ricordarsi SEMPRE di chiudere i ResultSet in un blocco finally 
+                rs.close();
+            }
+
+        } finally { // ricordarsi SEMPRE di chiudere i PreparedStatement in un blocco finally
+            stm.close();
+        }
+    }
+    
+    public List<GruppoBean> getGruppiPubblici() throws SQLException {
+
+        List<GruppoBean> gruppi = new ArrayList<GruppoBean>();
+  
+        PreparedStatement stm
+                = con.prepareStatement("SELECT * FROM gruppo where pubblico=? ");
+
+        try {
+            stm.setInt(1, 1);
+            ResultSet rs = stm.executeQuery();
+
+            try {
+
+                while (rs.next()) {
+                    GruppoBean p = new GruppoBean();
+                    p.setNome(rs.getString("nome"));
+                    p.setData_creazione(rs.getDate("data_creazione"));
+                    p.setIdgruppo(rs.getInt("idgruppo"));
+                    p.setIdOwner(rs.getInt("idowner"));
+                    gruppi.add(p);
+                }
+            } finally {
+
+                rs.close();
+            }
+        } finally {
+
+            stm.close();
+        }
+
+        return gruppi;
+
+    }
+    
+    
+     /**
+     * Permette di ottenere facilmente la lista di tutti i post di un gruppo ora
+     * perfezionata, in ogni post c'è un oggetto Utente che è il writer
+     *
+     * @param idgruppo dai in input l'id del gruppo desiderato
+     * @return ricevi la lista dei post in ordine di data inversa
+     * @throws SQLException
+     */
+    public List<PostBean> getPostsGruppo(int idgruppo) throws SQLException {
+
+        List<PostBean> posts = new ArrayList<>();
+       
+        String link;
+        PreparedStatement stm
+                = con.prepareStatement("SELECT * FROM post "
+                        + "WHERE idgruppo = ? ORDER BY data_ora DESC");
+
+        try {
+            stm.setInt(1, idgruppo);
+            ResultSet rs = stm.executeQuery();
+
+            try {
+
+                while (rs.next()) {
+                    PostBean p = new PostBean();
+                    //Utente tu = getMoreUtente(rs.getInt("idwriter"));
+                    p.setTesto(rs.getString("testo"));
+                    p.setData_ora(rs.getDate("data_ora"));
+                    p.setIdwriter(rs.getInt("idwriter"));
+                    if (rs.getString("dbname") != null) {
+                        link = "<a href='fileDownload?fileId=" + rs.getInt("idpost") + "'>" + rs.getString("realname") + "</a>";
+                        p.setLink(link);
+                    };
+                    posts.add(p);
+                }
+            } finally {
+
+                rs.close();
+            }
+        } finally {
+
+            stm.close();
+        }
+
+        return posts;
 
     }
 }
