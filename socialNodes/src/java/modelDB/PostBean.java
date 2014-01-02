@@ -6,6 +6,7 @@
 
 package modelDB;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Date;
  */
 public class PostBean {
     private String testo;
-    private Date data_ora;
+    private Timestamp data_ora;
     private int idwriter;
     private int idgruppo;
     private String link;
@@ -44,7 +45,7 @@ public class PostBean {
     /**
      * @param data_ora the data_ora to set
      */
-    public void setData_ora(Date data_ora) {
+    public void setData_ora(Timestamp data_ora) {
         this.data_ora = data_ora;
     }
 

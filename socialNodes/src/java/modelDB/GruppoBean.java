@@ -6,6 +6,7 @@
 
 package modelDB;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Date;
 public class GruppoBean {
     private int idOwner;
     private String nome;
-    private Date data_creazione;
+    private Timestamp data_creazione;
     private Boolean isPublic;
     private int idgruppo;
 
@@ -57,7 +58,7 @@ public class GruppoBean {
     /**
      * @param data_creazione the data_creazione to set
      */
-    public void setData_creazione(Date data_creazione) {
+    public void setData_creazione(Timestamp data_creazione) {
         this.data_creazione = data_creazione;
     }
 

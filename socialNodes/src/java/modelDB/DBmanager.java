@@ -71,7 +71,7 @@ public class DBmanager {
                     UtenteBean user = new UtenteBean();
                     user.setUsername(username);
                     user.setEmail("email");
-                    user.setLast_access(rs.getDate("data_ultimo_acc"));
+                    user.setLast_access(rs.getTimestamp("data_ultimo_acc"));
                     user.setId(rs.getInt("idutente"));
                     return user;
                 } else {
@@ -135,7 +135,7 @@ public class DBmanager {
                 while (rs.next()) {
                     GruppoBean p = new GruppoBean();
                     p.setNome(rs.getString("nome"));
-                    p.setData_creazione(rs.getDate("data_creazione"));
+                    p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
                     p.setIdOwner(rs.getInt("idowner"));
                     gruppi.add(p);
@@ -181,7 +181,7 @@ public class DBmanager {
                     PostBean p = new PostBean();
                     //Utente tu = getMoreUtente(rs.getInt("idwriter"));
                     p.setTesto(rs.getString("testo"));
-                    p.setData_ora(rs.getDate("data_ora"));
+                    p.setData_ora(rs.getTimestamp("data_ora"));
                     p.setIdwriter(rs.getInt("idwriter"));
                     if (rs.getString("dbname") != null) {
                         link = "<a href='fileDownload?fileId=" + rs.getInt("idpost") + "'>" + rs.getString("realname") + "</a>";

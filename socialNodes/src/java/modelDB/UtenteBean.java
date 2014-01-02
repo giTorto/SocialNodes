@@ -6,7 +6,8 @@
 package modelDB;
 
 import java.sql.SQLException;
-import java.util.Date;
+import java.sql.Timestamp;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,7 +19,7 @@ public class UtenteBean {
 
     private String email;
     private String username;
-    private Date last_access;
+    private Timestamp last_access;
     private int id;
 
     public String getEmail() {
@@ -37,11 +38,11 @@ public class UtenteBean {
         this.username = username;
     }
 
-    public Date getLast_access() {
+    public Timestamp getLast_access() {
         return last_access;
     }
 
-    public void setLast_access(Date last_access) {
+    public void setLast_access(Timestamp last_access) {
         this.last_access = last_access;
     }
 
