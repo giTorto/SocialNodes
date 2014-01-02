@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package modelDB;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -14,12 +16,14 @@ import java.util.Date;
  * @author Giulian
  */
 public class GruppoBean {
+
     private int idOwner;
     private String nome;
     private Timestamp data_creazione;
-    private Boolean isPublic;
+    private int isPublic;
     private int idgruppo;
-
+    private DBmanager manager;
+    
     /**
      * @return the idOwner
      */
@@ -65,14 +69,14 @@ public class GruppoBean {
     /**
      * @return the isPublic
      */
-    public Boolean getIsPublic() {
+    public int getIsPublic() {
         return isPublic;
     }
 
     /**
      * @param isPublic the isPublic to set
      */
-    public void setIsPublic(Boolean isPublic) {
+    public void setIsPublic(int isPublic) {
         this.isPublic = isPublic;
     }
 
@@ -89,6 +93,7 @@ public class GruppoBean {
     public void setIdgruppo(int idgruppo) {
         this.idgruppo = idgruppo;
     }
-    
-    
+
+ 
+
 }

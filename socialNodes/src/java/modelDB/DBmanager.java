@@ -138,6 +138,7 @@ public class DBmanager {
                     p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
                     p.setIdOwner(rs.getInt("idowner"));
+                    p.setIsPublic(rs.getInt("pubblico"));
                     gruppi.add(p);
                 }
             } finally {
