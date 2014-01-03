@@ -1,0 +1,40 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 3-gen-2014, 17.39.14
+    Author     : Giulian
+*/
+
+
+div.custom {
+                margin:8% auto;
+                text-align:left;
+                padding:15px;
+                width: 30%;
+                height: 60%;
+
+                padding: 30px;
+            }
+            
+            input {
+                margin:5px;
+            }
+            body, html {
+                background:#eee;
+                height:72%;
+                text-align:center;
+            }
+            
+            .btn-submit{
+                margin:5% auto; 
+                width:20%; 
+                height:3%;
+            }
+            
+                
+                .titolo-form{
+                    margin:3% auto; text-align:left;
+                }

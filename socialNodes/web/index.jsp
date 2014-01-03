@@ -13,15 +13,33 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Change the World!</h1>
+        <div class="panel panel-default">
+            <div class="panel-body" align="right">
+                <button style="background-color:#cbd5dd" onclick="location.href='createAccount.jsp'" type="button" class="btn btn-default" align="right">Crea Account</button>
+                <button style="background-color:#cbd5dd" onclick="location.href='logIn.jsp'" type="button" class="btn btn-default" align="right">Log In</button>
+            </div>
+        </div>
+        <h1>Benvenuto a Social Nodes</h1>
         <table>
+            <thead>
+                <th>
+                    Nome
+                </th>
+                <th>
+                    Vai al gruppo
+                </th>
+            </thead>
         <% while(i<g.size()){
             gru = (Gruppo)g.get(i);%>
             <tr>
                 <td><%=gru.getNome() %></td>
+                <td><a href="showPosts.jsp"</td>
             </tr>
         <%i++; } %>
         </table>
