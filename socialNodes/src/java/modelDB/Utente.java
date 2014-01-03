@@ -1,7 +1,8 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * and open the t
+emplate in the editor.
  */
 package modelDB;
 
@@ -15,12 +16,17 @@ import java.util.logging.Logger;
  *
  * @author Giulian
  */
-public class UtenteBean {
+public class Utente {
 
     private String email;
     private String username;
     private Timestamp last_access;
     private int id;
+    private DBmanager manager;
+    
+    Utente(){
+        manager = new DBmanager();
+    }
 
     public String getEmail() {
         return email;

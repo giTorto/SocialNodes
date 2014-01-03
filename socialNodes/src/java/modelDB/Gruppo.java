@@ -9,20 +9,28 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Giulian
  */
-public class GruppoBean {
+public class Gruppo {
 
     private int idOwner;
     private String nome;
     private Timestamp data_creazione;
     private int isPublic;
     private int idgruppo;
-    private DBmanager manager;
+    static private DBmanager manager;
+    
+    public Gruppo(){
+        manager = new DBmanager();
+    }
     
     /**
      * @return the idOwner
@@ -94,6 +102,15 @@ public class GruppoBean {
         this.idgruppo = idgruppo;
     }
 
- 
+    static public ArrayList<Gruppo> listaGruppiPubblici(){
+        ArrayList<Gruppo> all = new ArrayList<>();
+        try {
+           all = manager.getGruppiPubblici();
+        } catch (SQLException ex) {
+            Logger.getLogger(Gruppo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return all;
+    }
 
 }

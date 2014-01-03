@@ -13,13 +13,18 @@ import java.util.Date;
  *
  * @author Giulian
  */
-public class PostBean {
+public class Post {
     private String testo;
     private Timestamp data_ora;
     private int idwriter;
     private int idgruppo;
     private String link;
-   
+    private DBmanager manager;
+    
+    Post(){
+        manager = new DBmanager();
+  
+    }
 
     /**
      * @return the testo

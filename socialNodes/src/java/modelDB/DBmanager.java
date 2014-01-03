@@ -6,6 +6,7 @@
 
 package modelDB;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -20,7 +22,21 @@ import java.util.logging.Logger;
  * @author Giulian
  */
 public class DBmanager {
-    private transient Connection con;//transient = non serializzabile
+     private static transient Connection con;//transient = non serializzabile
+     private static final String DRIVER="org.apache.derby.jdbc.ClientDriver";
+     private static final String DBURL="jdbc:derby://localhost:1527/socialdb;user=utente;password=utente";
+    
+     DBmanager(){
+        try {
+            Class.forName(DRIVER,true,getClass().getClassLoader());
+            con = DriverManager.getConnection(DBURL);
+        } catch (SQLException ex) {
+            Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         
+     }
 
     public DBmanager(String dburl) throws SQLException {
 
@@ -46,6 +62,8 @@ public class DBmanager {
         }
 
     }
+
+
     
     /**
      * Autentica un utente in base a un nome utente e a una password
@@ -56,7 +74,7 @@ public class DBmanager {
      * esiste ed è autenticato
      * @throws java.sql.SQLException
      */
-    public UtenteBean authenticate(String username, String password) throws SQLException {
+    public Utente authenticate(String username, String password) throws SQLException {
 
         // usare SEMPRE i PreparedStatement, anche per query banali. 
         // *** MAI E POI MAI COSTRUIRE LE QUERY CONCATENANDO STRINGHE !!!! 
@@ -68,7 +86,7 @@ public class DBmanager {
 
             try {
                 if (rs.next()) {
-                    UtenteBean user = new UtenteBean();
+                    Utente user = new Utente();
                     user.setUsername(username);
                     user.setEmail("email");
                     user.setLast_access(rs.getTimestamp("data_ultimo_acc"));
@@ -90,7 +108,7 @@ public class DBmanager {
 
     }
     
-    public UtenteBean getMoreUtente(int id) throws SQLException {
+    public Utente getMoreUtente(int id) throws SQLException {
 
         PreparedStatement stm = con.prepareStatement("SELECT * FROM utente WHERE idutente = ?");
         try {
@@ -99,7 +117,7 @@ public class DBmanager {
 
             try {
                 if (rs.next()) {
-                    UtenteBean user = new UtenteBean();
+                    Utente user = new Utente();
                     user.setUsername(rs.getString("username"));
 
                     user.setId(rs.getInt("idutente"));
@@ -119,9 +137,9 @@ public class DBmanager {
         }
     }
     
-    public List<GruppoBean> getGruppiPubblici() throws SQLException {
+    public ArrayList<Gruppo> getGruppiPubblici() throws SQLException {
 
-        List<GruppoBean> gruppi = new ArrayList<GruppoBean>();
+        ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
   
         PreparedStatement stm
                 = con.prepareStatement("SELECT * FROM gruppo where pubblico=? ");
@@ -133,7 +151,7 @@ public class DBmanager {
             try {
 
                 while (rs.next()) {
-                    GruppoBean p = new GruppoBean();
+                    Gruppo p = new Gruppo();
                     p.setNome(rs.getString("nome"));
                     p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
@@ -163,9 +181,9 @@ public class DBmanager {
      * @return ricevi la lista dei post in ordine di data inversa
      * @throws SQLException
      */
-    public List<PostBean> getPostsGruppo(int idgruppo) throws SQLException {
+    static public ArrayList<Post> getPostsGruppo(int idgruppo) throws SQLException {
 
-        List<PostBean> posts = new ArrayList<>();
+        ArrayList<Post> posts = new ArrayList<>();
        
         String link;
         PreparedStatement stm
@@ -179,7 +197,7 @@ public class DBmanager {
             try {
 
                 while (rs.next()) {
-                    PostBean p = new PostBean();
+                    Post p = new Post();
                     //Utente tu = getMoreUtente(rs.getInt("idwriter"));
                     p.setTesto(rs.getString("testo"));
                     p.setData_ora(rs.getTimestamp("data_ora"));
