@@ -38,3 +38,34 @@ div.custom {
                 .titolo-form{
                     margin:3% auto; text-align:left;
                 }
+                
+.header{
+     float: right;
+     width: 180px;
+     margin: 0;
+}
+
+.container{
+     text-align: left;
+     width: 740px;
+     margin-left: auto;
+     margin-right: auto;
+     padding: 0;
+}
+
+.sidebar{
+    position:relative;
+}
+
+.right{
+    position:relative;
+}
+
+.footer{
+    margin-top: 10px;
+     clear: both;
+}
+
+.content{
+         margin: 0 400px 0 0;
+}

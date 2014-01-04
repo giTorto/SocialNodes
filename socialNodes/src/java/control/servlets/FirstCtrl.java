@@ -88,6 +88,9 @@ public class FirstCtrl extends HttpServlet {
             throws ServletException, IOException {
         String operazione,username = null,password=null,email=null;
         operazione = request.getParameter("op");
+        if(operazione==null){
+            operazione="";
+        }
         Utente user = null;
 
         HttpSession session = ((HttpServletRequest) request).getSession(false);
@@ -96,7 +99,7 @@ public class FirstCtrl extends HttpServlet {
         }
         try {
             switch (operazione) {
-                case "log": {
+                case "log":
                     if (user != null) {
                         //sei già loggato con l'utente user.getUsername
                     }
@@ -113,8 +116,7 @@ public class FirstCtrl extends HttpServlet {
                         response.sendRedirect(request.getContextPath() + "/main.jsp");
                     }
                     break;
-                }
-                case "creacc": {
+                case ""://caso in cui sto creando un account
                     try {
                         String  path, relPath, fileName, tmp;
                         ServletFileUpload fileUpload = new ServletFileUpload();
@@ -150,14 +152,14 @@ public class FirstCtrl extends HttpServlet {
                                        
                                         output = new BufferedOutputStream(new FileOutputStream(path, false));
                                         if (!MyUtil.isImage(new File(path))){
-                                             //qui devo passare attraverso un bean o something like that per segnalare
+                                            //qui devo passare attraverso un bean o something like that per segnalare
                                             //che il file non è un immagine
                                             response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
                                         }else{
-                                          int data = -1;
-                                        while ((data = is.read()) != -1) {
-                                            output.write(data);
-                                        }  
+                                            int data = -1;
+                                            while ((data = is.read()) != -1) {
+                                                output.write(data);
+                                            }  
                                         }
                                         
                                         
@@ -198,12 +200,12 @@ public class FirstCtrl extends HttpServlet {
                     } catch (FileUploadException ex) {
                         Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
                     //dbmanager inseriscie riga nella tabella utente
                     manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
                     response.sendRedirect(request.getContextPath() + "/logIn.jsp");
-                }
+                    break;
             }
+            
 
         } catch (SQLException ex) {
             Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
