@@ -5,11 +5,19 @@
  */
 package control.servlets;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.activation.MimetypesFileTypeMap;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +25,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import modelDB.DBmanager;
 import modelDB.Utente;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+import util.MyUtil;
 
 /**
  *
@@ -37,7 +51,6 @@ public class FirstCtrl extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
 
     }
 
@@ -73,7 +86,7 @@ public class FirstCtrl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       String operazione;
+        String operazione,username = null,password=null,email=null;
         operazione = request.getParameter("op");
         Utente user = null;
 
@@ -82,42 +95,115 @@ public class FirstCtrl extends HttpServlet {
             user = (Utente) session.getAttribute("user");
         }
         try {
-           switch (operazione) {
-               case "log":
-                   {
-                       if (user != null) {
-                           //sei già loggato con l'utente user.getUsername
-                       }      String username = request.getParameter("email");
-                String password = request.getParameter("password");
-                       //inoltre qui va aggiunto l'aggiornamento della data dell'ultimo accesso nel db
-                       user = manager.authenticate(username, password);
-                       if (user == null) {
-                           //l'utente non esiste
-                           response.sendRedirect(request.getContextPath() + "/logIn.jsp");
-                       } else {
-                           HttpSession sessione = request.getSession(true);
-                           sessione.setAttribute("user", user);
-                           response.sendRedirect(request.getContextPath() + "/main.jsp");
-                       }      break;
-                   }
-               case "creacc":
-                   {
-                       Boolean riuscito;
-                       String username = request.getParameter("username");
-                       String password = request.getParameter("password");
-                       String email = request.getParameter("email");
-                       //dbmanager inseriscie riga nella tabella utente
-                       riuscito = manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
-                       if(riuscito){
-                           //a creazione effettuata rimanda a pagina di login
-                           response.sendRedirect(request.getContextPath() + "/login.jsp");
-                       }else{
-                           //qui devo passare attraverso un bean o something like that per segnalare che email o username sono già
-                           //nel sistema
-                           response.sendRedirect(request.getContextPath()+"/createAccount.jsp");
-                       }      break;
-                   }
-           }
+            switch (operazione) {
+                case "log": {
+                    if (user != null) {
+                        //sei già loggato con l'utente user.getUsername
+                    }
+                    username = request.getParameter("email");
+                    password = request.getParameter("password");
+                    //inoltre qui va aggiunto l'aggiornamento della data dell'ultimo accesso nel db
+                    user = manager.authenticate(username, password);
+                    if (user == null) {
+                        //l'utente non esiste
+                        response.sendRedirect(request.getContextPath() + "/logIn.jsp");
+                    } else {
+                        HttpSession sessione = request.getSession(true);
+                        sessione.setAttribute("user", user);
+                        response.sendRedirect(request.getContextPath() + "/main.jsp");
+                    }
+                    break;
+                }
+                case "creacc": {
+                    try {
+                        String  path, relPath, fileName, tmp;
+                        ServletFileUpload fileUpload = new ServletFileUpload();
+                        FileItemIterator items;
+
+                        items = fileUpload.getItemIterator(request);
+
+                        while (items.hasNext()) {
+                            FileItemStream item = items.next();
+                            if (!item.isFormField()) {
+                                //String mimetype= new MimetypesFileTypeMap().getContentType(item);
+                                //String type = mimetype.split("/")[0];
+                                InputStream is = new BufferedInputStream(item.openStream()); 
+                                if (is.available() > 0) {
+                                    BufferedOutputStream output = null;
+                                    try {
+                                        String tipo;
+                                        ServletContext scx = getServletContext();
+                                        path = scx.getRealPath("") + "\\media";
+                                        relPath = "media";
+                                        makeDir(path);
+                                        path += "\\" + "avatar";
+                                        makeDir(path);
+                                        fileName = MyUtil.formatName(item.getName());;
+                                        //seed è il seme per l'algoritmo di hashing, per renderlo unico è composto dal nome del file, l'id utente e il tempo preciso al millisecondo (che garantisce)
+
+                                        tmp = email;
+                                        tipo = MyUtil.getExtension(fileName);
+                                        
+                                        tmp = tmp + tipo;
+                                        path += "\\" + tmp;
+                                        relPath += "\\avatar\\" + tmp;
+                                       
+                                        output = new BufferedOutputStream(new FileOutputStream(path, false));
+                                        if (!MyUtil.isImage(new File(path))){
+                                             //qui devo passare attraverso un bean o something like that per segnalare
+                                            //che il file non è un immagine
+                                            response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
+                                        }else{
+                                          int data = -1;
+                                        while ((data = is.read()) != -1) {
+                                            output.write(data);
+                                        }  
+                                        }
+                                        
+                                        
+
+                                    } catch (IOException ioe) {
+                                        throw new ServletException(ioe.getMessage());
+                                    } finally {
+                                        is.close();
+                                        if (output != null) {
+                                            output.close();
+                                        }
+                                    }
+                                }
+                            } else {
+                                switch (item.getFieldName()) {
+                                    case "username":
+                                        username = Streams.asString(item.openStream());
+                                        if (manager.nameAlreadyExist(username)) {
+                                            //qui devo passare attraverso un bean o something like that per segnalare
+                                            //che username è già nel sistema
+                                            response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
+                                        }
+                                        break;
+                                    case "email":
+                                        email = Streams.asString(item.openStream());
+                                        if (manager.mailAlreadyExist(email)) {
+                                            //qui devo passare attraverso un bean o something like that per segnalare
+                                            //che email è già nel sistema
+                                            response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
+                                        }
+                                        break;
+                                    case "password":
+                                        password = Streams.asString(item.openStream());
+                                        break;
+                                }
+                            }
+                        }
+                    } catch (FileUploadException ex) {
+                        Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    //dbmanager inseriscie riga nella tabella utente
+                    manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
+                    response.sendRedirect(request.getContextPath() + "/logIn.jsp");
+                }
+            }
 
         } catch (SQLException ex) {
             Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
@@ -134,4 +220,14 @@ public class FirstCtrl extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    public void makeDir(String path) throws ServletException {
+        File theDir = new File(path);
+        if (!theDir.exists()) {
+            boolean result = theDir.mkdir();
+            if (!result) {
+                throw new ServletException("Cannot create a DIR");
+            }
+        }
+
+    }
 }

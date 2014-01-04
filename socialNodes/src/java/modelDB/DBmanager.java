@@ -137,18 +137,33 @@ public class DBmanager {
         }
     }
     
-    public boolean addUtente(String username, String email, String password) throws SQLException {
-        
-        PreparedStatement stm = con.prepareStatement("Select * from utente where username=? or email=?");
+    public boolean nameAlreadyExist(String username)throws SQLException{
+        PreparedStatement stm = con.prepareStatement("Select * from utente where username=?");
         stm.setString(1, username);
-        stm.setString(2, email);
         ResultSet rs = stm.executeQuery();
         
         if (rs.next()==false){
             return false;
+        }else{
+            return true;
         }
+    }
+    
+    public boolean mailAlreadyExist( String email)throws SQLException{
+        PreparedStatement stm = con.prepareStatement("Select * from utente where username=?");
+        stm.setString(1, email);
+        ResultSet rs = stm.executeQuery();
         
+        if (rs.next()==false){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
+    public void addUtente(String username, String email, String password) throws SQLException {
         
+        PreparedStatement stm;        
         stm = con.prepareStatement("INSERT INTO utente (username,email,password,moderatore) "
                 + "values (?,?,?,?)");
         try{
@@ -160,7 +175,7 @@ public class DBmanager {
         }finally{
             stm.close();
         }
-        return true;
+       
         
     }
     

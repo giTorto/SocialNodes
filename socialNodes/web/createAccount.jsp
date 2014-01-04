@@ -13,7 +13,7 @@
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
-        <title>JSP Page</title>
+        <title>Create you own Account</title>
     </head>
     <body>
         <h1 class="titolo-form">Crea Account</h1>
@@ -23,7 +23,7 @@
             Username: <input type="text" name="username"></br>
             E-mail: <input type="email" name="email"> </br>
             Password: <input type="password" name="password"> </br> 
-            Scegli un avatar dal tuo pc: <input type="image" name="avatar"> </br>
+            Scegli un avatar dal tuo pc: <input type="file" name="avatar"> </br>
             <input type="submit" name="submit"  class="btn-submit" value="Crea Account"> 
         </form>
     </body>
