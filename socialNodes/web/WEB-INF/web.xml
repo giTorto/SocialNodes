@@ -17,12 +17,12 @@
         <param-value>jdbc:derby://localhost:1527/socialdb;user=utente;password=utente</param-value>
     </context-param>
     <servlet>
-        <servlet-name>srvLogin</servlet-name>
+        <servlet-name>FirstCtrl</servlet-name>
         <servlet-class>control.servlets.FirstCtrl</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>srvLogin</servlet-name>
-        <url-pattern>/srvLogin</url-pattern>
+        <servlet-name>FirstCtrl</servlet-name>
+        <url-pattern>/FirstCtrl</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

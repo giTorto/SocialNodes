@@ -19,7 +19,7 @@
         <h1 class="titolo-form">Crea Account</h1>
         <p> Compila questi pochi campi e potrai accedere al sistema </p>
         <form class="form-signin" method="post" action="FirstCtrl" enctype="multipart/form-data">
-            <input type="text" value="creAcc" name="op">
+            <input type="hidden" value="creacc" name="op">
             Username: <input type="text" name="username"></br>
             E-mail: <input type="email" name="email"> </br>
             Password: <input type="password" name="password"> </br> 

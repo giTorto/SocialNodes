@@ -37,41 +37,7 @@ public class FirstCtrl extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String operazione;
-        operazione = request.getParameter("op");
-        Utente user = null;
-
-        HttpSession session = ((HttpServletRequest) request).getSession(false);
-        if (session != null) {
-            user = (Utente) session.getAttribute("user");
-        }
-        try {
-            if (operazione.equalsIgnoreCase("log")) {
-
-                if (user != null) {
-                    //sei già loggato con l'utente user.getUsername
-                }
-                String username = request.getParameter("username");
-                String password = request.getParameter("password");
-                //inoltre qui va aggiunto l'aggiornamento della data dell'ultimo accesso nel db
-                user = manager.authenticate(username, password);
-                if (user == null) {
-                    //l'utente non esiste
-                    response.sendRedirect(request.getContextPath() + "/logIn.jsp");
-                } else {
-                    HttpSession sessione = request.getSession(true);
-                    sessione.setAttribute("user", user);
-                    response.sendRedirect(request.getContextPath() + "/main.jsp");
-                }
-
-            } else if (operazione.equalsIgnoreCase("creAcc")) {
-           //dbmanager inseriscie riga nella tabella utente
-                //a creazione effettuata rimanda a pagina di login
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
 
     }
 
@@ -107,7 +73,55 @@ public class FirstCtrl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+       String operazione;
+        operazione = request.getParameter("op");
+        Utente user = null;
+
+        HttpSession session = ((HttpServletRequest) request).getSession(false);
+        if (session != null) {
+            user = (Utente) session.getAttribute("user");
+        }
+        try {
+           switch (operazione) {
+               case "log":
+                   {
+                       if (user != null) {
+                           //sei già loggato con l'utente user.getUsername
+                       }      String username = request.getParameter("email");
+                String password = request.getParameter("password");
+                       //inoltre qui va aggiunto l'aggiornamento della data dell'ultimo accesso nel db
+                       user = manager.authenticate(username, password);
+                       if (user == null) {
+                           //l'utente non esiste
+                           response.sendRedirect(request.getContextPath() + "/logIn.jsp");
+                       } else {
+                           HttpSession sessione = request.getSession(true);
+                           sessione.setAttribute("user", user);
+                           response.sendRedirect(request.getContextPath() + "/main.jsp");
+                       }      break;
+                   }
+               case "creacc":
+                   {
+                       Boolean riuscito;
+                       String username = request.getParameter("username");
+                       String password = request.getParameter("password");
+                       String email = request.getParameter("email");
+                       //dbmanager inseriscie riga nella tabella utente
+                       riuscito = manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
+                       if(riuscito){
+                           //a creazione effettuata rimanda a pagina di login
+                           response.sendRedirect(request.getContextPath() + "/login.jsp");
+                       }else{
+                           //qui devo passare attraverso un bean o something like that per segnalare che email o username sono già
+                           //nel sistema
+                           response.sendRedirect(request.getContextPath()+"/createAccount.jsp");
+                       }      break;
+                   }
+           }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

@@ -74,21 +74,21 @@ public class DBmanager {
      * esiste ed è autenticato
      * @throws java.sql.SQLException
      */
-    public Utente authenticate(String username, String password) throws SQLException {
+    public Utente authenticate(String email, String password) throws SQLException {
 
         // usare SEMPRE i PreparedStatement, anche per query banali. 
         // *** MAI E POI MAI COSTRUIRE LE QUERY CONCATENANDO STRINGHE !!!! 
-        PreparedStatement stm = con.prepareStatement("SELECT * FROM utente WHERE username = ? AND password = ?");
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM utente WHERE email = ? AND password = ?");
         try {
-            stm.setString(1, username);
+            stm.setString(1, email);
             stm.setString(2, password);
             ResultSet rs = stm.executeQuery();
 
             try {
                 if (rs.next()) {
                     Utente user = new Utente();
-                    user.setUsername(username);
-                    user.setEmail("email");
+                    user.setUsername(rs.getString("username"));
+                    user.setEmail(email);
                     user.setLast_access(rs.getTimestamp("data_ultimo_acc"));
                     user.setId(rs.getInt("idutente"));
                     return user;
@@ -135,6 +135,33 @@ public class DBmanager {
         } finally { // ricordarsi SEMPRE di chiudere i PreparedStatement in un blocco finally
             stm.close();
         }
+    }
+    
+    public boolean addUtente(String username, String email, String password) throws SQLException {
+        
+        PreparedStatement stm = con.prepareStatement("Select * from utente where username=? or email=?");
+        stm.setString(1, username);
+        stm.setString(2, email);
+        ResultSet rs = stm.executeQuery();
+        
+        if (rs.next()==false){
+            return false;
+        }
+        
+        
+        stm = con.prepareStatement("INSERT INTO utente (username,email,password,moderatore) "
+                + "values (?,?,?,?)");
+        try{
+            stm.setString(1, username);
+            stm.setString(2, email);
+            stm.setString(3, password);
+            stm.setInt(4, 0);
+            stm.executeUpdate();
+        }finally{
+            stm.close();
+        }
+        return true;
+        
     }
     
     public ArrayList<Gruppo> getGruppiPubblici() throws SQLException {
