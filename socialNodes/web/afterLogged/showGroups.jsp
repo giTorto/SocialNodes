@@ -3,7 +3,7 @@
     Created on : 3-gen-2014, 17.07.34
     Author     : Giulian
 --%>
-
+<jsp:useBean id="user" type="modelDB.Utente" scope="session" />
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

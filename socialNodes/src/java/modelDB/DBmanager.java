@@ -262,4 +262,104 @@ public class DBmanager {
         return posts;
 
     }
+
+    public ArrayList<Gruppo> getGruppiParte(int id) throws SQLException {
+        ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
+   
+        PreparedStatement stm
+                = con.prepareStatement("SELECT * FROM gruppi_partecipanti g inner join gruppo gr on g.idgruppo=gr.idgruppo where g.idutente =? and invito_acc>0");
+
+        try {
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+
+            try {
+
+                while (rs.next()) {
+                    Gruppo p = new Gruppo();
+                   
+                    p.setNome(rs.getString("nome"));
+                    p.setData_creazione(rs.getTimestamp("datacreazione"));
+                    p.setIdgruppo(rs.getInt("idgruppo"));
+                    p.setNomeOwner( (this.getMoreUtente(id)).getUsername());
+                    gruppi.add(p);
+                }
+            } finally {
+
+                rs.close();
+            }
+        } finally {
+
+            stm.close();
+        }
+
+        return gruppi; 
+    }
+
+    public ArrayList<Gruppo> getInviti(int id) throws SQLException {
+         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
+   
+        PreparedStatement stm
+                = con.prepareStatement("SELECT * FROM gruppi_partecipanti g inner join gruppo gr on g.idgruppo=gr.idgruppo where g.idutente =? and invito_acc=0");
+
+        try {
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+
+            try {
+
+                while (rs.next()) {
+                    Gruppo p = new Gruppo();
+                   
+                    p.setNome(rs.getString("nome"));
+                    p.setData_creazione(rs.getTimestamp("datacreazione"));
+                    p.setIdgruppo(rs.getInt("idgruppo"));
+                    p.setNomeOwner( (this.getMoreUtente(id)).getUsername());
+                    gruppi.add(p);
+                }
+            } finally {
+
+                rs.close();
+            }
+        } finally {
+
+            stm.close();
+        }
+
+        return gruppi; 
+    }
+
+    public ArrayList<Gruppo> getGruppiOwn(int id) throws SQLException {
+    
+       
+        ArrayList<Gruppo> gruppi = new ArrayList<>();
+      
+        PreparedStatement stm
+                = con.prepareStatement("SELECT * FROM gruppo g, utente u where u.idutente = g.idowner and u.idutente =? ");
+
+        try {
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+
+            try {
+
+                while (rs.next()) {
+                    Gruppo p = new Gruppo();
+                    p.setNome(rs.getString("nome"));
+                    p.setData_creazione(rs.getTimestamp("datacreazione"));
+                    p.setIdgruppo(rs.getInt("idgruppo"));
+                    p.setNomeOwner( (this.getMoreUtente(id)).getUsername() );
+                    gruppi.add(p);
+                }
+            } finally {
+
+                rs.close();
+            }
+        } finally {
+
+            stm.close();
+        }
+
+        return gruppi;
+    }
 }

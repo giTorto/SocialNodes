@@ -3,23 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package control.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import modelDB.DBmanager;
+import modelDB.Gruppo;
+import modelDB.Utente;
 
 /**
  *
  * @author Giulian
  */
 public class AfterLogin extends HttpServlet {
-
+    DBmanager manager;
+    
+    @Override
+    public void init() {
+        // inizializza il DBManager dagli attributi di Application
+        this.manager = (DBmanager) super.getServletContext().getAttribute("dbmanager");
+    }
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -31,7 +42,7 @@ public class AfterLogin extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-   
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -46,7 +57,39 @@ public class AfterLogin extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String operazione = request.getParameter("op");
         RequestDispatcher dispatcher;
+
+        HttpSession session = request.getSession(false);
+        Utente user = (Utente) session.getAttribute("user");
+
+        switch (operazione) {
+            case "tocreation":
+                dispatcher = request.getRequestDispatcher("/afterLogged/createGruppo.jsp");
+                break;
+            case "showinviti":
+                //request.setAttribute("utente", user); dipende se si vuole lavorare su request o session
+                //per l'utente ha più senso lavorare in sessione
+                dispatcher = request.getRequestDispatcher("/afterLogged/showInviti.jsp");
+                dispatcher.forward(request, response);
+                break;
+            case "showgruppi":
+                //request.setAttribute("utente", user); dipende se si vuole lavorare su request o session
+                 //per l'utente ha più senso lavorare in sessione
+                dispatcher = request.getRequestDispatcher("/afterLogged/showGroups.jsp");
+                dispatcher.forward(request, response);
+                break;
+            case "logout":
+
+                session.removeAttribute("user");
+                session.invalidate();
+
+                request.setAttribute("message", "Logout effettuato con successo");
+                dispatcher = request.getRequestDispatcher("/afterLogged/logout.jsp");
+                dispatcher.forward(request, response);
+                break;
+        }
+
         dispatcher = request.getRequestDispatcher("/afterLogged/logout.jsp");
         dispatcher.forward(request, response);
     }

@@ -31,7 +31,7 @@
                         <a href="afterLogged/afterLogin?op=showgruppi">
                             <li align="center" class="list-group-item" style="background-color:lightblue" ><h3>Gruppi</h3></li>
                         </a>
-                        <a href="afterLogged/afterLogin?op=creagruppo">
+                        <a href="afterLogged/afterLogin?op=tocreation">
                             <li align="center" class="list-group-item" style="background-color:orange"><h3>Crea gruppo</h3></li>
                         </a>
                         <a href="afterLogged/afterLogin?op=logout">

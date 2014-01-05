@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 public class Gruppo {
 
     private int idOwner;
+    private String nomeOwner;
     private String nome;
     private Timestamp data_creazione;
     private int isPublic;
@@ -111,6 +112,20 @@ public class Gruppo {
         }
         
         return all;
+    }
+
+    /**
+     * @return the nomeOwner
+     */
+    public String getNomeOwner() {
+        return nomeOwner;
+    }
+
+    /**
+     * @param nomeOwner the nomeOwner to set
+     */
+    public void setNomeOwner(String nomeOwner) {
+        this.nomeOwner = nomeOwner;
     }
 
 }

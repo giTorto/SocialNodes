@@ -116,7 +116,10 @@ public class FirstCtrl extends HttpServlet {
                         dispatcher.forward(request, response);
                     } else {
                         dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
-                        request.setAttribute("user",user);
+                        HttpSession sessione = request.getSession(true);
+                        sessione.setAttribute("user", user);
+           
+                       // request.setAttribute("user",user);
                         dispatcher.forward(request, response);
                         
                        // HttpSession sessione = request.getSession(true);
@@ -188,7 +191,7 @@ public class FirstCtrl extends HttpServlet {
                                 switch (item.getFieldName()) {
                                     case "username":
                                         username = Streams.asString(item.openStream());
-                                        if (manager.nameAlreadyExist(username)) {
+                                        if (manager.nameAlreadyExist(username) || username==null || username.equals("")) {
                                             //qui devo passare attraverso un bean o something like that per segnalare
                                             //che username è già nel sistema
                                             //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
@@ -199,7 +202,7 @@ public class FirstCtrl extends HttpServlet {
                                         break;
                                     case "email":
                                         email = Streams.asString(item.openStream());
-                                        if (manager.mailAlreadyExist(email)) {
+                                        if (manager.mailAlreadyExist(email) || email==null || email.equals("")) {
                                             //qui devo passare attraverso un bean o something like that per segnalare
                                             //che email è già nel sistema
                                             //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");

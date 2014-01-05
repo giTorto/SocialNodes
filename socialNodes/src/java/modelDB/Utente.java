@@ -8,6 +8,7 @@ package modelDB;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,6 +65,40 @@ public class Utente {
      */
     public void setId(int id) {
         this.id = id;
+    }
+    
+    public ArrayList<Gruppo> getInviti(){
+        ArrayList<Gruppo> all = new ArrayList<>();
+        try {
+            all= manager.getInviti(this.id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return all;
+    }
+    
+     public ArrayList<Gruppo> getGruppiParte(){
+         ArrayList<Gruppo> all = new ArrayList<>();
+        try {
+            all= manager.getGruppiParte(this.id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return all;
+        
+    }
+     
+      public ArrayList<Gruppo> getGruppiOwn(){
+          ArrayList<Gruppo> all = new ArrayList<>();
+        try {
+            all= manager.getGruppiOwn(this.id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return all;
     }
 
 }
