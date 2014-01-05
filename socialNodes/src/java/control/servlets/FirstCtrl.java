@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.activation.MimetypesFileTypeMap;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -87,6 +88,7 @@ public class FirstCtrl extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String operazione,username = null,password=null,email=null;
+        RequestDispatcher dispatcher;
         operazione = request.getParameter("op");
         if(operazione==null){
             operazione="";
@@ -108,12 +110,18 @@ public class FirstCtrl extends HttpServlet {
                     //inoltre qui va aggiunto l'aggiornamento della data dell'ultimo accesso nel db
                     user = manager.authenticate(username, password);
                     if (user == null) {
-                        //l'utente non esiste
-                        response.sendRedirect(request.getContextPath() + "/logIn.jsp");
+                        //l'utente non esiste response.sendRedirect(request.getContextPath() + "/logIn.jsp");
+                        dispatcher = request.getRequestDispatcher("/logIn.jsp");
+                        request.setAttribute("messaggio",new String("Email o password errata"));
+                        dispatcher.forward(request, response);
                     } else {
-                        HttpSession sessione = request.getSession(true);
-                        sessione.setAttribute("user", user);
-                        response.sendRedirect(request.getContextPath() + "/main.jsp");
+                        dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
+                        request.setAttribute("user",user);
+                        dispatcher.forward(request, response);
+                        
+                       // HttpSession sessione = request.getSession(true);
+                       // sessione.setAttribute("user", user);
+                       // response.sendRedirect(request.getContextPath() + "/afterLogged/main.jsp");
                     }
                     break;
                 case ""://caso in cui sto creando un account
@@ -154,7 +162,10 @@ public class FirstCtrl extends HttpServlet {
                                         if (!MyUtil.isImage(new File(path))){
                                             //qui devo passare attraverso un bean o something like that per segnalare
                                             //che il file non è un immagine
-                                            response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
+                                            //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
+                                             dispatcher = request.getRequestDispatcher("/createAccount.jsp");
+                                             request.setAttribute("messaggio",new String("Per l'avatar è necessario scegliere un immagine"));
+                                             dispatcher.forward(request, response);
                                         }else{
                                             int data = -1;
                                             while ((data = is.read()) != -1) {
@@ -180,7 +191,10 @@ public class FirstCtrl extends HttpServlet {
                                         if (manager.nameAlreadyExist(username)) {
                                             //qui devo passare attraverso un bean o something like that per segnalare
                                             //che username è già nel sistema
-                                            response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
+                                            //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
+                                                dispatcher = request.getRequestDispatcher("/createAccount.jsp");
+                                                request.setAttribute("messaggio",new String("Username già in uso"));
+                                                dispatcher.forward(request, response);
                                         }
                                         break;
                                     case "email":
@@ -188,7 +202,10 @@ public class FirstCtrl extends HttpServlet {
                                         if (manager.mailAlreadyExist(email)) {
                                             //qui devo passare attraverso un bean o something like that per segnalare
                                             //che email è già nel sistema
-                                            response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
+                                            //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
+                                             dispatcher = request.getRequestDispatcher("/createAccount.jsp");
+                                             request.setAttribute("messaggio",new String("email già in uso"));
+                                             dispatcher.forward(request, response);
                                         }
                                         break;
                                     case "password":
@@ -202,7 +219,10 @@ public class FirstCtrl extends HttpServlet {
                     }
                     //dbmanager inseriscie riga nella tabella utente
                     manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
-                    response.sendRedirect(request.getContextPath() + "/logIn.jsp");
+                    //response.sendRedirect(request.getContextPath() + "/logIn.jsp");
+                    dispatcher = request.getRequestDispatcher("/logIn.jsp");
+                    request.setAttribute("email",email);
+                    dispatcher.forward(request, response);
                     break;
             }
             
