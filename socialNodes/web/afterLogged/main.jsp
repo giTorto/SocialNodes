@@ -25,10 +25,18 @@
             <div class="content">
                 <div class="sidebar">
                     <ul class="list-group">
-                        <li align="center" class="list-group-item" onmouseover="document.body.style.cursor = & #39; pointer & #39;" onmouseout="document.body.style.cursor = & #39; auto & #39;" style="background-color:lightgreen; text-color:white" onclick="/logg/invitiSrvlt"><h3>Inviti</h3></li>
-                        <li align="center" class="list-group-item" onmouseover="document.body.style.cursor = & #39; pointer & #39;" onmouseout="document.body.style.cursor = & #39; auto & #39;" style="background-color:lightblue" onclick="/logg/gruppiSrvlt"><h3>Gruppi</h3></li>
-                        <li align="center" class="list-group-item" onmouseover="document.body.style.cursor = & #39; pointer & #39;" onmouseout="document.body.style.cursor = & #39; auto & #39;" style="background-color:orange" onclick="/logg/creaGruppoSrvlt"><h3>Crea gruppo</h3></li>
-                        <li align="center" class="list-group-item" onmouseover="document.body.style.cursor = & #39; pointer & #39;" onmouseout="document.body.style.cursor = & #39; auto & #39;" style="background-color:yellow"  onclick="/logg/logoutSrvlt"><h3>Logout</h3></li>
+                        <a href=afterLogged/afterLogin?op=showinviti">
+                            <li align="center" class="list-group-item" style="background-color:lightgreen; text-color:white" ><h3>Inviti</h3></li>
+                        </a>
+                        <a href="afterLogged/afterLogin?op=showgruppi">
+                            <li align="center" class="list-group-item" style="background-color:lightblue" ><h3>Gruppi</h3></li>
+                        </a>
+                        <a href="afterLogged/afterLogin?op=creagruppo">
+                            <li align="center" class="list-group-item" style="background-color:orange"><h3>Crea gruppo</h3></li>
+                        </a>
+                        <a href="afterLogged/afterLogin?op=logout">
+                            <li align="center" class="list-group-item" style="background-color:yellow"> <h3>Logout</h3></li>
+                        </a>
                     </ul>
                 </div>
                 <div class="right">

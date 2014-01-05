@@ -16,16 +16,25 @@
         <title>Create you own Account</title>
     </head>
     <body>
-        <h1 class="titolo-form">Crea Account</h1>
-        <p> Compila questi pochi campi e potrai accedere al sistema </p>
-        <div>
-            <form class="form-signin" method="post" action="FirstCtrl" enctype="multipart/form-data">
-                Username: <input type="text" name="username"></br>
-                E-mail: <input type="email" name="email"> </br>
-                Password: <input type="password" name="password"> </br> 
-                Scegli un avatar dal tuo pc: <input type="file" name="avatar"> </br>
-                <input type="submit" name="submit"  class="btn-submit" value="Crea Account"> 
-            </form>
-         <div>
-      </body>
+        <div class="container">
+            <div class="header">
+                <h1 class="titolo-form">Crea Account</h1>
+                <p> Compila questi pochi campi e potrai accedere al sistema </p>
+            </div>
+            <div class="content">
+
+                <div>
+                    <form class="form-signin" method="post" action="FirstCtrl" enctype="multipart/form-data">
+                        Username: <input type="text" name="username"></br>
+                        E-mail: <input type="email" name="email"> </br>
+                        Password: <input type="password" name="password"> </br> 
+                        Scegli un avatar dal tuo pc: <input type="file" name="avatar"> </br>
+                        <input type="submit" name="submit"  class="btn-submit" value="Crea Account"> 
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </body>
 </html>

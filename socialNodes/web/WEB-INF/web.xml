@@ -20,9 +20,17 @@
         <servlet-name>FirstCtrl</servlet-name>
         <servlet-class>control.servlets.FirstCtrl</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AfterLogin</servlet-name>
+        <servlet-class>control.servlets.AfterLogin</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>FirstCtrl</servlet-name>
         <url-pattern>/FirstCtrl</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AfterLogin</servlet-name>
+        <url-pattern>/afterLogged/afterLogin</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
