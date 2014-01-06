@@ -45,20 +45,21 @@
                                     <jsp:getProperty name="messaggioBean" property="messaggio" />
                                     <jsp:getProperty name="messaggioBean" property="value" />
                                 </p>
+                                
                                 <p> 
-                                    <label for="useremail" class="uname" data-icon="u" > Your email</label>
-                                    <input id="useremail" name="email" required="required" type="text" placeholder="useremail"/>
+                                    <label for="useremail" class="uname" data-icon="u" > La tua email</label>
+                                    <input id="useremail" name="email" required="required" type="text" placeholder="email"/>
                                 </p>
                                 <p> 
-                                    <label for="password" class="youpasswd" data-icon="p"> Your password </label>
+                                    <label for="password" class="youpasswd" data-icon="p"> La tua password</label>
                                     <input id="password" name="password" required="required" type="password" placeholder="eg. X8df!90EO" /> 
                                 </p>
                                 <p class="login button">
                                     <input type="submit" value="Login" /> 
                                 </p>
                                 <p class="change_link">
-                                    <a href="<%=request.getServletContext().getContextPath()%>/FirstCtrl?op=recoverpassword">Forgot your password?</a>
-                                    <a href="#toregister" class="to_register">Join us</a>
+                                    <a href="<%=request.getServletContext().getContextPath()%>/FirstCtrl?op=recoverpassword">Dimenticato la password?</a>
+                                    <a href="#toregister" class="to_register">Registrati</a>
                                 </p>
                             </form>
                         </div>
@@ -66,33 +67,33 @@
                         <div id="register" class="animate form">
                             <form  method="post" action="FirstCtrl" autocomplete="on" enctype="multipart/form-data">
                                 <input type="hidden" value="crea" name="op">
-                                <h1> Sign up </h1> 
+                                <h1> Registrazione </h1> 
                                 <p> 
-                                    <label for="usernamesignup" class="uname" data-icon="u">Your username</label>
-                                    <input id="usernamesignup" name="username" required="required" type="text" placeholder="mysuperusername690" />
+                                    <label for="usernamesignup" class="uname" data-icon="u">Il tuo soprannome</label>
+                                    <input id="usernamesignup" name="username" required="required" type="text" placeholder="soprannome" />
                                 </p>
                                 <p> 
-                                    <label for="emailsignup" class="youmail" data-icon="e" > Your email</label>
-                                    <input id="emailsignup" name="email" required="required" type="email" placeholder="mysupermail@mail.com"/> 
+                                    <label for="emailsignup" class="youmail" data-icon="e" > La tua email</label>
+                                    <input id="emailsignup" name="email" required="required" type="email" placeholder="email"/> 
                                 </p>
                                 <p> 
-                                    <label for="passwordsignup" class="youpasswd" data-icon="p">Your password </label>
+                                    <label for="passwordsignup" class="youpasswd" data-icon="p">La tua password </label>
                                     <input id="passwordsignup" name="password" required="required" type="password" placeholder="eg. X8df!90EO"/>
                                 </p>
                                 <p> 
-                                    <label for="passwordsignup_confirm" class="youpasswd" data-icon="p">Please confirm your password </label>
+                                    <label for="passwordsignup_confirm" class="youpasswd" data-icon="p">Per favore, inserisci nuovamente la password </label>
                                     <input id="password_confirm" name="password_confirm" required="required" type="password" placeholder="eg. X8df!90EO"/>
                                 </p>
                                 <p>
-                                    <label >Select an avatar </label>
+                                    <label >Seleziona il tuo avatar </label>
                                     <input type="file" name="avatar">
                                 </p>
                                 <p class="signin button"> 
-                                    <input type="submit" value="Sign up"/> 
+                                    <input type="submit" value="OK"/> 
                                 </p>
                                 <p class="change_link">  
-                                    Already a member ?
-                                    <a href="#tologin" class="to_register"> Go and log in </a>
+                                    Sei già registrato?
+                                    <a href="#tologin" class="to_register"> Vai al login </a>
                                 </p>
                             </form>
                         </div>
