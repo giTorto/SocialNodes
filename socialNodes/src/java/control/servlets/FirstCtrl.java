@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import modelDB.DBmanager;
+import modelDB.Message;
 import modelDB.Utente;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -73,7 +74,31 @@ public class FirstCtrl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String operazione = null;
+        operazione = request.getParameter("op");
+        Message messaggioBean = new Message();
+        messaggioBean.setMessaggio("");
+        messaggioBean.setTipoutente("");
+        messaggioBean.setValue("");
+        RequestDispatcher dispatcher;
+        request.setAttribute("messaggioBean", messaggioBean);
+        
+        switch (operazione){
+            case "login":
+                dispatcher = request.getRequestDispatcher("/logIn.jsp");
+               
+                break;
+            case "crea":
+                dispatcher = request.getRequestDispatcher("/createAccount.jsp");
+               
+                break;
+                
+            default:
+                dispatcher = request.getRequestDispatcher("/index.jsp");
+                break;
+        }
+        
+         dispatcher.forward(request, response);
     }
 
     /**
@@ -88,6 +113,10 @@ public class FirstCtrl extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String operazione,username = null,password=null,email=null;
+        Message messaggioBean = new Message();
+        messaggioBean.setMessaggio("");
+        messaggioBean.setValue("");
+        messaggioBean.setTipoutente("");
         RequestDispatcher dispatcher;
         operazione = request.getParameter("op");
         if(operazione==null){
@@ -112,7 +141,8 @@ public class FirstCtrl extends HttpServlet {
                     if (user == null) {
                         //l'utente non esiste response.sendRedirect(request.getContextPath() + "/logIn.jsp");
                         dispatcher = request.getRequestDispatcher("/logIn.jsp");
-                        request.setAttribute("messaggio",new String("Email o password errata"));
+                        messaggioBean.setMessaggio("L'e-mail o la password inserita non è corretta");
+                        request.setAttribute("messaggioBean",messaggioBean);
                         dispatcher.forward(request, response);
                     } else {
                         dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
@@ -154,7 +184,7 @@ public class FirstCtrl extends HttpServlet {
                                         fileName = MyUtil.formatName(item.getName());;
                                         //seed è il seme per l'algoritmo di hashing, per renderlo unico è composto dal nome del file, l'id utente e il tempo preciso al millisecondo (che garantisce)
 
-                                        tmp = email;
+                                        tmp = username;
                                         tipo = MyUtil.getExtension(fileName);
                                         
                                         tmp = tmp + tipo;
@@ -166,8 +196,10 @@ public class FirstCtrl extends HttpServlet {
                                             //qui devo passare attraverso un bean o something like that per segnalare
                                             //che il file non è un immagine
                                             //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
+                                             output.close();
                                              dispatcher = request.getRequestDispatcher("/createAccount.jsp");
-                                             request.setAttribute("messaggio",new String("Per l'avatar è necessario scegliere un immagine"));
+                                             messaggioBean.setMessaggio("Per l'avatar è necessario scegliere un immagine");
+                                             request.setAttribute("messaggioBean",messaggioBean);
                                              dispatcher.forward(request, response);
                                         }else{
                                             int data = -1;
@@ -196,7 +228,8 @@ public class FirstCtrl extends HttpServlet {
                                             //che username è già nel sistema
                                             //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
                                                 dispatcher = request.getRequestDispatcher("/createAccount.jsp");
-                                                request.setAttribute("messaggio",new String("Username già in uso"));
+                                                messaggioBean.setMessaggio("Username già in uso");
+                                                request.setAttribute("messaggioBean",messaggioBean);
                                                 dispatcher.forward(request, response);
                                         }
                                         break;
@@ -207,12 +240,21 @@ public class FirstCtrl extends HttpServlet {
                                             //che email è già nel sistema
                                             //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
                                              dispatcher = request.getRequestDispatcher("/createAccount.jsp");
-                                             request.setAttribute("messaggio",new String("email già in uso"));
+                                             messaggioBean.setMessaggio("email già in uso");
+                                             request.setAttribute("messaggioBean",messaggioBean);
                                              dispatcher.forward(request, response);
                                         }
                                         break;
                                     case "password":
                                         password = Streams.asString(item.openStream());
+                                        if(password==null || password.equals("")){
+                                            dispatcher = request.getRequestDispatcher("/createAccount.jsp");
+                                            messaggioBean.setMessaggio("Scegliere una password");
+                                            request.setAttribute("messaggioBean",messaggioBean);
+                                            dispatcher.forward(request, response);
+                                        }
+                                        
+                                     
                                         break;
                                 }
                             }
@@ -224,7 +266,8 @@ public class FirstCtrl extends HttpServlet {
                     manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
                     //response.sendRedirect(request.getContextPath() + "/logIn.jsp");
                     dispatcher = request.getRequestDispatcher("/logIn.jsp");
-                    request.setAttribute("email",email);
+                    messaggioBean.setValue(email);
+                    request.setAttribute("messaggioBean",messaggioBean);
                     dispatcher.forward(request, response);
                     break;
             }

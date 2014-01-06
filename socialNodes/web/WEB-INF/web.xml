@@ -24,6 +24,18 @@
         <servlet-name>AfterLogin</servlet-name>
         <servlet-class>control.servlets.AfterLogin</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ownerCtrl</servlet-name>
+        <servlet-class>control.servlets.ownerCtrl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>groupCtrl</servlet-name>
+        <servlet-class>control.servlets.groupCtrl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>moderatoreCtrl</servlet-name>
+        <servlet-class>control.servlets.moderatoreCtrl</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>FirstCtrl</servlet-name>
         <url-pattern>/FirstCtrl</url-pattern>
@@ -31,6 +43,18 @@
     <servlet-mapping>
         <servlet-name>AfterLogin</servlet-name>
         <url-pattern>/afterLogged/afterLogin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ownerCtrl</servlet-name>
+        <url-pattern>/afterLogged/ownerCtrl</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>groupCtrl</servlet-name>
+        <url-pattern>/afterLogged/groupCtrl</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>moderatoreCtrl</servlet-name>
+        <url-pattern>/afterLogged/moderatoreCtrl</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

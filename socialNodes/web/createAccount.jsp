@@ -3,7 +3,7 @@
     Created on : 3-gen-2014, 17.07.01
     Author     : Giulian
 --%>
-
+<jsp:useBean id="messaggioBean" class="modelDB.Message" scope="request" />
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -24,6 +24,7 @@
             <div class="content">
 
                 <div>
+                    <jsp:getProperty name="messaggioBean" property="messaggio" />
                     <form class="form-signin" method="post" action="FirstCtrl" enctype="multipart/form-data">
                         Username: <input type="text" name="username"></br>
                         E-mail: <input type="email" name="email"> </br>
