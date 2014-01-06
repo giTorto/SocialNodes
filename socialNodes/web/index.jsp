@@ -22,8 +22,9 @@
         <div class="container">
             <div class="header">
                 <div class="panel-body" align="right">
-                    <button style="background-color:#cbd5dd" onclick="location.href='FirstCtrl?op=crea'" type="button" class="btn btn-default" align="right">Crea Account</button>
-                    <button style="background-color:#cbd5dd" onclick="location.href='FirstCtrl?op=login'" type="button" class="btn btn-default" align="right">Log In</button>
+                    <button style="background-color:#cbd5dd" onclick="location.href='FirstCtrl?op=gotocrea'" type="button" class="btn btn-default" align="right">Crea Account</button>
+                    <button style="background-color:#cbd5dd" onclick="location.href='FirstCtrl?op=gotologin'" type="button" class="btn btn-default" align="right">Log In</button>
+                    <button style="background-color:#cbd5dd" onclick="location.href='FirstCtrl?op=gotologin2'" type="button" class="btn btn-default" align="right">Log In2</button>
                 </div>
        
                 <h1>Benvenuto a Social Nodes</h1>

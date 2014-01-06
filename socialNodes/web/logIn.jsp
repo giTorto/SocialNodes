@@ -25,7 +25,7 @@
                         <h2 class="titolo-form" >Social Nodes Log In</h2>
                         <jsp:getProperty name="messaggioBean" property="messaggio" />
                          <jsp:getProperty name="messaggioBean" property="value" />
-                        <input type="hidden" value="log" name="op">
+                        <input type="hidden" name="op" value="login">
                         <input type="text" name="email" class="form-control" placeholder="Email address" required="" autofocus="" >
                         <input type="password" name="password" class="form-control" placeholder="Password" required="">
                         <button class="btn-submit" type="submit">Sign in</button>
