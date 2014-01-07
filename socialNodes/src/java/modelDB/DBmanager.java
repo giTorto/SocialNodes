@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -119,7 +120,7 @@ public class DBmanager {
                 if (rs.next()) {
                     Utente user = new Utente();
                     user.setUsername(rs.getString("username"));
-
+                    user.setLast_access(rs.getTimestamp("data_ultimo_acc"));
                     user.setId(rs.getInt("idutente"));
                     return user;
                 } else {
@@ -136,6 +137,9 @@ public class DBmanager {
             stm.close();
         }
     }
+    
+   
+    
     
     public boolean nameAlreadyExist(String username)throws SQLException{
         PreparedStatement stm = con.prepareStatement("Select * from utente where username=?");
@@ -362,4 +366,19 @@ public class DBmanager {
 
         return gruppi;
     }
+
+
+
+    public void setNewdate(Timestamp data_acc, int idutente) {
+        PreparedStatement stm;        
+         try {
+             stm = con.prepareStatement("Update utente set data_ultimo_acc=? where idutente=? ");
+             
+             
+             
+         } catch (SQLException ex) {
+             Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        
+         }
 }

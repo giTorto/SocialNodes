@@ -7,6 +7,7 @@ package control.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import modelDB.DBmanager;
 import modelDB.Gruppo;
+import modelDB.Message;
 import modelDB.Utente;
 
 /**
@@ -64,6 +66,20 @@ public class AfterLogin extends HttpServlet {
         Utente user = (Utente) session.getAttribute("user");
 
         switch (operazione) {
+            case "main":
+                Timestamp data_acc = Timestamp.valueOf(request.getParameter("data_acc"));
+                Timestamp last_access = user.getLast_access();
+                Message data_accesso = new Message();
+                if (last_access!=null){
+                    data_accesso.setMessaggio("Benvenuto "+ user.getUsername() + "il tuo ultimo accesso è "+ last_access.toString());
+                }else{
+                    data_accesso.setMessaggio("Benvenuto " + user.getUsername() +" è il tuo primo accesso");
+                }
+                
+                session.setAttribute("data_accesso", data_accesso);
+                manager.setNewdate(data_acc,user.getId());
+                dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
+                break;
             case "tocreation":
                 dispatcher = request.getRequestDispatcher("/afterLogged/createGruppo.jsp");
                 break;
