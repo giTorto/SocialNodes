@@ -9,33 +9,53 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" type="text/css" href="./stile.css/creaElog.css">
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
-        <title>Create you own Account</title>
+        <title>Registrazione a Socialnodes</title>
     </head>
     <body>
-        <div class="container">
-            <div class="header">
-                <h1 class="titolo-form">Crea Account</h1>
-                <p> Compila questi pochi campi e potrai accedere al sistema </p>
-            </div>
-            <div class="content">
 
-                <div>
-                    <jsp:getProperty name="messaggioBean" property="messaggio" />
-                    <form class="form-signin" method="post" action="FirstCtrl" enctype="multipart/form-data">
-                        Username: <input type="text" name="username"></br>
-                        E-mail: <input type="email" name="email"> </br>
-                        Password: <input type="password" name="password"> </br> 
-                        Scegli un avatar dal tuo pc: <input type="file" name="avatar"> </br>
-                        <input type="submit" name="submit"  class="btn-submit" value="Crea Account"> 
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <div class="page-header">
+                        <h1>
+                            Socialnodes: <small>Registrazione</small>
+                        </h1>
+                    </div>
+
+                    <p>
+                        Per registrarsi è necessario compilare il modulo sottostante
+                    </p>
+                    <p>
+                        <jsp:getProperty name="messaggioBean" property="messaggio"/>
+                    </p>
+
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <form role="form" action="FirstCtrl" method ="post"  enctype="multipart/form-data" >
+                        <div class="form-group">
+                            <label for="exampleInputUsername1">Username</label><input name="username" type="text" class="form-control" id="exampleInputUsername1" />
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label><input name="email" type="email" class="form-control" id="exampleInputEmail1" />
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label><input name="password" type="password" class="form-control" id="exampleInputPassword1" />
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputFile">Avatar</label><input name="avatar" type="file" id="exampleInputFile" />
+                        </div>
+                        <button style="float: right" type="submit" class="btn btn-primary">OK <span class="glyphicon glyphicon-ok"></span></button>
                     </form>
                 </div>
-
             </div>
-
         </div>
+
     </body>
 </html>
+
+

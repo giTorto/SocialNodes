@@ -269,10 +269,10 @@ public class FirstCtrl extends HttpServlet {
                     } catch (FileUploadException ex) {
                         Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    //dbmanager inseriscie riga nella tabella utente
+                    //dbmanager inserisce riga nella tabella utente
                     manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
                     //response.sendRedirect(request.getContextPath() + "/logIn.jsp");
-                    dispatcher = request.getRequestDispatcher("/logIn.jsp");
+                    dispatcher = request.getRequestDispatcher("/index.jsp");
                     messaggioBean.setValue(email);
                     request.setAttribute("messaggioBean", messaggioBean);
                     dispatcher.forward(request, response);

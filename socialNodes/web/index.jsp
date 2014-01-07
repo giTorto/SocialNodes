@@ -17,7 +17,7 @@
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
-        <title>JSP Page</title>
+        <title>Socialnode</title>
 
     </head>
     <body>
@@ -39,7 +39,8 @@
                             Per scambiare idee sugli argomenti trattati a lezione e condividere le soluzioni degli esercizi più difficili!
                         </p>
                         <p>
-                            <a class="btn btn-primary btn-large" onclick="location.href = 'FirstCtrl?op=gotocrea'" align="right" style="float: right">Registrati<span class="glyphicon glyphicon-user"></span></a>
+                            <a class="btn btn-primary btn-large" onclick="location.href = 'FirstCtrl?op=gotocrea'" 
+                               align="right" style="float: right">Registrati<span class="glyphicon glyphicon-user"></span></a>
                         </p>
                     </div>
                 </div>
@@ -48,6 +49,7 @@
                         <h3 style="margin: 0.4em;">Login</h3>
                         <form style="padding: 1em;" role="form" method="post" action="FirstCtrl">
                             <input type="hidden" name="op" value="login">
+                            
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Email address</label><input name="email" type="email" class="form-control" id="exampleInputEmail1" />
                             </div>
