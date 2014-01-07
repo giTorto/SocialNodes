@@ -57,7 +57,7 @@
                             <div class="form-group">
                                 <label for="exampleInputPassword1">Password</label><input name="password" type="password" class="form-control" id="exampleInputPassword1" />
                             </div>
-                            <a href="<%=request.getServletContext().getContextPath()%>/FirstCtrl?op=recoverpassword">Dimenticato la password?</a>
+                            <a href="<%=request.getServletContext().getContextPath()%>/FirstCtrl?op=gotorecoverpassword">Dimenticato la password?</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button   type="submit" class="btn btn-primary">Log in</button>                                                                     
                         </form>
                     </div>

@@ -15,13 +15,13 @@
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
 
     </head>
-    <body style="margin: 8em; padding: 2em">
+    <body style="margin: 8em; padding: 2em" background="http://lovinlosing.com/wallpaper/light-blue-minimalistic-clouds_302559.jpg">
         <div class="container">
             <div class="row clearfix">
                 <div class="col-md-12 column">
                     <div class="page-header">
                         <h1>
-                           Socialnodes: <small>recupero password</small>
+                            Socialnodes: <small>recupero password</small>
                         </h1>
                     </div>
                 </div>
@@ -36,11 +36,13 @@
                     <p style="padding-bottom: 0.2em">
                         Inserisci il tuo indirizzo email per ripristinare la password. Potresti dover consultare la cartella dello spam.
                     </p>
-                    <form role="form">
+                    <form role="form" method="post" action="FirstCtrl">
+                        <input type="hidden" name="op" value="recoverpassword">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Email address</label><input type="email" class="form-control" id="exampleInputEmail1" name="email" />
+                            <label for="exampleInputEmail1">Email address</label><input type="email" class="form-control" id="exampleInputEmail1" name="email_to_recover" />
                         </div>
-                </div> <a style="float: right;" href="#" class="btn btn-primary">Invia <span class="glyphicon glyphicon-send"></span></a>
+                </div> 
+                <button   style="float: right;" type="submit" class="btn btn-primary">Invia <span class="glyphicon glyphicon-send"></span></button>
                 </form>
             </div>
         </div>

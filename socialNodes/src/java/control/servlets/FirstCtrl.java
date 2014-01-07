@@ -12,13 +12,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.activation.MimetypesFileTypeMap;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -98,7 +98,7 @@ public class FirstCtrl extends HttpServlet {
                 dispatcher = request.getRequestDispatcher("/createAccount.jsp");
 
                 break;
-            case "recoverpassword":
+            case "gotorecoverpassword":
                 dispatcher = request.getRequestDispatcher("/recoverpassword.jsp");
 
                 break;
@@ -140,6 +140,30 @@ public class FirstCtrl extends HttpServlet {
         }
         try {
             switch (operazione) {
+                case "recoverpassword":
+
+                    String from_mail = "lorenzo.ghiro@gmail.com",
+                     to,
+                     from_password = "Bip+bip3",
+                     subject = "Recupero password",
+                     text = "ignavio";
+
+                    to = request.getParameter("email_to_recover");
+                    if (to != null && !to.equals("")) {
+                        try {
+                            MyUtil.sendMailGoogle(from_mail, to, from_password, subject, text);
+                        } catch (AddressException e) {
+                            Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, e);
+                            //dispatcher = request.getRequestDispatcher("/errorpage.jsp");
+                        } catch (MessagingException ex) {
+                            Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
+                            //dispatcher = request.getRequestDispatcher("/errorpage.jsp");
+                        }
+                        dispatcher = request.getRequestDispatcher("/terminecontrollapassword.jsp");
+                        dispatcher.forward(request, response);
+                    }
+
+                    break;
                 case "login":
                     if (user != null) {
                         //sei già loggato con l'utente user.getUsername
@@ -160,19 +184,18 @@ public class FirstCtrl extends HttpServlet {
                         dispatcher = request.getRequestDispatcher("/afterLogged/afterLogin");
                         HttpSession sessione = request.getSession(true);
                         sessione.setAttribute("user", user);
-                        
+
                         Calendar calendar = Calendar.getInstance();
                         java.util.Date now = calendar.getTime();
-                        
+
                         Timestamp data_acc = new Timestamp(now.getTime());
-                        request.setAttribute("op","main");
-                        request.setAttribute("data_acc",data_acc);
-                        
-                        
+                        request.setAttribute("op", "main");
+                        request.setAttribute("data_acc", data_acc);
+
                         // request.setAttribute("user",user);
                         dispatcher.forward(request, response);
 
-                       // HttpSession sessione = request.getSession(true);
+                        // HttpSession sessione = request.getSession(true);
                         // sessione.setAttribute("user", user);
                         // response.sendRedirect(request.getContextPath() + "/afterLogged/main.jsp");
                     }
