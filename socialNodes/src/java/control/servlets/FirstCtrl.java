@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.activation.MimetypesFileTypeMap;
@@ -155,10 +156,18 @@ public class FirstCtrl extends HttpServlet {
                         request.setAttribute("messaggioBean", messaggioBean);
                         dispatcher.forward(request, response);
                     } else {
-                        dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
+                        dispatcher = request.getRequestDispatcher("/afterLogged/afterLogin");
                         HttpSession sessione = request.getSession(true);
                         sessione.setAttribute("user", user);
-
+                        
+                        Calendar calendar = Calendar.getInstance();
+                        java.util.Date now = calendar.getTime();
+                        
+                        Timestamp data_acc = new Timestamp(now.getTime());
+                        request.setAttribute("op","main");
+                        request.setAttribute("data_acc",data_acc);
+                        
+                        
                         // request.setAttribute("user",user);
                         dispatcher.forward(request, response);
 
