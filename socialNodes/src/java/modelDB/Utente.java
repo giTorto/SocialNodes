@@ -2,13 +2,14 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the t
-emplate in the editor.
+ emplate in the editor.
  */
 package modelDB;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,8 +25,8 @@ public class Utente {
     private Timestamp last_access;
     private int id;
     private DBmanager manager;
-    
-    Utente(){
+
+    Utente() {
         manager = new DBmanager();
     }
 
@@ -66,39 +67,51 @@ public class Utente {
     public void setId(int id) {
         this.id = id;
     }
-    
-    public ArrayList<Gruppo> getInviti(){
+
+    public ArrayList<Gruppo> getInviti() {
         ArrayList<Gruppo> all = new ArrayList<>();
         try {
-            all= manager.getInviti(this.id);
+            all = manager.getInviti(this.id);
         } catch (SQLException ex) {
             Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        return all;
-    }
-    
-     public ArrayList<Gruppo> getGruppiParte(){
-         ArrayList<Gruppo> all = new ArrayList<>();
-        try {
-            all= manager.getGruppiParte(this.id);
-        } catch (SQLException ex) {
-            Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return all;
-        
-    }
-     
-      public ArrayList<Gruppo> getGruppiOwn(){
-          ArrayList<Gruppo> all = new ArrayList<>();
-        try {
-            all= manager.getGruppiOwn(this.id);
-        } catch (SQLException ex) {
-            Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+
         return all;
     }
 
+    public ArrayList<Gruppo> getGruppiParte() {
+        ArrayList<Gruppo> all = new ArrayList<>();
+        try {
+            all = manager.getGruppiParte(this.id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return all;
+
+    }
+
+    public ArrayList<Gruppo> getGruppiOwn() {
+        ArrayList<Gruppo> all = new ArrayList<>();
+        try {
+            all = manager.getGruppiOwn(this.id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return all;
+    }
+
+    public ArrayList<Message> getNews() {
+        ArrayList<Message> all = new ArrayList<>();
+        
+        try {
+            all = manager.getNews(this.getLast_access(), this.getId());
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return all;
+    }
 }

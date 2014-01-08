@@ -14,6 +14,7 @@ public class Message {
     private String messaggio;
     private String tipoutente;
     private String value;
+    private String link;
     
             
     public Message(){
@@ -62,6 +63,20 @@ public class Message {
      */
     public void setValue(String value) {
         this.value = value;
+    }
+
+    /**
+     * @return the link
+     */
+    public String getLink() {
+        return link;
+    }
+
+    /**
+     * @param link the link to set
+     */
+    public void setLink(String link) {
+        this.link = link;
     }
     
 }

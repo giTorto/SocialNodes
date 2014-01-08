@@ -79,9 +79,12 @@ public class AfterLogin extends HttpServlet {
                 session.setAttribute("data_accesso", data_accesso);
                 manager.setNewdate(data_acc,user.getId());
                 dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
+                dispatcher.forward(request, response);
                 break;
             case "tocreation":
                 dispatcher = request.getRequestDispatcher("/afterLogged/createGruppo.jsp");
+                dispatcher.forward(request, response);
+              
                 break;
             case "showinviti":
                 //request.setAttribute("utente", user); dipende se si vuole lavorare su request o session
@@ -106,8 +109,8 @@ public class AfterLogin extends HttpServlet {
                 break;
         }
 
-        dispatcher = request.getRequestDispatcher("/afterLogged/logout.jsp");
-        dispatcher.forward(request, response);
+       
+        
     }
 
     /**

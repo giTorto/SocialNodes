@@ -5,7 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<jsp:useBean id="messaggio_main" class="modelDB.Message" scope="session">
+<jsp:useBean id="user" class="modelDB.Utente" scope="session">
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,6 +19,9 @@
     </head>
     <body>
         <h1>Benvenuto</h1>
+        <jsp:getProperty name="messaggio_main" property="messaggio" />
+        <% user.getNews();
+            %>
         <div class="container">
             <div class="header">
                 

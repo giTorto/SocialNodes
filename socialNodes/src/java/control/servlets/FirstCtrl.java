@@ -45,8 +45,9 @@ public class FirstCtrl extends HttpServlet {
     private DBmanager manager;
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP
+     * <code>GET</code> and
+     * <code>POST</code> methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -55,7 +56,6 @@ public class FirstCtrl extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
     }
 
     @Override
@@ -66,7 +66,8 @@ public class FirstCtrl extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP <code>GET</code> method.
+     * Handles the HTTP
+     * <code>GET</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -112,7 +113,8 @@ public class FirstCtrl extends HttpServlet {
     }
 
     /**
-     * Handles the HTTP <code>POST</code> method.
+     * Handles the HTTP
+     * <code>POST</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -176,21 +178,30 @@ public class FirstCtrl extends HttpServlet {
                         //l'utente non esiste response.sendRedirect(request.getContextPath() + "/logIn.jsp");
                         //commento la riga sotto solo per provare il login che ho preparato io!!! poi basta scegliere quale mantenere
                         //dispatcher = request.getRequestDispatcher("/logIn.jsp");
-                        dispatcher = request.getRequestDispatcher("/login2.jsp");
+                        dispatcher = request.getRequestDispatcher("/index.jsp");
                         messaggioBean.setMessaggio("L'e-mail o la password inserita non e' corretta");
                         request.setAttribute("messaggioBean", messaggioBean);
                         dispatcher.forward(request, response);
                     } else {
-                        dispatcher = request.getRequestDispatcher("/afterLogged/afterLogin");
+
+                        dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
                         HttpSession sessione = request.getSession(true);
                         sessione.setAttribute("user", user);
 
+
+                        Timestamp last_access = user.getLast_access();
                         Calendar calendar = Calendar.getInstance();
                         java.util.Date now = calendar.getTime();
-
                         Timestamp data_acc = new Timestamp(now.getTime());
-                        request.setAttribute("op", "main");
-                        request.setAttribute("data_acc", data_acc);
+
+                        Message data_accesso = new Message();
+                        if (last_access != null) {
+                            data_accesso.setMessaggio("Benvenuto " + user.getUsername() + "il tuo ultimo accesso è " + last_access.toString());
+                        } else {
+                            data_accesso.setMessaggio("Benvenuto " + user.getUsername() + " è il tuo primo accesso");
+                        }
+                        manager.setNewdate(data_acc, user.getId());
+                        session.setAttribute("messaggio_main", data_accesso);
 
                         // request.setAttribute("user",user);
                         dispatcher.forward(request, response);
@@ -235,6 +246,12 @@ public class FirstCtrl extends HttpServlet {
                                         relPath += "\\avatar\\" + tmp;
 
                                         output = new BufferedOutputStream(new FileOutputStream(path, false));
+
+                                        int data = -1;
+                                        while ((data = is.read()) != -1) {
+                                            output.write(data);
+                                        }
+
                                         if (!MyUtil.isImage(new File(path))) {
                                             //qui devo passare attraverso un bean o something like that per segnalare
                                             //che il file non è un immagine
@@ -245,11 +262,8 @@ public class FirstCtrl extends HttpServlet {
                                             request.setAttribute("messaggioBean", messaggioBean);
                                             dispatcher.forward(request, response);
                                         } else {
-                                            int data = -1;
-                                            while ((data = is.read()) != -1) {
-                                                output.write(data);
-                                            }
                                         }
+
 
                                     } catch (IOException ioe) {
                                         throw new ServletException(ioe.getMessage());
