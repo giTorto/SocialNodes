@@ -74,10 +74,15 @@ public class AfterLogin extends HttpServlet {
                     data_accesso.setMessaggio("Benvenuto "+ user.getUsername() + "il tuo ultimo accesso è "+ last_access.toString());
                 }else{
                     data_accesso.setMessaggio("Benvenuto " + user.getUsername() +" è il tuo primo accesso");
-                }
-                
+                }                
                 session.setAttribute("data_accesso", data_accesso);
                 manager.setNewdate(data_acc,user.getId());
+                
+                //recupero dal bb e metto tra i request attribute gli oggetti che servono per creare correttamente la pagina main
+                //servono i gruppi dell'utente e le cose del quickdisplay
+                
+                
+                
                 dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
                 dispatcher.forward(request, response);
                 break;

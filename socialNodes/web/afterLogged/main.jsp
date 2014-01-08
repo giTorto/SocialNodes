@@ -19,7 +19,7 @@
     <body background="./stile.css/images/nuvole_blu.jpg">
 
 
-        <div class="container" style="padding-top: 2em;">
+        <div class="container" style="padding-top: 2em;" >
             <div class="row clearfix">
                 <div class="col-md-2 column">
                     <button type="button" class="btn btn-primary">Home</button>
@@ -39,7 +39,7 @@
                             </li>
                             <li class="divider">
                             <li>
-                                <a href="afterLogged/afterLogin?op=logout">logout</a>
+                                <a href="afterLogged/afterLogin?op=logout">Logout</a>
                             </li>
                             </li>
                         </ul>
@@ -123,25 +123,11 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title">
-                                Panel title
+                                I miei gruppi
                             </h3>
                         </div>
                         <div class="panel-body">
-                            Panel content
-                        </div>
-
-                    </div>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                Panel title
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            Panel content
-                        </div>
-                        <div class="panel-footer">
-                            Panel footer
+                            Link gruppo
                         </div>
                     </div>
                 </div>
