@@ -23,6 +23,7 @@ public class Utente {
     private String email;
     private String username;
     private Timestamp last_access;
+    private String avatar_link;
     private int id;
     private DBmanager manager;
 
@@ -113,5 +114,19 @@ public class Utente {
         }
 
         return all;
+    }
+
+    /**
+     * @return the avatar_link
+     */
+    public String getAvatar_link() {
+        return avatar_link;
+    }
+
+    /**
+     * @param avatar_link the avatar_link to set
+     */
+    public void setAvatar_link(String avatar_link) {
+        this.avatar_link = avatar_link;
     }
 }

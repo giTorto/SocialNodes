@@ -212,8 +212,10 @@ public class FirstCtrl extends HttpServlet {
                     }
                     break;
                 case ""://caso in cui sto creando un account
+                    Boolean thereimage = false;
+                     String path=null, relPath, fileName, tmp;
                     try {
-                        String path, relPath, fileName, tmp;
+                       
                         ServletFileUpload fileUpload = new ServletFileUpload();
                         FileItemIterator items;
 
@@ -262,6 +264,7 @@ public class FirstCtrl extends HttpServlet {
                                             request.setAttribute("messaggioBean", messaggioBean);
                                             dispatcher.forward(request, response);
                                         } else {
+                                            thereimage = true;
                                         }
 
 
@@ -317,8 +320,14 @@ public class FirstCtrl extends HttpServlet {
                         Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     //dbmanager inseriscie riga nella tabella utente
-                    manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
+                    if (!thereimage){
+                          manager.addUtente(username, email, password,"/standard_image/standard_avatar.png");
+                    }else{
+                        manager.addUtente(username, email, password, path);
+                    }
+                   //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
                     //response.sendRedirect(request.getContextPath() + "/logIn.jsp");
+                    
                     dispatcher = request.getRequestDispatcher("/logIn.jsp");
                     messaggioBean.setValue(email);
                     request.setAttribute("messaggioBean", messaggioBean);
