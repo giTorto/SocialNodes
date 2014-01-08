@@ -396,6 +396,7 @@ public class DBmanager {
                     + "OR g.idgruppo in (SELECT g.idgruppo from gruppo g inner join gruppi_partecipanti gr on "
                     + "g.idgruppo=gr.idgruppo where gr.idutente = ? ) )");
             
+            
             stm.setTimestamp(1, data_last_access);
             stm.setInt(2, id);
             stm.setInt(3, id);
