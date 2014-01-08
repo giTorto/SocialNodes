@@ -21,7 +21,7 @@
         <title>Socialnode</title>
 
     </head>
-    <body>
+    <body background="./stile.css/images/nuvole_blu.jpg">
         <!--div class="container">
             <div class="header">
                 <div class="panel-body" align="right">

@@ -293,7 +293,8 @@ public class DBmanager {
     public ArrayList<Gruppo> getInviti(int id) throws SQLException {
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
         
-        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppi_partecipanti g inner join gruppo gr on g.idgruppo=gr.idgruppo where g.idutente =? and invito_acc=0");
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppi_partecipanti g inner"
+                + " join gruppo gr on g.idgruppo=gr.idgruppo where g.idutente =? and invito_acc=0");
         
         try {
             stm.setInt(1, id);

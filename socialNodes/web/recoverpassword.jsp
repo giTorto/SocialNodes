@@ -15,7 +15,7 @@
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
 
     </head>
-    <body style="margin: 8em; padding: 2em" background="http://lovinlosing.com/wallpaper/light-blue-minimalistic-clouds_302559.jpg">
+    <body style="margin: 8em; padding: 2em" background="./stile.css/images/nuvole_blu.jpg">
         <div class="container">
             <div class="row clearfix">
                 <div class="col-md-12 column">

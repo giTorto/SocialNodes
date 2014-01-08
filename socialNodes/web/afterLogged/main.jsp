@@ -5,8 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<jsp:useBean id="messaggio_main" class="modelDB.Message" scope="session">
-<jsp:useBean id="user" class="modelDB.Utente" scope="session">
+<jsp:useBean id="messaggio_main" class="modelDB.Message" scope="session"/>
+<jsp:useBean id="user" class="modelDB.Utente" scope="session"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,41 +14,137 @@
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="./stile.css/main.css">
         <title>JSP Page</title>
     </head>
-    <body>
-        <h1>Benvenuto</h1>
-        <jsp:getProperty name="messaggio_main" property="messaggio" />
-        <% user.getNews();
-            %>
-        <div class="container">
-            <div class="header">
-                
-            </div>
-            <div class="content">
-                <div class="sidebar">
-                    <ul class="list-group">
-                        <a href=afterLogged/afterLogin?op=showinviti">
-                            <li align="center" class="list-group-item" style="background-color:lightgreen; text-color:white" ><h3>Inviti</h3></li>
-                        </a>
-                        <a href="afterLogged/afterLogin?op=showgruppi">
-                            <li align="center" class="list-group-item" style="background-color:lightblue" ><h3>Gruppi</h3></li>
-                        </a>
-                        <a href="afterLogged/afterLogin?op=tocreation">
-                            <li align="center" class="list-group-item" style="background-color:orange"><h3>Crea gruppo</h3></li>
-                        </a>
-                        <a href="afterLogged/afterLogin?op=logout">
-                            <li align="center" class="list-group-item" style="background-color:yellow"> <h3>Logout</h3></li>
-                        </a>
-                    </ul>
+    <body background="./stile.css/images/nuvole_blu.jpg">
+
+
+        <div class="container" style="padding-top: 2em;">
+            <div class="row clearfix">
+                <div class="col-md-2 column">
+                    <button type="button" class="btn btn-primary">Home</button>
                 </div>
-                <div class="right">
-                
+                <div class="col-md-6 column">
+                    <!--qua possiamo metterci una scritta header da usare in tutte le altre pagine-->
+                </div>
+                <div class="col-md-4 column">
+                    <div class="btn-group">
+                        <button class="btn btn-primary">Azioni</button> <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="afterLogged/afterLogin?op=showinviti">Inviti</a>
+                            </li>
+                            <li>
+                                <a href="afterLogged/afterLogin?op=tocreation">Crea gruppo</a>
+                            </li>
+                            <li class="divider">
+                            <li>
+                                <a href="afterLogged/afterLogin?op=logout">logout</a>
+                            </li>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="footer">
-                
+            <div class="row clearfix" style="padding-top: 5em">
+                <div class="col-md-8 column">
+                    <p>
+                    <h2>
+                        <jsp:getProperty name="messaggio_main" property="messaggio" />
+                        <% user.getNews();
+                        %>
+                    </h2>
+                    </p>
+                    <div class="page-header">
+                        <h1>
+                            Notifiche dai gruppi <small></small>
+                        </h1>
+                    </div>
+                    <table class="table" style="background: whitesmoke">
+                        <thead>
+                            <tr class="panel panel-primary" style="background-color: #006DCC; color: white">
+
+                                <th>
+                                    Gruppo
+                                </th>
+                                <th>
+                                    Notifica
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    1
+                                </td>
+                                <td>
+                                    TB - Monthly
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <div class="page-header">
+                        <h1>
+                            Nuovi inviti <small></small>
+                        </h1>
+                    </div>
+                    <table class="table" style="background: whitesmoke">
+                        <thead>
+                            <tr class="panel panel-primary" style="background-color: #006DCC; color: white">
+                                <th>
+                                    Gruppo
+                                </th>
+                                <th>
+                                    Invitato da
+                                </th>
+                                <th>
+                                    Accetti?
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    1
+                                </td>
+                                <td>
+                                    TB - Monthly
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4 column" style="padding-top: 5em; padding-left: 5em;">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                Panel title
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            Panel content
+                        </div>
+
+                    </div>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                Panel title
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            Panel content
+                        </div>
+                        <div class="panel-footer">
+                            Panel footer
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
