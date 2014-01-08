@@ -144,9 +144,9 @@ public class FirstCtrl extends HttpServlet {
             switch (operazione) {
                 case "recoverpassword":
 
-                    String from_mail = "lorenzo.ghiro@gmail.com",
+                    String from_mail = "username@gmail.com",
                      to,
-                     from_password = "Bip+bip3",
+                     from_password = "***********",
                      subject = "Recupero password",
                      text = "ignavio";
 
