@@ -6,14 +6,12 @@
 package modelDB;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -161,17 +159,16 @@ public class DBmanager {
         }
     }
     
-    public void addUtente(String username, String email, String password, String path) throws SQLException {
+    public void addUtente(String username, String email, String password) throws SQLException {
         
         PreparedStatement stm;        
-        stm = con.prepareStatement("INSERT INTO utente (username,email,password,moderatore,avatar_path) "
+        stm = con.prepareStatement("INSERT INTO utente (username,email,password,moderatore) "
                 + "values (?,?,?,?)");
         try {
             stm.setString(1, username);
             stm.setString(2, email);
             stm.setString(3, password);
             stm.setInt(4, 0);
-            stm.setString(5, path);
             stm.executeUpdate();
         } finally {
             stm.close();
@@ -180,54 +177,6 @@ public class DBmanager {
         
     }
     
-     /**
-     * Permette di ottenere facilmente la lista di tutti i post di un gruppo ora
-     * perfezionata, in ogni post c'è un oggetto Utente che è il writer
-     *
-     * @param g dai in input il gruppo di cui vuoi vedere i post
-     * @return ricevi la lista dei post in ordine di data inversa
-     * @throws SQLException
-     */
-    public List<Post> getPostsGruppo(Gruppo g) throws SQLException {
-
-        List<Post> posts = new ArrayList<Post>();
-        int id = g.getIdgruppo();
-        String link = "";
-        PreparedStatement stm
-                = con.prepareStatement("SELECT * FROM post "
-                        + "WHERE idgruppo = ? ORDER BY data_ora DESC");
-
-        try {
-            stm.setInt(1, id);
-            ResultSet rs = stm.executeQuery();
-
-            try {
-
-                while (rs.next()) {
-                    Post p = new Post();
-                    //Utente tu = getMoreUtente(rs.getInt("idwriter"));
-                    p.setTesto(rs.getString("testo"));
-                    p.setData_ora(rs.getTimestamp("data_ora"));
-                    p.setIdwriter(rs.getInt("idwriter"));
-                    if (rs.getString("dbname") != null) {
-                        link = "<a href='fileDownload?fileId=" + rs.getInt("idpost") + "'>" + rs.getString("realname") + "</a>";
-                        p.setLink(link);
-                    };
-                    posts.add(p);
-                }
-            } finally {
-
-                rs.close();
-            }
-        } finally {
-
-            stm.close();
-        }
-
-        return posts;
-
-    }
-            
     public ArrayList<Gruppo> getGruppiPubblici() throws SQLException {
         
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
@@ -312,7 +261,7 @@ public class DBmanager {
     public ArrayList<Gruppo> getGruppiParte(int id) throws SQLException {
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
         
-        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppi_partecipanti g inner join gruppo gr on g.idgruppo=gr.idgruppo where g.idutente =? and invito_acc>0");
+        PreparedStatement stm = con.prepareStatement("SELECT NOME, DATA_CREAZIONE, IDGRUPPO FROM gruppi_partecipanti g natural join gruppo gr  where g.idutente =? and invito_acc>0");
         
         try {
             stm.setInt(1, id);
@@ -324,7 +273,7 @@ public class DBmanager {
                     Gruppo p = new Gruppo();
                     
                     p.setNome(rs.getString("nome"));
-                    p.setData_creazione(rs.getTimestamp("datacreazione"));
+                    p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
                     p.setNomeOwner((this.getMoreUtente(id)).getUsername());
                     gruppi.add(p);
@@ -379,7 +328,7 @@ public class DBmanager {
         
         ArrayList<Gruppo> gruppi = new ArrayList<>();
         
-        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppo g, utente u where u.idutente = g.idowner and u.idutente =? ");
+        PreparedStatement stm = con.prepareStatement("SELECT NOME,DATA_CREAZIONE,IDGRUPPO FROM gruppo g, utente u where u.idutente = g.idowner and u.idutente =? ");
         
         try {
             stm.setInt(1, id);
@@ -390,7 +339,7 @@ public class DBmanager {
                 while (rs.next()) {
                     Gruppo p = new Gruppo();
                     p.setNome(rs.getString("nome"));
-                    p.setData_creazione(rs.getTimestamp("datacreazione"));
+                    p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
                     p.setNomeOwner((this.getMoreUtente(id)).getUsername());
                     gruppi.add(p);
@@ -469,102 +418,4 @@ public class DBmanager {
         
         return news;
     }
-    
-     /**
-     * Ricerca l'ID del file basandosi sul nome. Se il file viene trovato, viene
-     * impostato un campo per indicarlo come recente
-     * @param idgruppo id del gruppo in cui si è e lo si sta richiedendo
-     * @param fileName Nome del file
-     * @param user Nome dell'utente da linkare
-     * @return Url del file associato al nome Utente o stringa vuota
-     */
-    public int getLinkByName(String fileName, String user, int idgruppo) {
-        int retVal = 0;
-        try {
-
-            ResultSet rs;
-
-            PreparedStatement stm
-                    = con.prepareStatement("SELECT * FROM POST p inner join utente u on p.idwriter = u.idutente WHERE u.username = ? AND realname=? "
-                            + "AND idgruppo = ?");
-            stm.setString(1, user);
-            stm.setString(2, fileName);
-            stm.setInt(3,idgruppo);
-            rs = stm.executeQuery();
-            rs.next();
-            retVal = rs.getInt("idpost");
-
-            stm.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return retVal;
-    }
-
-    /**
-     * Ricerca l'ID del file basandosi sul nome. Il file ricercato è quello
-     * aggiunto per ultimo
-     *
-     * @param fileName Nome del FIlE da cercare
-     * @return ID del file o stringa vuota
-     */
-    public int getLRULink(String fileName,int idgruppo) {
-
-        int retVal = 0;
-        try {
-
-            ResultSet rs;
-
-            PreparedStatement stm
-                    = con.prepareStatement("SELECT * FROM POST WHERE realname=? "
-                            + "AND idgruppo = ? ORDER BY data_ora DESC FETCH FIRST 1 ROWS ONLY");
-            stm.setString(1, fileName);
-            stm.setInt(2,idgruppo);
-            rs = stm.executeQuery();
-            rs.next();
-            retVal = rs.getInt("idpost");
-            
-
-            stm.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return retVal;
-    }
-    
-     /**
-     * Aggiunge un nuovo file al DB
-     *
-     * @param user l'utente che ha aggiunto il post
-     * @param idgruppo ID del gruppo in cui è stato posto
-     * @param realname nome del file secondo l'utente
-     * @param dbname nome univoco del file generato automaticamente
-     * @param testo il testo del post
-     */
-    public void addPostFile(Utente user, int idgruppo, String realname, String dbname, String testo) throws SQLException {
-        int idutente = user.getId();
-
-        Date data = new Date(Calendar.getInstance().getTimeInMillis());
-
-        PreparedStatement stm
-                = con.prepareStatement("INSERT INTO POST (data_ora,testo,idwriter,idgruppo,realname,dbname) values(?,?,?,?,?,?) ");
-
-        try {
-            stm.setDate(1, data);
-            stm.setString(2, testo);
-            stm.setInt(3, idutente);
-            stm.setInt(4, idgruppo);
-            stm.setString(5, realname);
-            stm.setString(6, dbname);
-            int executeUpdate = stm.executeUpdate();
-        } catch (SQLException ex) {
-
-        } finally {
-            stm.close();
-        }
-
-    }
-
 }

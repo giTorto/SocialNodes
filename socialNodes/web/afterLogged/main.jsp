@@ -1,10 +1,12 @@
-
 <%-- 
     Document   : main
     Created on : 3-gen-2014, 17.07.13
     Author     : Giulian
 --%>
 
+<%@page import="modelDB.Utente"%>
+<%@page import="modelDB.Gruppo"%>
+<%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:useBean id="messaggio_main" class="modelDB.Message" scope="session"/>
 <jsp:useBean id="user" class="modelDB.Utente" scope="session"/>
@@ -20,10 +22,10 @@
     <body background="./stile.css/images/nuvole_blu.jpg">
 
 
-        <div class="container" style="padding-top: 2em;">
+        <div class="container" style="padding-top: 2em;" >
             <div class="row clearfix">
                 <div class="col-md-2 column">
-                    <button type="button" class="btn btn-primary">Home</button>
+                    <!--button type="button" class="btn btn-primary">Indietro</button-->
                 </div>
                 <div class="col-md-6 column">
                     <!--qua possiamo metterci una scritta header da usare in tutte le altre pagine-->
@@ -40,7 +42,7 @@
                             </li>
                             <li class="divider">
                             <li>
-                                <a href="afterLogged/afterLogin?op=logout">logout</a>
+                                <a href="afterLogged/afterLogin?op=logout">Logout</a>
                             </li>
                             </li>
                         </ul>
@@ -121,29 +123,35 @@
                     </table>
                 </div>
                 <div class="col-md-4 column" style="padding-top: 5em; padding-left: 5em;">
-                    <div class="panel panel-primary">
+                    <div class="panel panel-primary"> 
                         <div class="panel-heading">
                             <h3 class="panel-title">
-                                Panel title
+                                I miei gruppi
                             </h3>
                         </div>
-                        <div class="panel-body">
-                            Panel content
-                        </div>
+                        <%
+                            ArrayList<Gruppo> gruppi_miei = user.getGruppiOwn();
+                            for (Gruppo gruppo : gruppi_miei) {
+                                out.println("<div class=\"panel-body\">"
+                                        + "<a href=\""+request.getContextPath()+"/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\">" + gruppo.getNome() + "</a>"
+                                        + "</div>");
+                            }
+                        %>
 
-                    </div>
-                    <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title">
-                                Panel title
+                                Gruppi a cui partecipo
                             </h3>
                         </div>
-                        <div class="panel-body">
-                            Panel content
-                        </div>
-                        <div class="panel-footer">
-                            Panel footer
-                        </div>
+                        <%
+                            ArrayList<Gruppo> gruppi_parte = user.getGruppiParte();
+                            for (Gruppo gruppo : gruppi_parte) {
+                                out.println("<div class=\"panel-body\">"
+                                        + "<a href=\""+request.getContextPath()+"/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\">" + gruppo.getNome() + "</a>"
+                                        + "</div>");
+                            }
+                        %>
+
                     </div>
                 </div>
             </div>

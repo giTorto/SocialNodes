@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -107,10 +108,15 @@ public class AfterLogin extends HttpServlet {
 
                 session.removeAttribute("user");
                 session.invalidate();
+                Cookie [] cookies=request.getCookies();
+                for (Cookie cookie : cookies) {
+                    cookie.setMaxAge(0);
+                }
 
-                request.setAttribute("message", "Logout effettuato con successo");
-                dispatcher = request.getRequestDispatcher("/afterLogged/logout.jsp");
-                dispatcher.forward(request, response);
+                //request.setAttribute("message", "Logout effettuato con successo");
+                //dispatcher = request.getRequestDispatcher("/index.jsp");
+                //dispatcher.forward(request, response);
+                response.sendRedirect(request.getContextPath());
                 break;
         }
 

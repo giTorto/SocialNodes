@@ -7,6 +7,7 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="modelDB.Gruppo" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<jsp:useBean id="messaggioBean" class="modelDB.Message" scope="request"/>
 <% ArrayList<Gruppo> g = new ArrayList<Gruppo>();
     g = (new Gruppo()).listaGruppiPubblici(); %>
 <% Gruppo gru = null;
@@ -39,6 +40,15 @@
                         <p>
                             Per scambiare idee sugli argomenti trattati a lezione e condividere le soluzioni degli esercizi più difficili!
                         </p>
+                        <%
+                            String messaggio = messaggioBean.getMessaggio();
+                        %>
+                        <%if (messaggio!=null){
+                            out.println("Attenzione: "+messaggio);
+                        }%>
+                        <p>
+
+                        </p>
                         <p>
                             <a class="btn btn-primary btn-large" onclick="location.href = 'FirstCtrl?op=gotocrea'" 
                                align="right" style="float: right">Registrati<span class="glyphicon glyphicon-user"></span></a>
@@ -50,7 +60,7 @@
                         <h3 style="margin: 0.4em;">Login</h3>
                         <form style="padding: 1em;" role="form" method="post" action="FirstCtrl">
                             <input type="hidden" name="op" value="login">
-                            
+
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Email address</label><input name="email" type="email" class="form-control" id="exampleInputEmail1" />
                             </div>

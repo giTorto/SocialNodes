@@ -44,20 +44,6 @@ public class FirstCtrl extends HttpServlet {
 
     private DBmanager manager;
 
-    /**
-     * Processes requests for both HTTP
-     * <code>GET</code> and
-     * <code>POST</code> methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-    }
-
     @Override
     public void init() {
         // inizializza il DBManager dagli attributi di Application
@@ -66,8 +52,7 @@ public class FirstCtrl extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP
-     * <code>GET</code> method.
+     * Handles the HTTP <code>GET</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -86,35 +71,44 @@ public class FirstCtrl extends HttpServlet {
         RequestDispatcher dispatcher;
         request.setAttribute("messaggioBean", messaggioBean);
 
-        switch (operazione) {
-            case "gotologin":
-                dispatcher = request.getRequestDispatcher("/logIn.jsp");
+        if (operazione != null) {
+            switch (operazione) {
+                case "gotologin":
+                    dispatcher = request.getRequestDispatcher("/logIn.jsp");
 
-                break;
-            case "gotologin2":
-                dispatcher = request.getRequestDispatcher("/login2.jsp");
+                    break;
+                case "gotologin2":
+                    dispatcher = request.getRequestDispatcher("/login2.jsp");
 
-                break;
-            case "gotocrea":
-                dispatcher = request.getRequestDispatcher("/createAccount.jsp");
+                    break;
+                case "gotocrea":
+                    dispatcher = request.getRequestDispatcher("/createAccount.jsp");
 
-                break;
-            case "gotorecoverpassword":
-                dispatcher = request.getRequestDispatcher("/recoverpassword.jsp");
+                    break;
+                case "gotorecoverpassword":
+                    dispatcher = request.getRequestDispatcher("/recoverpassword.jsp");
 
-                break;
+                    break;
 
-            default:
-                dispatcher = request.getRequestDispatcher("/index.jsp");
-                break;
+                default:
+                    //qua visto che il bean è nella request e poi però bisogna fare per forza il redirect per riscrivere l'url, il bean vien perso
+                    //bisogna inventarsi qlcs per scrivere il messaggio, tipo bean con scope application
+                    messaggioBean.setMessaggio("Utilizza gli elementi disposti in questa pagina per compiere le operazioni che desideri");
+                    response.sendRedirect(request.getContextPath());
+                    return;
+                   
+
+            }
+        } else {
+            response.sendRedirect(request.getContextPath());
+            return;
         }
 
         dispatcher.forward(request, response);
     }
 
     /**
-     * Handles the HTTP
-     * <code>POST</code> method.
+     * Handles the HTTP <code>POST</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -173,21 +167,27 @@ public class FirstCtrl extends HttpServlet {
                     username = request.getParameter("email");
                     password = request.getParameter("password");
                     //inoltre qui va aggiunto l'aggiornamento della data dell'ultimo accesso nel db
-                    user = manager.authenticate(username, password);
+                    try {
+                        user = manager.authenticate(username, password);
+                    } catch (Exception e) {
+                        response.sendRedirect(request.getContextPath());
+                        return;
+                    }
+
                     if (user == null) {
                         //l'utente non esiste response.sendRedirect(request.getContextPath() + "/logIn.jsp");
-                        //commento la riga sotto solo per provare il login che ho preparato io!!! poi basta scegliere quale mantenere
-                        //dispatcher = request.getRequestDispatcher("/logIn.jsp");
+                      
                         dispatcher = request.getRequestDispatcher("/index.jsp");
                         messaggioBean.setMessaggio("L'e-mail o la password inserita non e' corretta");
-                        request.setAttribute("messaggioBean", messaggioBean);
-                        dispatcher.forward(request, response);
+                        //request.setAttribute("messaggioBean", messaggioBean);
+                        //dispatcher.forward(request, response);
+                        response.sendRedirect(request.getContextPath());
+                        return;
                     } else {
 
                         dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
                         HttpSession sessione = request.getSession(true);
                         sessione.setAttribute("user", user);
-
 
                         Timestamp last_access = user.getLast_access();
                         Calendar calendar = Calendar.getInstance();
@@ -212,10 +212,8 @@ public class FirstCtrl extends HttpServlet {
                     }
                     break;
                 case ""://caso in cui sto creando un account
-                    Boolean thereimage = false;
-                     String path=null, relPath, fileName, tmp;
                     try {
-                       
+                        String path, relPath, fileName, tmp;
                         ServletFileUpload fileUpload = new ServletFileUpload();
                         FileItemIterator items;
 
@@ -264,9 +262,7 @@ public class FirstCtrl extends HttpServlet {
                                             request.setAttribute("messaggioBean", messaggioBean);
                                             dispatcher.forward(request, response);
                                         } else {
-                                            thereimage = true;
                                         }
-
 
                                     } catch (IOException ioe) {
                                         throw new ServletException(ioe.getMessage());
@@ -313,6 +309,7 @@ public class FirstCtrl extends HttpServlet {
                                         }
 
                                         break;
+
                                 }
                             }
                         }
@@ -320,19 +317,17 @@ public class FirstCtrl extends HttpServlet {
                         Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     //dbmanager inseriscie riga nella tabella utente
-                    if (!thereimage){
-                          manager.addUtente(username, email, password,"/standard_image/standard_avatar.png");
-                    }else{
-                        manager.addUtente(username, email, password, path);
-                    }
-                   //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
+                    manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
                     //response.sendRedirect(request.getContextPath() + "/logIn.jsp");
-                    
                     dispatcher = request.getRequestDispatcher("/logIn.jsp");
                     messaggioBean.setValue(email);
                     request.setAttribute("messaggioBean", messaggioBean);
                     dispatcher.forward(request, response);
                     break;
+
+                default:
+                    dispatcher = request.getRequestDispatcher("/index.jsp");
+                    dispatcher.forward(request, response);
             }
 
         } catch (SQLException ex) {
