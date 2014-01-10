@@ -113,6 +113,16 @@ public class Gruppo {
         
         return all;
     }
+    
+    public int getNumPost() {
+        ArrayList<Gruppo> all = new ArrayList<>();
+        try {
+           all = manager.getGruppiPubblici();
+        } catch (SQLException ex) {
+            Logger.getLogger(Gruppo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return all.size();
+    }
 
     /**
      * @return the nomeOwner

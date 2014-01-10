@@ -29,7 +29,8 @@
                         Per registrarsi è necessario compilare il modulo sottostante
                     </p>
                     <p>
-                        <jsp:getProperty name="messaggioBean" property="messaggio"/>
+                    <h3 style="color: red"> <jsp:getProperty name="messaggioBean" property="messaggio"/> </h3>
+                       
                     </p>
 
                 </div>

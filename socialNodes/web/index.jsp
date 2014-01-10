@@ -43,9 +43,9 @@
                         <%
                             String messaggio = messaggioBean.getMessaggio();
                         %>
-                        <%if (messaggio!=null){
-                            out.println("Attenzione: "+messaggio);
-                        }%>
+                        <%if (messaggio != null) {
+                                out.println("Attenzione: " + messaggio);
+                            }%>
                         <p>
 
                         </p>
@@ -94,22 +94,18 @@
                                             Nome Gruppo
                                         </th>
                                         <th>
-                                            # di partecipanti
-                                        </th>
-                                        <th>
                                             # di post
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% while (i < g.size()) {
-                                            gru = (Gruppo) g.get(i);%>
-                                    <tr>
-                                        <td><%=gru.getNome()%></td>
-                                        <td><a href="showPosts.jsp"</td>
-                                    </tr>
-                                    <%i++;
-                                        }%>
+                                    <%
+                                        for (Gruppo gruppo : g) {
+                                            out.println("<tr><td>" + "<a href=\"" + request.getContextPath()
+                                                    + "/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\">" + gruppo.getNome() + "</a>" + "</td>"
+                                                    + "<td>" + gruppo.getNumPost() + "</td></tr>");
+                                        }
+                                    %>
                                 </tbody>
                             </table>
                         </div>

@@ -127,6 +127,9 @@ public class fltLogged implements Filter {
             if (problem instanceof IOException) {
                 throw (IOException) problem;
             }
+            if (problem instanceof SecurityException) {
+                throw (SecurityException) problem;
+            }
             sendProcessingError(problem, response);
         }
     }

@@ -96,7 +96,6 @@ public class FirstCtrl extends HttpServlet {
                     messaggioBean.setMessaggio("Utilizza gli elementi disposti in questa pagina per compiere le operazioni che desideri");
                     response.sendRedirect(request.getContextPath());
                     return;
-                   
 
             }
         } else {
@@ -137,16 +136,28 @@ public class FirstCtrl extends HttpServlet {
         try {
             switch (operazione) {
                 case "recoverpassword":
-
-                    String from_mail = "username@gmail.com",
+                    String user_password="";
+                    String nomeutente="";
+                    String from_mail = "socialnodes@gmail.com",
                      to,
-                     from_password = "***********",
+                     from_password = "socialnodes123",
                      subject = "Recupero password",
-                     text = "ignavio";
-
+                     text = "Socialnodes:\nScusa! non siamo riusciti a generare correttamente il testo da includere in questa mail.";
                     to = request.getParameter("email_to_recover");
+
                     if (to != null && !to.equals("")) {
                         try {
+                            
+                            Utente utente = manager.getMoreUtente(to);
+                            user_password = manager.getPasswordUtente(to);
+                            nomeutente = utente.getUsername();
+
+                        } catch (Exception e) {
+                            //dispatcher = request.getRequestDispatcher("/errorpage.jsp");
+                            System.out.println("FirstCtrl: gestione mail, Errore nel recupero dati con cui mandare la mail");
+                        }
+                        try {
+                            text = "Socialnodes:\n\nCaro " + nomeutente + ", la tua password è \"" + user_password + "\"\n";
                             MyUtil.sendMailGoogle(from_mail, to, from_password, subject, text);
                         } catch (AddressException e) {
                             Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, e);
@@ -161,9 +172,7 @@ public class FirstCtrl extends HttpServlet {
 
                     break;
                 case "login":
-                    if (user != null) {
-                        //sei già loggato con l'utente user.getUsername
-                    }
+                   
                     username = request.getParameter("email");
                     password = request.getParameter("password");
                     //inoltre qui va aggiunto l'aggiornamento della data dell'ultimo accesso nel db
@@ -176,7 +185,7 @@ public class FirstCtrl extends HttpServlet {
 
                     if (user == null) {
                         //l'utente non esiste response.sendRedirect(request.getContextPath() + "/logIn.jsp");
-                      
+
                         dispatcher = request.getRequestDispatcher("/index.jsp");
                         messaggioBean.setMessaggio("L'e-mail o la password inserita non e' corretta");
                         //request.setAttribute("messaggioBean", messaggioBean);

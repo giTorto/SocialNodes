@@ -93,22 +93,26 @@ public class MyUtil {
         props.put("mail.smtp.auth", "true");
         props.put("mail.debug", "true");
 
-        final String username = from_mail;
-        final String password = from_password;
-        Session session = Session.getDefaultInstance(props, new Authenticator() {
+        final String username = "socialnodes@gmail.com";
+        final String password = "socialnodes123";
+
+        Session session = Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
         });
-// — Create a new message –
+        // — Create a new message –
         Message msg = new MimeMessage(session);
 // — Set the FROM and TO fields –
-        msg.setFrom(new InternetAddress(username + ""));
+        msg.setFrom(
+                new InternetAddress(username + ""));
         msg.setRecipients(Message.RecipientType.TO,
                 InternetAddress.parse(to, false));
         msg.setSubject(subject);
-        msg.setText(text + new Date());
-        msg.setSentDate(new Date());
+        msg.setText(text
+                + "\n\n\n" + new Date());
+        msg.setSentDate(
+                new Date());
         Transport.send(msg);
 
     }
