@@ -7,6 +7,8 @@ package control.servlets;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -82,7 +84,8 @@ public class groupCtrl extends HttpServlet {
         Utente user = (Utente) session.getAttribute("user");
 
         switch (operazione) {
-            case "creagruppo":   //codice per gestire la creazione di un gruppo
+            case "creagruppo": //codice per gestire la creazione di un gruppo
+            {
                 System.out.println("Analisi del form di creazione nuovo gruppo");
                 String inviti2parse = "";
                 String creazione_gruppoNome = "";
@@ -138,16 +141,49 @@ public class groupCtrl extends HttpServlet {
                     }
                 } else {
                     dispatcher = request.getRequestDispatcher("/errorpage.jsp");
-                     dispatcher.forward(request, response);
+                    dispatcher.forward(request, response);
                 }
+                //se tutto è andato bene
                 //response.sendRedirect(request.getContextPath()+"/afterLogged/main.jsp");
                 dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
                 dispatcher.forward(request, response);
-                break;
+            }
+            break;
+
+            case "accettainviti": //codice per gestire gli inviti accettati dall'utente
+            {
+                ArrayList<Integer> groupids = new ArrayList<Integer>();
+                Enumeration paramNames = request.getParameterNames();
+                while (paramNames.hasMoreElements()) {
+                    Integer param_groupid;
+                    String param = (String) paramNames.nextElement();
+                    if (!param.equals("op")) {
+                        groupids.add(Integer.parseInt(param));
+                    }
+                }
+
+                try {
+                    Utente utente = (Utente) request.getSession().getAttribute("user");
+                    try {
+                        for (Integer id_gruppo_accettato : groupids) {
+                            manager.updatePartecipanti(utente.getId(), (int) id_gruppo_accettato);
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, null, ex);
+
+                    }
+                } catch (Exception e) {
+                    System.err.println("errore nel gestire gli inviti");
+                }
+                //se tutto è andato bene
+                dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
+                dispatcher.forward(request, response);
+            }
+            break;
 
             default:
                 dispatcher = request.getRequestDispatcher("/errorpage.jsp");
-                 dispatcher.forward(request, response);
+                dispatcher.forward(request, response);
         }
     }
 

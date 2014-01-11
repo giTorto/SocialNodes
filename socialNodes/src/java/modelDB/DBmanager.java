@@ -273,7 +273,7 @@ public class DBmanager {
      * @return ricevi la lista dei post in ordine di data inversa
      * @throws SQLException
      */
-    static public ArrayList<Post> getPostsGruppo(int idgruppo) throws SQLException {
+    public ArrayList<Post> getPostsGruppo(int idgruppo) throws SQLException {
 
         ArrayList<Post> posts = new ArrayList<>();
 
@@ -347,8 +347,8 @@ public class DBmanager {
     public ArrayList<Gruppo> getInviti(int id) throws SQLException {
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
 
-        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppi_partecipanti g inner"
-                + " join gruppo gr on g.idgruppo=gr.idgruppo where g.idutente =? and invito_acc=0");
+        PreparedStatement stm = con.prepareStatement("SELECT gr.nome, gr.data_creazione, gr.idgruppo "
+                + "FROM gruppi_partecipanti g inner join gruppo gr on g.idgruppo=gr.idgruppo where g.idutente =? and invito_acc=0");
 
         try {
             stm.setInt(1, id);
@@ -358,9 +358,8 @@ public class DBmanager {
 
                 while (rs.next()) {
                     Gruppo p = new Gruppo();
-
                     p.setNome(rs.getString("nome"));
-                    p.setData_creazione(rs.getTimestamp("datacreazione"));
+                    p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
                     p.setNomeOwner((this.getMoreUtente(id)).getUsername());
                     gruppi.add(p);
@@ -381,7 +380,8 @@ public class DBmanager {
 
         ArrayList<Gruppo> gruppi = new ArrayList<>();
 
-        PreparedStatement stm = con.prepareStatement("SELECT NOME,DATA_CREAZIONE,IDGRUPPO FROM gruppo g, utente u where u.idutente = g.idowner and u.idutente =? ");
+        PreparedStatement stm = con.prepareStatement("SELECT NOME,DATA_CREAZIONE,IDGRUPPO "
+                + "FROM gruppo g, utente u where u.idutente = g.idowner and u.idutente =? ");
 
         try {
             stm.setInt(1, id);
@@ -517,6 +517,19 @@ public class DBmanager {
         } catch (SQLException ex) {
             Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
             System.err.println("DbManager: creagruppo, qlcs è andato storto\n");
+        } finally {
+            stm.close();
+        }
+    }
+
+    public void updatePartecipanti(int idutente, int id_gruppo_accettato) throws SQLException {
+        PreparedStatement stm = con.prepareStatement("UPDATE GRUPPI_PARTECIPANTI   SET INVITO_ACC = 1  WHERE IDUTENTE=? AND idgruppo=?");
+        try {
+            stm.setInt(1, idutente);
+            stm.setInt(2, id_gruppo_accettato);
+            int executeUpdate = stm.executeUpdate();
+        } catch (SQLException ex) {
+            System.err.println("DbManager: updatepartecipanti, Errore nell'aggiornare i partecipanti");
         } finally {
             stm.close();
         }

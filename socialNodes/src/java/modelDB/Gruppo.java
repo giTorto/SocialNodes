@@ -28,11 +28,11 @@ public class Gruppo {
     private int isPublic;
     private int idgruppo;
     static private DBmanager manager;
-    
-    public Gruppo(){
+
+    public Gruppo() {
         manager = new DBmanager();
     }
-    
+
     /**
      * @return the idOwner
      */
@@ -103,23 +103,24 @@ public class Gruppo {
         this.idgruppo = idgruppo;
     }
 
-    static public ArrayList<Gruppo> listaGruppiPubblici(){
+    static public ArrayList<Gruppo> listaGruppiPubblici() {
         ArrayList<Gruppo> all = new ArrayList<>();
         try {
-           all = manager.getGruppiPubblici();
+            all = manager.getGruppiPubblici();
         } catch (SQLException ex) {
             Logger.getLogger(Gruppo.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return all;
     }
-    
+
     public int getNumPost() {
-        ArrayList<Gruppo> all = new ArrayList<>();
+        ArrayList<Post> all = new ArrayList<>();
         try {
-           all = manager.getGruppiPubblici();
+            all = manager.getPostsGruppo(this.idgruppo);
         } catch (SQLException ex) {
             Logger.getLogger(Gruppo.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("DbManager, getnumpost: errore nel recupero dei post per il gruppo con groupid=" + this.idgruppo + "\n");
         }
         return all.size();
     }

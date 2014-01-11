@@ -3,6 +3,8 @@
     Created on : 5-gen-2014, 10.37.13
     Author     : Giulian
 --%>
+<%@page import="modelDB.Gruppo"%>
+<%@page import="java.util.ArrayList"%>
 <jsp:useBean id="user" type="modelDB.Utente" scope="session" />
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -57,19 +59,20 @@
                             <h3>
                                 Inviti pendenti
                             </h3>
-                            <form action="#" method="POST">
+                            <form action="/socialNodes/afterLogged/groupCtrl" method="post">
+                                <input type="hidden" name="op" value="accettainviti">
                                 <div style="padding: 2em;">
                                     <table class="table" >
                                         <thead>
                                             <tr class="success"> 
                                                 <th>
-                                                    Owner
+                                                    Ti ha invitato
                                                 </th>
                                                 <th>
                                                     Nome Gruppo 
                                                 </th> 
                                                 <th>
-                                                    Data creazione
+                                                    Data creazione del gruppo
                                                 </th> 
                                                 <th>
                                                     Spunta la casella per accettare l'invito 
@@ -77,37 +80,25 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>
-                                                    1
-                                                </td>
-                                                <td>
-                                                    TB - Monthly
-                                                </td>
-                                                <td>
-                                                    01/04/2012
-                                                </td>
-                                                <td>
-                                                    <input name="nome gruppo"
-                                                           type="checkbox" value="Accetto" checked="checked"/>
-                                                </td>
-                                            </tr>
-                                            <tr class>
-                                                <td>
-                                                    1
-                                                </td>
-                                                <td>
-                                                    TB - Monthly
-                                                </td>
-                                                <td>
-                                                    01/04/2012
-                                                </td>
-                                                <td>
-                                                    <input name="nome gruppo"
-                                                           type="checkbox" value="Accetto" checked="checked"/>
-                                                </td>
-                                            </tr>
-
+                                            <%
+                                                ArrayList<Gruppo> gruppi_invitato = user.getInviti();
+                                                for (Gruppo gruppo : gruppi_invitato) {
+                                                    out.println("<tr>"
+                                                            + "<td>"
+                                                            + gruppo.getNomeOwner()
+                                                            + "</td>"
+                                                            + "<td>"
+                                                            + gruppo.getNome()
+                                                            + "</td>"
+                                                            + "<td>"
+                                                            + gruppo.getData_creazione().toString()
+                                                            + "</td>"
+                                                            + "<td>"
+                                                            + " <input name=\"" + gruppo.getIdgruppo() + "\""
+                                                            + "        type=\"checkbox\" value=\"Accetto\" checked=\"checked\"/>"
+                                                            + "</td>");
+                                                }
+                                            %>                                                                                 
                                         </tbody>
                                     </table> 
                                 </div>
