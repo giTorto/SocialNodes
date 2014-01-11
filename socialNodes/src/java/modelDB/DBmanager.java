@@ -6,6 +6,7 @@
 package modelDB;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -466,4 +467,43 @@ public class DBmanager {
 
         return news;
     }
+
+    public List<Gruppo> getInvitiGruppi(Utente u) throws SQLException {
+        List<Gruppo> gruppi = new ArrayList<Gruppo>();
+        int id = u.getId();
+        PreparedStatement stm
+                = con.prepareStatement("SELECT g.idgruppo,g.nome,g.idowner,g.data_creazione,grp.idutente,u.username,grp.invito_acc, g.pubblico \n"
+                        + "                        FROM (gruppo g INNER JOIN gruppi_partecipanti grp ON grp.idgruppo = g.idgruppo) INNER JOIN utente u on grp.idutente=u.idutente\n"
+                        + "                        WHERE grp.idutente=? AND grp.invito_acc=0 and g.pubblico=0");
+
+        try {
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+
+            try {
+
+                while (rs.next()) {
+                    Gruppo gruppo = new Gruppo();
+                    gruppo.setNomeOwner(getMoreUtente(rs.getInt("idowner")).getUsername());
+                    gruppo.setNome(rs.getString("nome"));
+                    Date data = rs.getDate("data_creazione");
+                    Timestamp ts = new Timestamp(data.getTime());
+                    gruppo.setData_creazione(ts);
+                    gruppo.setIdgruppo(rs.getInt("idgruppo"));
+                    gruppi.add(gruppo);
+
+                }
+            } finally {
+
+                rs.close();
+            }
+        } finally {
+
+            stm.close();
+        }
+
+        return gruppi;
+
+    }
+
 }
