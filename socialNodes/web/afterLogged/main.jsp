@@ -49,6 +49,7 @@
                     </div>
                 </div>
             </div>
+        </div>
             <div class="row clearfix" style="padding-top: 5em">
                 <div class="col-md-8 column">
                     <div class="panel panel-default">

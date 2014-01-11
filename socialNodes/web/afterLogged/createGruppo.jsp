@@ -9,57 +9,121 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+        <title>Socialnodes: creazione gruppo</title>
+
+        <script language=javascript type='text/javascript'>
+            function hideDiv() {
+                 // DOM3 = IE5, NS6 
+                    document.getElementById('private_elements').style.visibility = 'hidden';
+                    document.getElementById('radios-privato').checked=false;
+                
+                
+            }
+
+            function showDiv() {
+               document.getElementById('private_elements').style.visibility = 'visible';
+                    document.getElementById('radios-pubblico').checked=false;
+                
+            }
+        </script>
+
+
+
+
     </head>
-    <body style="">
+    <body>
+        <div class="container" style="padding: 2em; padding-bottom: 4em;" >
+            <div class="row clearfix">
+                <div class="col-md-2 column">
+                    <button type="button" class="btn btn-primary">Indietro</button>
+                </div>
+                <div class="col-md-6 column">
+                    <!--qua possiamo metterci una scritta header da usare in tutte le altre pagine-->
+                </div>
+                <div class="col-md-4 column">
+                    <div class="btn-group">
+                        <button class="btn btn-primary">Azioni</button> <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="afterLogged/afterLogin?op=showinviti">Inviti</a>
+                            </li>
+                            <li>
+                                <a href="afterLogged/afterLogin?op=tocreation">Crea gruppo</a>
+                            </li>
+                            <li class="divider">
+                            <li>
+                                <a href="afterLogged/afterLogin?op=logout">Logout</a>
+                            </li>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <form class="form-horizontal" action="#" method="post">
+                        <fieldset>
 
-        <div class="panel panel-default">
-            <div class="panel-body" align="right">
-                <button style="background-color:#cbd5dd" type="button" class="btn btn-default" align="right">Home</button>
-                <button style="background-color:#cbd5dd" type="button" class="btn btn-default" align="right">Logout</button>
+                            <!-- Form Name -->
+                            <legend>Creazione nuovo gruppo</legend>
 
+                            <!-- Text input-->
+                            <div class="control-group" style="padding: 1em;">
+                                <label class="control-label" for="textinput_nomegruppo">Inserire il nome del nuovo gruppo</label>
+                                <div class="controls">
+                                    <input id="textinput_nomegruppo" name="nome_gruppo" type="text" placeholder="groupname" class="input-xlarge">
+
+                                </div>
+                            </div>
+
+                            <!-- Multiple Radios -->
+                            <div class="control-group" style="padding: 1em;">
+                                <label class="control-label" for="radios">Gruppo pubblico o privato?</label>
+                                <div class="controls">
+                                    <label class="radio" for="radios-0">
+                                        <input type="radio" name="radios_privato" id="radios-privato" value="privato" checked="checked" onclick="javascript:showDiv()">
+                                        Privato
+                                    </label>
+                                    <label class="radio" for="radios-1">
+                                        <input type="radio" name="radios_pubblico" id="radios-pubblico" value="pubblico" onclick="javascript:hideDiv()">
+                                        Pubblico
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="row" style="padding: 1em;" id="private_elements">
+                                <div class="col-lg-6">
+                                    <label>Inserisci gli username degli utenti che vuoi invitare separati da una virgola</label>
+                                    <div class="input-group">
+
+                                        <input class="form-control" name="areainviti" size="50" type="text" placeholder="ad es: username1,username2">
+                                        <span class="input-group-btn">
+
+                                        </span></div>
+                                    <!-- Text input--></div>
+                            </div>
+
+                            <!-- Button -->
+                            <div class="control-group" style="padding: 1em;">
+                                <label class="control-label" for="singlebutton"></label>
+                                <div class="controls">
+                                    <button type="submit" id="singlebutton" name="singlebutton" class="btn btn-primary">Fatto!</button>
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    </form>
+
+
+                </div>
             </div>
         </div>
 
-        <div class="panel panel-default" margin-left="auto"
-             margin-right="auto"
-             margin-top="0"
-             margin-bottom="0"
-             padding="0">
-            <div class="panel-body">
-                <h2>Nome gruppo:</h2>
-                <form action="" method="post" name="myform">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="input-group">
+    </body>
 
-                                <input class="form-control" name="creazione_gruppo_nome" type="text" placeholder="scegli un nome">
-                                <span class="input-group-btn">
-                                </span>
-                            </div>
-                            <!-- /input-group --></div>
-                        <!-- /.col-lg-6 --></div>
-                    <!-- /.row -->
-                    <br>
-                    <h2>Invitati:</h2>
-                    <p>Inserisci gli username degli utenti che vuoi invitare separati da una virgola</p>
-                    <form action="/webForum/logg/gruppiSrvlt" method="post" name="">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="input-group">
-
-                                    <input class="form-control" name="areainviti" size="50" type="text" placeholder="ad es: username1,username2">
-                                    <span class="input-group-btn">
-
-                                    </span></div>
-                                <!-- /input-group --></div>
-                            <!-- /.col-lg-6 --></div>
-                        <!-- /.row -->
-                        <br><br>
-                        <a href="javascript: submitform()" class="btn btn-primary btn-lg" role="button" align="center">Crea il gruppo! »</a>
-
-                        </div>
-                        </div>
-
-      </body>
-</html>
