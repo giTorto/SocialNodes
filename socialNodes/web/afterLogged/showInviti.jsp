@@ -28,14 +28,14 @@
                         <button class="btn btn-primary">Azioni</button> <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span></button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="afterLogged/afterLogin?op=showinviti">Inviti</a>
+                                <a href="afterLogin?op=showinviti">Inviti</a>
                             </li>
                             <li>
-                                <a href="afterLogged/afterLogin?op=tocreation">Crea gruppo</a>
+                                <a href="afterLogin?op=tocreation">Crea gruppo</a>
                             </li>
                             <li class="divider">
                             <li>
-                                <a href="afterLogged/afterLogin?op=logout">Logout</a>
+                                <a href="afterLogin?op=logout">Logout</a>
                             </li>
                             </li>
                         </ul>

@@ -113,6 +113,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <!--Qua ci vuole un getinvitirecenti, con foreach per -->
                                     <tr>
                                         <td>
                                             1

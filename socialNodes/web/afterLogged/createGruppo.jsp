@@ -48,14 +48,14 @@
                         <button class="btn btn-primary">Azioni</button> <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span></button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="afterLogged/afterLogin?op=showinviti">Inviti</a>
+                                <a href="afterLogin?op=showinviti">Inviti</a>
                             </li>
                             <li>
-                                <a href="afterLogged/afterLogin?op=tocreation">Crea gruppo</a>
+                                <a href="afterLogin?op=tocreation">Crea gruppo</a>
                             </li>
                             <li class="divider">
                             <li>
-                                <a href="afterLogged/afterLogin?op=logout">Logout</a>
+                                <a href="afterLogin?op=logout">Logout</a>
                             </li>
                             </li>
                         </ul>
@@ -66,7 +66,8 @@
         <div class="container">
             <div class="row clearfix">
                 <div class="col-md-12 column">
-                    <form class="form-horizontal" action="#" method="post">
+                    <form class="form-horizontal" method="POST" action="/socialNodes/afterLogged/groupCtrl">
+                        <input type="hidden" name="op" value="creagruppo">
                         <fieldset>
 
                             <!-- Form Name -->
@@ -76,7 +77,7 @@
                             <div class="control-group" style="padding: 1em;">
                                 <label class="control-label" for="textinput_nomegruppo">Inserire il nome del nuovo gruppo</label>
                                 <div class="controls">
-                                    <input id="textinput_nomegruppo" name="nome_gruppo" type="text" placeholder="groupname" class="input-xlarge">
+                                    <input id="textinput_nomegruppo" name="creazione_gruppo_nome" type="text" placeholder="groupname" class="input-xlarge">
 
                                 </div>
                             </div>
@@ -86,11 +87,11 @@
                                 <label class="control-label" for="radios">Gruppo pubblico o privato?</label>
                                 <div class="controls">
                                     <label class="radio" for="radios-0">
-                                        <input type="radio" name="radios_privato" id="radios-privato" value="privato" checked="checked" onclick="javascript:showDiv()">
+                                        <input type="radio" name="radios" id="radios-privato" value="privato" checked="checked" onclick="javascript:showDiv()">
                                         Privato
                                     </label>
                                     <label class="radio" for="radios-1">
-                                        <input type="radio" name="radios_pubblico" id="radios-pubblico" value="pubblico" onclick="javascript:hideDiv()">
+                                        <input type="radio" name="radios" id="radios-pubblico" value="pubblico" onclick="javascript:hideDiv()">
                                         Pubblico
                                     </label>
                                 </div>

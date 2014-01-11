@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -475,13 +476,10 @@ public class DBmanager {
                 = con.prepareStatement("SELECT g.idgruppo,g.nome,g.idowner,g.data_creazione,grp.idutente,u.username,grp.invito_acc, g.pubblico \n"
                         + "                        FROM (gruppo g INNER JOIN gruppi_partecipanti grp ON grp.idgruppo = g.idgruppo) INNER JOIN utente u on grp.idutente=u.idutente\n"
                         + "                        WHERE grp.idutente=? AND grp.invito_acc=0 and g.pubblico=0");
-
         try {
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
-
             try {
-
                 while (rs.next()) {
                     Gruppo gruppo = new Gruppo();
                     gruppo.setNomeOwner(getMoreUtente(rs.getInt("idowner")).getUsername());
@@ -491,19 +489,37 @@ public class DBmanager {
                     gruppo.setData_creazione(ts);
                     gruppo.setIdgruppo(rs.getInt("idgruppo"));
                     gruppi.add(gruppo);
-
                 }
             } finally {
-
                 rs.close();
             }
         } finally {
-
             stm.close();
         }
-
         return gruppi;
+    }
 
+    public void creaGruppo(Utente u, String nome, boolean isPublic) throws SQLException {
+        int idutente = u.getId();
+        Date data = new Date(Calendar.getInstance().getTimeInMillis());
+        PreparedStatement stm
+                = con.prepareStatement("INSERT INTO gruppo (nome,data_creazione,idowner,pubblico) values(?,?,?,?) ");
+        try {
+            stm.setString(1, nome);
+            stm.setDate(2, data);
+            stm.setInt(3, idutente);
+            if (isPublic) {
+                stm.setInt(4, 1);
+            } else {
+                stm.setInt(4, 0);
+            }
+            int rowsaffected = stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("DbManager: creagruppo, qlcs è andato storto\n");
+        } finally {
+            stm.close();
+        }
     }
 
 }
