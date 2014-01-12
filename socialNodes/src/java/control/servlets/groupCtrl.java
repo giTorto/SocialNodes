@@ -18,7 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import modelDB.DBmanager;
+import modelDB.Gruppo;
 import modelDB.Utente;
+import util.MyUtil;
 
 /**
  *
@@ -89,9 +91,9 @@ public class groupCtrl extends HttpServlet {
                 System.out.println("Analisi del form di creazione nuovo gruppo");
                 String inviti2parse = "";
                 String creazione_gruppoNome = "";
-                // ArrayList<String> utentiSbagliati = new ArrayList<String>();
+                ArrayList<String> utentiSbagliati = new ArrayList<String>();
                 boolean ok_crea_gruppo = true;
-                // boolean ok_inviti = true;
+                boolean ok_inviti = true;
                 boolean isPublic = false;
                 boolean ok_radio = true;
 
@@ -105,14 +107,15 @@ public class groupCtrl extends HttpServlet {
                     ok_crea_gruppo = false;
                 }
 
-//                try {
-//                    inviti2parse = request.getParameter("areainviti");
-//                    if (inviti2parse == null) {
-//                        ok_inviti = false;
-//                    }
-//                } catch (Exception e) {
-//                    ok_inviti = false;
-//                }
+                try {
+                    inviti2parse = request.getParameter("areainviti");
+                    if (inviti2parse == null) {
+                        ok_inviti = false;
+                    }
+                } catch (Exception e) {
+                    ok_inviti = false;
+                }
+
                 try {
                     String radio = request.getParameter("radios");
                     if (radio.equals("privato")) {
@@ -126,11 +129,18 @@ public class groupCtrl extends HttpServlet {
                     ok_radio = false;
                 }
 
-                if (ok_crea_gruppo && /*!"".equals(inviti2parse) && */ !"".equals(creazione_gruppoNome) && creazione_gruppoNome != null) {
+                if (ok_crea_gruppo && !"".equals(inviti2parse) && !"".equals(creazione_gruppoNome) && creazione_gruppoNome != null) {
                     try {
                         Utente ownernewgroup = (Utente) ((HttpServletRequest) request).getSession().getAttribute("user");
                         try {
                             manager.creaGruppo(user, creazione_gruppoNome, isPublic);
+                            
+                            Gruppo gruppo_appena_creato = manager.getGruppo(creazione_gruppoNome);
+                            ArrayList<String> username_invitati = MyUtil.parseFromString(inviti2parse);
+                            utentiSbagliati = MyUtil.sendinviti(username_invitati, gruppo_appena_creato.getIdgruppo(), manager);
+                            if (!utentiSbagliati.isEmpty()) {
+                                //prepara un messaggio bean degli invitati a cui non si è potuto mandare l'invito
+                            }
                         } catch (SQLException ex) {
                             Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, null, ex);
                             System.err.println("Groupctrl: errore nel creare un gruppo " + ex.getMessage());

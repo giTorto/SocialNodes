@@ -9,10 +9,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.activation.MimetypesFileTypeMap;
-import javax.servlet.ServletException;
 import java.security.Security;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -22,6 +24,9 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import modelDB.Gruppo;
+import modelDB.Utente;
+import modelDB.DBmanager;
 
 /**
  *
@@ -36,6 +41,40 @@ public class MyUtil {
         String[] tokens = phrase_inviti.split(delims);
         retval.addAll(Arrays.asList(tokens));
         return retval;
+    }
+
+    public static ArrayList<String> sendinviti(ArrayList<String> usernames, int idgruppo, DBmanager manager) {
+        ArrayList<String> utentiNonEsistenti = new ArrayList<String>();
+        boolean noerr = true;
+        for (String username : usernames) {
+            try {
+                Utente u = manager.getMoreByUserName(username);
+                if (u != null && !manager.controllaInvitogià_esistente(idgruppo, u.getId())) {
+                    Gruppo invitante = manager.getGruppo(idgruppo);
+                    String nomeownerinvitante = invitante.getNomeOwner();
+                    Utente owner = manager.getMoreByUserName(nomeownerinvitante);
+                    if (u.getId() != owner.getId()) {
+                        try {
+                            manager.insertInvito(idgruppo, u.getId());
+                        } catch (SQLException ex) {
+                            Logger.getLogger(MyUtil.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                } else {
+                    //System.err.println("Util.sendinviti: Impossibile invitare " + username);
+                    utentiNonEsistenti.add(username);
+                    noerr = false;
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(MyUtil.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println("Util.sendinviti: Impossibile invitare " + username);
+            }
+        }
+        if (noerr) {
+            return null;
+        } else {
+            return utentiNonEsistenti;
+        }
 
     }
 

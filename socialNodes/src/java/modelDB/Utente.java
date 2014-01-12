@@ -9,8 +9,6 @@ package modelDB;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -105,10 +103,10 @@ public class Utente {
 
     public ArrayList<Message> getNews() {
         ArrayList<Message> all = new ArrayList<>();
-        
+
         try {
             all = manager.getNews(this.getLast_access(), this.getId());
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
         }

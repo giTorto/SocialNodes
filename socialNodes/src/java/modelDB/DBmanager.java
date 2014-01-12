@@ -535,4 +535,137 @@ public class DBmanager {
         }
     }
 
+    public void insertInvito(int groupid, int idutente) throws SQLException {
+        PreparedStatement stm = con.prepareStatement("INSERT INTO gruppi_partecipanti (idgruppo,idutente,invito_acc,data_invio) values(?,?,?,?)");
+        int zero = 0;
+        Date data = new Date(Calendar.getInstance().getTimeInMillis());
+        try {
+            stm.setInt(1, groupid);
+            stm.setInt(2, idutente);
+            stm.setInt(3, zero);
+            stm.setDate(4, data);
+
+            int executeUpdate = stm.executeUpdate();
+        } catch (Exception e) {
+            System.err.println("errore nel inserire l'invito");
+        } finally {
+            stm.close();
+        }
+    }
+
+    public Utente getMoreByUserName(String ut) throws SQLException {
+
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM utente WHERE username = ?");
+        try {
+            stm.setString(1, ut);
+            ResultSet rs = stm.executeQuery();
+
+            try {
+                if (rs.next()) {
+                    Utente user = new Utente();
+                    user.setUsername(rs.getString("username"));
+
+                    user.setId(rs.getInt("idutente"));
+                    return user;
+                } else {
+                    return null;
+
+                }
+
+            } finally {
+                // ricordarsi SEMPRE di chiudere i ResultSet in un blocco finally 
+                rs.close();
+            }
+
+        } finally { // ricordarsi SEMPRE di chiudere i PreparedStatement in un blocco finally
+            stm.close();
+        }
+    }
+
+    public boolean controllaInvitogià_esistente(int groupid, int idutente) throws SQLException {//ritorna true se c'è già un invito, false altrimenti
+
+        boolean retval = false;
+        try {
+            PreparedStatement stm = con.prepareStatement("select * from gruppi_partecipanti where idgruppo= ? and idutente= ?");
+
+            stm.setInt(1, groupid);
+            stm.setInt(2, idutente);
+
+            ResultSet rs = stm.executeQuery();
+
+            if (!rs.next()) {
+                System.out.println("No data");
+                retval = false;
+            } else {
+                retval = true;
+            }
+            stm.close();
+        } catch (SQLException e) {
+            System.err.println("errore nel verificare se l'invito esisteva già");
+            return false;
+        }
+        return retval;
+    }
+
+    /**
+     * Dato un idgruppo restituisce un oggetto contenente tutte le sue info
+     *
+     * @param Idgruppo
+     * @return oggetto
+     * @throws SQLException
+     */
+    public Gruppo getGruppo(int Idgruppo) throws SQLException {
+        Gruppo group = new Gruppo();
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppo g where g.idgruppo=?");
+        try {
+            stm.setInt(1, Idgruppo);
+            ResultSet rs = stm.executeQuery();
+            try {
+                while (rs.next()) {
+
+                    group.setNome(rs.getString("nome"));
+                    Date date = rs.getDate("data_creazione");
+                    long timestamp = date.getTime();
+                    Timestamp tsdate = new Timestamp(timestamp);
+                    group.setData_creazione(tsdate);
+                    group.setIdgruppo(rs.getInt("idgruppo"));
+                    group.setNomeOwner(getMoreUtente(rs.getInt("idowner")).getUsername());
+
+                }
+            } finally {
+                rs.close();
+            }
+        } finally {
+            stm.close();
+        }
+        return group;
+    }
+
+    public Gruppo getGruppo(String nome) throws SQLException {
+        ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppo g where g.nome=?");
+        try {
+            stm.setString(1, nome);
+            ResultSet rs = stm.executeQuery();
+            try {
+                while (rs.next()) {
+                    Gruppo group = new Gruppo();
+                    group.setNome(rs.getString("nome"));
+                    Date date = rs.getDate("data_creazione");
+                    long timestamp = date.getTime();
+                    Timestamp tsdate = new Timestamp(timestamp);
+                    group.setData_creazione(tsdate);
+                    group.setIdgruppo(rs.getInt("idgruppo"));
+                    group.setNomeOwner(getMoreUtente(rs.getInt("idowner")).getUsername());
+                    gruppi.add(group);
+                }
+            } finally {
+                rs.close();
+            }
+        } finally {
+            stm.close();
+        }
+        return gruppi.get(0);
+    }
+
 }
