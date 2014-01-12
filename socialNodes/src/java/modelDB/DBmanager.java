@@ -719,7 +719,7 @@ public class DBmanager {
         }
 
     }
-    
+
     public List<Integer> getUtenti(int idgruppo) throws SQLException {
 
         List<Integer> allUsers = new ArrayList<Integer>();
@@ -750,7 +750,12 @@ public class DBmanager {
 
         return allUsers;
     }
-    
+
+    /*
+     Da mettere la getpostgruppo ma va modificata molto...e soprattuto aspetto di vedere
+    come gestire gli avatar perchè se ogni post ha bisogno dell'avatar per essere printoutato
+    allora finchè non sappiamo come gestire gli avatar non ci serve recuperare i post
+     */
 //    public boolean checkUtenteOwnGruppo(Utente u, int idgruppo) throws SQLException {
 //        boolean retval=false;
 //        PreparedStatement stm
@@ -770,5 +775,4 @@ public class DBmanager {
 //        
 //        return retval;
 //    }
-
 }

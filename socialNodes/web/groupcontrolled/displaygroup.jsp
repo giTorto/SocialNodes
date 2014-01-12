@@ -104,7 +104,7 @@
 
         <div style="text-align:center" >
             <h1>
-                Nome gruppo <small>forum</small>
+               Forum <small> <%gruppo.getNome(); %></small>
             </h1>
         </div>
         <div class="forumWrapper panel">
