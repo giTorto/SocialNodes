@@ -36,6 +36,10 @@
         <servlet-name>moderatoreCtrl</servlet-name>
         <servlet-class>control.servlets.moderatoreCtrl</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Generapdf</servlet-name>
+        <servlet-class>genericServlets.Generapdf</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>FirstCtrl</servlet-name>
         <url-pattern>/FirstCtrl</url-pattern>
@@ -55,6 +59,10 @@
     <servlet-mapping>
         <servlet-name>moderatoreCtrl</servlet-name>
         <url-pattern>/afterLogged/moderatoreCtrl</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Generapdf</servlet-name>
+        <url-pattern>/afterLogged/groupCtrl/generapdf</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

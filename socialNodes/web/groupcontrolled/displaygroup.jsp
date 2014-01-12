@@ -4,7 +4,12 @@
     Author     : Lorenzo
 --%>
 
+<%@page import="modelDB.Utente"%>
+<%@page import="modelDB.Gruppo"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<jsp:useBean id="user" class="modelDB.Utente" scope="session"/>
+<jsp:useBean id="gruppo" class="modelDB.Gruppo" scope="request"/>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -84,22 +89,15 @@
 
     <body>
         <div style="left:74%;position:absolute;top:1%;" >
-            <div class="btn-group">
-                <button type="button" class="btn btn-default"> <span class="glyphicon glyphicon-wrench"></span>Impostazioni</button>
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a><span class="glyphicon glyphicon-plus"></span>Inviti </a></li>
-                    <li class="divider"></li>
-                    <li><a> <span class="glyphicon glyphicon-user"></span>Crea Gruppo</a> </li>
-                </ul>
-            </div>
 
-
-
-
+            <button type="button" class="btn btn-default"> <span class="glyphicon glyphicon-wrench"></span>Impostazioni</button>         
+            <%
+                if (gruppo.getNomeOwner().equals(user.getUsername())) {
+                    String output = "<a href=\"/socialNodes/afterLogged/groupCtrl/generapdf?groupid=" + gruppo.getIdgruppo()
+                            + "\" class=\"btn btn-primary btn-large\">Genera PDF</a>";
+                    out.println(output);
+                }
+            %>
             <button type="button" class="btn btn-warning"> <span class="glyphicon glyphicon-backward"></span>Indietro </button>
             <button type="button" class="btn btn-danger"> <span class="glyphicon glyphicon-log-out"></span>Logout</button>
         </div>

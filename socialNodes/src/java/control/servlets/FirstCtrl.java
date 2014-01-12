@@ -73,14 +73,6 @@ public class FirstCtrl extends HttpServlet {
 
         if (operazione != null) {
             switch (operazione) {
-                case "gotologin":
-                    dispatcher = request.getRequestDispatcher("/logIn.jsp");
-
-                    break;
-                case "gotologin2":
-                    dispatcher = request.getRequestDispatcher("/login2.jsp");
-
-                    break;
                 case "gotocrea":
                     dispatcher = request.getRequestDispatcher("/createAccount.jsp");
 
@@ -136,8 +128,8 @@ public class FirstCtrl extends HttpServlet {
         try {
             switch (operazione) {
                 case "recoverpassword":
-                    String user_password="";
-                    String nomeutente="";
+                    String user_password = "";
+                    String nomeutente = "";
                     String from_mail = "socialnodes@gmail.com",
                      to,
                      from_password = "socialnodes123",
@@ -147,7 +139,7 @@ public class FirstCtrl extends HttpServlet {
 
                     if (to != null && !to.equals("")) {
                         try {
-                            
+
                             Utente utente = manager.getMoreUtente(to);
                             user_password = manager.getPasswordUtente(to);
                             nomeutente = utente.getUsername();
@@ -172,7 +164,7 @@ public class FirstCtrl extends HttpServlet {
 
                     break;
                 case "login":
-                   
+
                     username = request.getParameter("email");
                     password = request.getParameter("password");
                     //inoltre qui va aggiunto l'aggiornamento della data dell'ultimo accesso nel db
@@ -196,6 +188,11 @@ public class FirstCtrl extends HttpServlet {
 
                         dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
                         HttpSession sessione = request.getSession(true);
+                        try {
+                            user = manager.getMoreUtente(username);
+                        } catch (SQLException e) {
+                            response.sendRedirect(request.getContextPath());
+                        }
                         sessione.setAttribute("user", user);
 
                         Timestamp last_access = user.getLast_access();

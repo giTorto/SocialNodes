@@ -55,6 +55,17 @@ public class groupCtrl extends HttpServlet {
 
         switch (operazione) {
             case "displaygroup":
+                Gruppo gruppo=null;
+                try {
+                    String groupid=request.getParameter("groupid");
+                    
+                    gruppo = manager.getGruppo(Integer.parseInt(groupid));
+                } catch (SQLException e) {
+                    System.err.println("groupCtrl: case displaygroup, errore nel recuperare il gruppo dal db");
+                }
+                
+                request.setAttribute("gruppo", gruppo);              
+
                 dispatcher = request.getRequestDispatcher("/groupcontrolled/displaygroup.jsp");
                 dispatcher.forward(request, response);
 
@@ -134,7 +145,7 @@ public class groupCtrl extends HttpServlet {
                         Utente ownernewgroup = (Utente) ((HttpServletRequest) request).getSession().getAttribute("user");
                         try {
                             manager.creaGruppo(user, creazione_gruppoNome, isPublic);
-                            
+
                             Gruppo gruppo_appena_creato = manager.getGruppo(creazione_gruppoNome);
                             ArrayList<String> username_invitati = MyUtil.parseFromString(inviti2parse);
                             utentiSbagliati = MyUtil.sendinviti(username_invitati, gruppo_appena_creato.getIdgruppo(), manager);

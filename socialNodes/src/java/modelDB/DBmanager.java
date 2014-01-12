@@ -668,4 +668,107 @@ public class DBmanager {
         return gruppi.get(0);
     }
 
+    public int getNumPostPerGruppo(int idgruppo) throws SQLException {
+
+        PreparedStatement stm
+                = con.prepareStatement("SELECT COUNT (p.idgruppo) AS count "
+                        + "FROM post p  "
+                        + "WHERE p.idgruppo = ?");
+
+        try {
+            stm.setInt(1, idgruppo);
+            ResultSet resultSet = stm.executeQuery();
+
+            try {
+                if (resultSet.next()) {
+                    return resultSet.getInt("count");
+                } else {
+                    return 0;
+                }
+
+            } finally {
+                resultSet.close();
+            }
+        } finally {
+            stm.close();
+        }
+
+    }
+
+    public Date getDataUltimoPost(int idgruppo) throws SQLException {
+        Date data = null;
+
+        PreparedStatement stm = con.prepareStatement("SELECT max(data_ora) as maxdata from post where idgruppo = ? ");
+
+        try {
+            stm.setInt(1, idgruppo);
+            ResultSet resultSet = stm.executeQuery();
+
+            try {
+                if (resultSet.next()) {
+                    return resultSet.getDate("maxdata");
+                } else {
+                    return null;
+                }
+
+            } finally {
+                resultSet.close();
+            }
+        } finally {
+            stm.close();
+        }
+
+    }
+    
+    public List<Integer> getUtenti(int idgruppo) throws SQLException {
+
+        List<Integer> allUsers = new ArrayList<Integer>();
+        PreparedStatement stm
+                = con.prepareStatement("SELECT DISTINCT  idutente FROM gruppi_partecipanti "
+                        + "                                    WHERE idgruppo = ?  and invito_acc=1");
+
+        try {
+            stm.setInt(1, idgruppo);
+            ResultSet rs = stm.executeQuery();
+
+            try {
+
+                while (rs.next()) {
+
+                    Integer ut = new Integer(rs.getInt("idutente"));
+
+                    allUsers.add(ut);
+                }
+            } finally {
+
+                rs.close();
+            }
+        } finally {
+
+            stm.close();
+        }
+
+        return allUsers;
+    }
+    
+//    public boolean checkUtenteOwnGruppo(Utente u, int idgruppo) throws SQLException {
+//        boolean retval=false;
+//        PreparedStatement stm
+//                = con.prepareStatement("select utente.username from UTENTE.GRUPPO inner join utente on gruppo.idowner=utente.idutente where idgruppo=?");
+//
+//        try {
+//            stm.setInt(1, idgruppo);
+//            ResultSet rs=stm.executeQuery();
+//            String retrieved_username=rs.getString("username");
+//            if (retrieved_username.equals(u.getUsername()))
+//                retval=true;
+//            
+//        } catch (SQLException ex) {
+//            System.err.println("dbmanager: checkutenteowngruppo errore sql");
+//        }
+//        
+//        
+//        return retval;
+//    }
+
 }

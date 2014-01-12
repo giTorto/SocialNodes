@@ -25,7 +25,7 @@ public class Utente {
     private int id;
     private DBmanager manager;
 
-    Utente() {
+    public Utente() {
         manager = new DBmanager();
     }
 
@@ -70,7 +70,7 @@ public class Utente {
     public ArrayList<Gruppo> getInviti() {
         ArrayList<Gruppo> all = new ArrayList<>();
         try {
-            all = manager.getInviti(this.id);
+            all = getManager().getInviti(this.getId());
         } catch (SQLException ex) {
             Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -81,7 +81,7 @@ public class Utente {
     public ArrayList<Gruppo> getGruppiParte() {
         ArrayList<Gruppo> all = new ArrayList<>();
         try {
-            all = manager.getGruppiParte(this.id);
+            all = getManager().getGruppiParte(this.getId());
         } catch (SQLException ex) {
             Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -93,7 +93,7 @@ public class Utente {
     public ArrayList<Gruppo> getGruppiOwn() {
         ArrayList<Gruppo> all = new ArrayList<>();
         try {
-            all = manager.getGruppiOwn(this.id);
+            all = getManager().getGruppiOwn(this.getId());
         } catch (SQLException ex) {
             Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -105,7 +105,7 @@ public class Utente {
         ArrayList<Message> all = new ArrayList<>();
 
         try {
-            all = manager.getNews(this.getLast_access(), this.getId());
+            all = getManager().getNews(this.getLast_access(), this.getId());
 
         } catch (SQLException ex) {
             Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
@@ -127,4 +127,28 @@ public class Utente {
     public void setAvatar_link(String avatar_link) {
         this.avatar_link = avatar_link;
     }
+
+    /**
+     * @return the manager
+     */
+    public DBmanager getManager() {
+        return manager;
+    }
+
+    /**
+     * @param manager the manager to set
+     */
+    public void setManager(DBmanager manager) {
+        this.manager = manager;
+    }
+    
+//    public boolean owngruppo(Utente u, int idgruppo) {
+//        try {
+//            return manager.checkUtenteOwnGruppo(this, idgruppo);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return false;
+//        
+//    }
 }
