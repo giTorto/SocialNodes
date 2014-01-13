@@ -90,21 +90,41 @@
     <body>
         <div style="left:74%;position:absolute;top:1%;" >
 
-            <button type="button" class="btn btn-default"> <span class="glyphicon glyphicon-wrench"></span>Impostazioni</button>         
             <%
                 if (gruppo.getNomeOwner().equals(user.getUsername())) {
-                    String output = "<a href=\"/socialNodes/afterLogged/groupCtrl/generapdf?groupid=" + gruppo.getIdgruppo()
-                            + "\" class=\"btn btn-primary btn-large\">Genera PDF</a>";
-                    out.println(output);
+            %>
+            <a href="<% out.print(request.getContextPath()); %>/afterLogged/groupCtrl?op=settings&groupid=<%out.print(gruppo.getIdgruppo());%>" 
+               class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Impostazioni</a>
+            <%
+            } else {
+            %>
+            <!--what happens else...-->
+            <%
                 }
             %>
-            <button type="button" class="btn btn-warning"> <span class="glyphicon glyphicon-backward"></span>Indietro </button>
-            <button type="button" class="btn btn-danger"> <span class="glyphicon glyphicon-log-out"></span>Logout</button>
+
+            <%
+                if (gruppo.getNomeOwner().equals(user.getUsername())) {
+            %>
+            <a href="<% out.print(request.getContextPath()); %>/afterLogged/groupCtrl/generapdf?groupid=<%out.print(gruppo.getIdgruppo());%>"
+               class="btn btn-primary btn-large">Genera PDF</a>
+            <%
+            } else {
+            %>
+            <P>Goodbye, world
+                <%
+                    }
+                %>
+
+
+                <a href="#" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-left"></span> Indietro</a>
+                <a href="#" class="btn btn-primary"><span class="glyphicon glyphicon-new-window"></span> Logout</a>
+
         </div>
 
         <div style="text-align:center" >
             <h1>
-               Forum <small> <%gruppo.getNome(); %></small>
+                Forum <small> <%out.print(gruppo.getNome());%></small>
             </h1>
         </div>
         <div class="forumWrapper panel">

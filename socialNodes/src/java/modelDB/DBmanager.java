@@ -347,7 +347,7 @@ public class DBmanager {
     public ArrayList<Gruppo> getInviti(int id) throws SQLException {
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
 
-        PreparedStatement stm = con.prepareStatement("SELECT gr.nome, gr.data_creazione, gr.idgruppo "
+        PreparedStatement stm = con.prepareStatement("SELECT gr.nome, gr.data_creazione, gr.idgruppo, gr.idowner "
                 + "FROM gruppi_partecipanti g inner join gruppo gr on g.idgruppo=gr.idgruppo where g.idutente =? and invito_acc=0");
 
         try {
@@ -361,7 +361,7 @@ public class DBmanager {
                     p.setNome(rs.getString("nome"));
                     p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
-                    p.setNomeOwner((this.getMoreUtente(id)).getUsername());
+                    p.setNomeOwner(getMoreUtente(rs.getInt("idowner")).getUsername());
                     gruppi.add(p);
                 }
             } finally {
@@ -751,10 +751,40 @@ public class DBmanager {
         return allUsers;
     }
 
+    public void updateGroupName(int idgroup, String nuovo_nome) throws SQLException {
+
+        PreparedStatement stm = con.prepareStatement("UPDATE GRUPPO   SET NOME = ?  WHERE IDGRUPPO = ?");
+        try {
+            stm.setString(1, nuovo_nome);
+            stm.setInt(2, idgroup);
+
+            int executeUpdate = stm.executeUpdate();
+        } catch (SQLException ex) {
+            System.err.println("Errore nell'aggiornare il gruppo con id:" + idgroup);
+        } finally {
+            stm.close();
+        }
+    }
+    
+    public void updateGroupFlag(int idgroup, int isPublic) throws SQLException {
+
+        PreparedStatement stm = con.prepareStatement("UPDATE GRUPPO   SET PUBBLICO = ?  WHERE IDGRUPPO = ?");
+        try {
+            stm.setInt(1, isPublic);
+            stm.setInt(2, idgroup);
+
+            int executeUpdate = stm.executeUpdate();
+        } catch (SQLException ex) {
+            System.err.println("Errore nell'aggiornare il flag del gruppo con id:" + idgroup);
+        } finally {
+            stm.close();
+        }
+    }
+
     /*
      Da mettere la getpostgruppo ma va modificata molto...e soprattuto aspetto di vedere
-    come gestire gli avatar perchè se ogni post ha bisogno dell'avatar per essere printoutato
-    allora finchè non sappiamo come gestire gli avatar non ci serve recuperare i post
+     come gestire gli avatar perchè se ogni post ha bisogno dell'avatar per essere printoutato
+     allora finchè non sappiamo come gestire gli avatar non ci serve recuperare i post
      */
 //    public boolean checkUtenteOwnGruppo(Utente u, int idgruppo) throws SQLException {
 //        boolean retval=false;

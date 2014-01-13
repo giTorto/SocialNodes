@@ -27,9 +27,9 @@ import util.MyUtil;
  * @author Giulian
  */
 public class groupCtrl extends HttpServlet {
-
+    
     private DBmanager manager;
-
+    
     @Override
     public void init() {
         // inizializza il DBManager dagli attributi di Application
@@ -49,33 +49,51 @@ public class groupCtrl extends HttpServlet {
             throws ServletException, IOException {
         String operazione = request.getParameter("op");
         RequestDispatcher dispatcher;
-
+        
         HttpSession session = request.getSession(false);
         Utente user = (Utente) session.getAttribute("user");
-
+        
         switch (operazione) {
             case "displaygroup":
-                Gruppo gruppo=null;
+                Gruppo gruppo_disp = null;
                 try {
-                    String groupid=request.getParameter("groupid");
+                    String groupid = request.getParameter("groupid");
                     
-                    gruppo = manager.getGruppo(Integer.parseInt(groupid));
+                    gruppo_disp = manager.getGruppo(Integer.parseInt(groupid));
                 } catch (SQLException e) {
                     System.err.println("groupCtrl: case displaygroup, errore nel recuperare il gruppo dal db");
                 }
                 
-                request.setAttribute("gruppo", gruppo);              
-
+                request.setAttribute("gruppo", gruppo_disp);
+                
                 dispatcher = request.getRequestDispatcher("/groupcontrolled/displaygroup.jsp");
                 dispatcher.forward(request, response);
-
+                
                 break;
+            
+            case "settings":
+                Gruppo gruppo_sett = null;
+                try {
+                    String groupid = request.getParameter("groupid");
+                    
+                    gruppo_sett = manager.getGruppo(Integer.parseInt(groupid));
+                } catch (SQLException e) {
+                    System.err.println("groupCtrl: case displaygroup, errore nel recuperare il gruppo dal db");
+                }
+                
+                request.setAttribute("gruppo", gruppo_sett);
+                
+                dispatcher = request.getRequestDispatcher("/groupcontrolled/settings_group.jsp");
+                dispatcher.forward(request, response);
+                
+                break;
+            
             default:
                 //da decidere cosa fare
                 response.sendRedirect(request.getContextPath());
                 return;
         }
-
+        
     }
 
     /**
@@ -89,13 +107,13 @@ public class groupCtrl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
         String operazione = request.getParameter("op");
         RequestDispatcher dispatcher;
-
+        
         HttpSession session = request.getSession(false);
         Utente user = (Utente) session.getAttribute("user");
-
+        
         switch (operazione) {
             case "creagruppo": //codice per gestire la creazione di un gruppo
             {
@@ -117,7 +135,7 @@ public class groupCtrl extends HttpServlet {
                 } catch (Exception e) {
                     ok_crea_gruppo = false;
                 }
-
+                
                 try {
                     inviti2parse = request.getParameter("areainviti");
                     if (inviti2parse == null) {
@@ -126,7 +144,7 @@ public class groupCtrl extends HttpServlet {
                 } catch (Exception e) {
                     ok_inviti = false;
                 }
-
+                
                 try {
                     String radio = request.getParameter("radios");
                     if (radio.equals("privato")) {
@@ -139,13 +157,13 @@ public class groupCtrl extends HttpServlet {
                 } catch (Exception e) {
                     ok_radio = false;
                 }
-
+                
                 if (ok_crea_gruppo && !"".equals(inviti2parse) && !"".equals(creazione_gruppoNome) && creazione_gruppoNome != null) {
                     try {
                         Utente ownernewgroup = (Utente) ((HttpServletRequest) request).getSession().getAttribute("user");
                         try {
                             manager.creaGruppo(user, creazione_gruppoNome, isPublic);
-
+                            
                             Gruppo gruppo_appena_creato = manager.getGruppo(creazione_gruppoNome);
                             ArrayList<String> username_invitati = MyUtil.parseFromString(inviti2parse);
                             utentiSbagliati = MyUtil.sendinviti(username_invitati, gruppo_appena_creato.getIdgruppo(), manager);
@@ -156,7 +174,7 @@ public class groupCtrl extends HttpServlet {
                             Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, null, ex);
                             System.err.println("Groupctrl: errore nel creare un gruppo " + ex.getMessage());
                         }
-
+                        
                     } catch (Exception e) {
                         System.err.println("Groupctrl: errore! " + e.getMessage());
                     }
@@ -170,7 +188,7 @@ public class groupCtrl extends HttpServlet {
                 dispatcher.forward(request, response);
             }
             break;
-
+            
             case "accettainviti": //codice per gestire gli inviti accettati dall'utente
             {
                 ArrayList<Integer> groupids = new ArrayList<Integer>();
@@ -182,7 +200,7 @@ public class groupCtrl extends HttpServlet {
                         groupids.add(Integer.parseInt(param));
                     }
                 }
-
+                
                 try {
                     Utente utente = (Utente) request.getSession().getAttribute("user");
                     try {
@@ -191,7 +209,7 @@ public class groupCtrl extends HttpServlet {
                         }
                     } catch (SQLException ex) {
                         Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, null, ex);
-
+                        
                     }
                 } catch (Exception e) {
                     System.err.println("errore nel gestire gli inviti");
@@ -201,7 +219,109 @@ public class groupCtrl extends HttpServlet {
                 dispatcher.forward(request, response);
             }
             break;
+            
+            case "modificagruppo": {
+                System.out.println("modificagruppo!!!");
+                //dichiarazione parametri passati dal form modificagruppo
+                int idgruppo = -1;
+                String nuovonome = null;
+                String radio = null;
+                String inviti2parse = null;
+                Gruppo gruppo = null;
 
+                //recupero idgruppo
+                try {
+                    idgruppo = Integer.parseInt(request.getParameter("groupid"));
+                } catch (Exception e) {
+                    System.err.println("groupCtrl: modificagruppo, errore nel recupero dell'id del gruppo da modificare");
+                }
+                //recupero info sul gruppo da modificare
+                try {
+                    gruppo = manager.getGruppo(idgruppo);
+                } catch (SQLException e) {
+                    System.err.println("groupCtrl: modificagruppo, errore nel recupero del gruppo da modificare");
+                }
+
+                //recupero parametro nuovonome e salvataggio nel db
+                boolean ok_nuovonome = true;
+                try {
+                    nuovonome = request.getParameter("modifica_nomegruppo");
+                } catch (Exception e) {
+                    ok_nuovonome = false;
+                }
+                if (ok_nuovonome && nuovonome != null) {
+                    try {
+                        manager.updateGroupName(gruppo.getIdgruppo(), nuovonome);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, null, ex);
+                        System.err.println("groupCtrl: modificagruppo: errore nel cambio nome al gruppo");
+                    }
+                }
+
+                //recupero parametro radio pubblico o privato e conseguenti operazioni su db
+                boolean ok_radio = true;
+                int isPublic = gruppo.getIsPublic();
+                try {
+                    radio = request.getParameter("radios");
+                    if (radio.equals("privato")) {
+                        isPublic = 0;
+                    } else if (radio.equals("pubblico")) {
+                        isPublic = 1;
+                    } else {
+                        ok_radio = false;
+                    }
+                } catch (Exception e) {
+                    ok_radio = false;
+                }
+                
+                if (ok_radio && (gruppo.getIsPublic() != isPublic)) {
+                    //se è stato cambiato il flag allora agisici di conseguenza
+                    System.out.println("grouctrl: modificagruppo sto cambiando le impostazioni del gruppo perchè è stato impostato un nuovo flag");
+                    try {
+                        manager.updateGroupFlag(gruppo.getIdgruppo(), isPublic);
+                    } catch (SQLException e) {
+                        System.err.println("groupCtrl: modificagruppo: errore nel cambio flag al gruppo");
+                    }
+                    //codice per gestire le FAMOSE CONSIDERAZIONI circa il passaggio dei partecipanti da pubblico a privato ecc
+                }
+
+                //gestione degli eventuali inviti, da fare solo se il radios=privato
+                if (isPublic == 0) {
+                    //codice per mandare gli inviti, recupero parametro invitati
+                    boolean ok_inviti = true;
+                    try {
+                        inviti2parse = request.getParameter("areainviti");
+                        if (inviti2parse == null || inviti2parse.equals("")) {
+                            ok_inviti = false;
+                        }
+                    } catch (Exception e) {
+                        ok_inviti = false;
+                        System.err.println("groupCtrl: modificagruppo, errore nel recupero degli invitati");
+                    }
+                    if (ok_inviti) {
+                        try {
+                            ArrayList<String> username_invitati = MyUtil.parseFromString(inviti2parse);
+                            ArrayList<String> utentiSbagliati = new ArrayList<>();
+                            utentiSbagliati = MyUtil.sendinviti(username_invitati, gruppo.getIdgruppo(), manager);
+                            if (!utentiSbagliati.isEmpty()) {
+                                //prepara un messaggio bean degli invitati a cui non si è potuto mandare l'invito
+                            }
+                        } catch (Exception ex) {
+                            Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, null, ex);
+                            System.err.println("Groupctrl: modificagruppo, errore nel mandare nuovi inviti " + ex.getMessage());
+                        }
+                    }
+                    
+                }
+
+                //fine modificagruppo
+//                dispatcher = request.getRequestDispatcher("/groupcontrolled/displaygroup.jsp");
+//                dispatcher.forward(request, response);
+                response.sendRedirect(request.getContextPath());
+            }
+            
+            break;
+            
             default:
                 dispatcher = request.getRequestDispatcher("/errorpage.jsp");
                 dispatcher.forward(request, response);
