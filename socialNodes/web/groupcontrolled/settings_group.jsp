@@ -80,7 +80,7 @@
                 <div class="col-md-12 column">
                     <form class="form-horizontal" method="POST" action="/socialNodes/afterLogged/groupCtrl?op=modificagruppo">
                         <input type="hidden" name="op" value="creagruppo">
-                        <input type="hidden" name="groupid" value="<%out.print(gruppo.getIdgruppo());%>">
+                        <input type="hidden" name="groupid" value="<%=gruppo.getIdgruppo()%>">
                         <fieldset>
 
                             <!-- Form Name -->
@@ -90,7 +90,7 @@
                             <div class="control-group" style="padding: 1em;">
                                 <label class="control-label" for="textinput_nomegruppo">Modifica il nome del tuo gruppo</label>
                                 <div class="controls">
-                                    <input id="textinput_nomegruppo" name="modifica_nomegruppo" type="text" placeholder="groupname" class="input-xlarge">
+                                    <input id="textinput_nomegruppo" name="modifica_nomegruppo" type="text" value="<%=gruppo.getNome()%>" class="input-xlarge">
 
                                 </div>
                             </div>
@@ -109,15 +109,18 @@
                                 <label class="control-label" for="radios">Gruppo pubblico o privato?</label>
                                 <div class="controls">
                                     <label class="radio" for="radios-0">
-                                        <input type="radio" name="radios" id="radios-privato" value="privato" <% if (gruppo.getIsPublic() == 0) {
-                                                out.print("checked=\"checked\"");
-                                            };%>  onclick="javascript:showDiv()">
+                                        <input type="radio" name="radios" id="radios-privato" value="privato" 
+                                               <% if (gruppo.getIsPublic() == 0) {
+                                                       out.print("checked=\"checked\"");
+                                                   };%>  
+                                               onclick="javascript:showDiv()">
                                         Privato
                                     </label>
                                     <label class="radio" for="radios-1">
-                                        <input type="radio" name="radios" id="radios-pubblico" value="pubblico" <% if (gruppo.getIsPublic() == 0) {
-                                                out.print("checked=\"checked\"");
-                                            };%> onclick="javascript:hideDiv()">
+                                        <input type="radio" name="radios" id="radios-pubblico" value="pubblico" 
+                                               <% if (gruppo.getIsPublic() == 1) {
+                                                       out.print("checked=\"checked\"");
+                                                   };%> onclick="javascript:hideDiv()">
                                         Pubblico
                                     </label>
                                 </div>
@@ -129,7 +132,11 @@
                                     <label>Inserisci gli username degli utenti che vuoi invitare separati da una virgola</label>
                                     <div class="input-group">
 
-                                        <input class="form-control" name="areainviti" size="50" type="text" placeholder="ad es: username1,username2">
+                                        <input class="form-control" name="areainviti" size="50" type="text" placeholder="ad es: username1,username2"
+                                               <% if (gruppo.getIsPublic() == 1) {
+                                                       out.print("disabled");
+                                                   };%> 
+                                               >
                                         <span class="input-group-btn">
 
                                         </span></div>

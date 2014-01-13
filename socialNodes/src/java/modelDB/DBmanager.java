@@ -630,6 +630,7 @@ public class DBmanager {
                     group.setData_creazione(tsdate);
                     group.setIdgruppo(rs.getInt("idgruppo"));
                     group.setNomeOwner(getMoreUtente(rs.getInt("idowner")).getUsername());
+                    group.setIsPublic(rs.getInt("pubblico"));
 
                 }
             } finally {

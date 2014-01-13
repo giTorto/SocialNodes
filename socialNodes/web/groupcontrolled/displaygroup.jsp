@@ -93,7 +93,7 @@
             <%
                 if (gruppo.getNomeOwner().equals(user.getUsername())) {
             %>
-            <a href="<% out.print(request.getContextPath()); %>/afterLogged/groupCtrl?op=settings&groupid=<%out.print(gruppo.getIdgruppo());%>" 
+            <a href="<% out.print(request.getContextPath()); %>/afterLogged/groupCtrl?op=settings&groupid=<%=gruppo.getIdgruppo()%>" 
                class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Impostazioni</a>
             <%
             } else {
@@ -106,7 +106,7 @@
             <%
                 if (gruppo.getNomeOwner().equals(user.getUsername())) {
             %>
-            <a href="<% out.print(request.getContextPath()); %>/afterLogged/groupCtrl/generapdf?groupid=<%out.print(gruppo.getIdgruppo());%>"
+            <a href="<% out.print(request.getContextPath()); %>/afterLogged/groupCtrl/generapdf?groupid=<%=gruppo.getIdgruppo()%>"
                class="btn btn-primary btn-large">Genera PDF</a>
             <%
             } else {
