@@ -766,7 +766,7 @@ public class DBmanager {
             stm.close();
         }
     }
-    
+
     public void updateGroupFlag(int idgroup, int isPublic) throws SQLException {
 
         PreparedStatement stm = con.prepareStatement("UPDATE GRUPPO   SET PUBBLICO = ?  WHERE IDGRUPPO = ?");
@@ -782,6 +782,34 @@ public class DBmanager {
         }
     }
 
+    public void updateUserName(int idutente, String new_username) throws SQLException {
+        PreparedStatement stm = con.prepareStatement("UPDATE UTENTE   SET username = ?  WHERE IDUTENTE = ?");
+        try {
+            stm.setString(1, new_username);
+            stm.setInt(2, idutente);
+            int executeUpdate = stm.executeUpdate();
+        } catch (SQLException ex) {
+            System.err.println("Errore nell'aggiornare username per l'utente con id:" + idutente);
+        } finally {
+            stm.close();
+        }
+    }
+
+    public boolean updateUserPassword(int idutente, String new_password) throws SQLException {
+        boolean retval = true;
+        PreparedStatement stm = con.prepareStatement("UPDATE UTENTE   SET password = ?  WHERE IDUTENTE = ?");
+        try {
+            stm.setString(1, new_password);
+            stm.setInt(2, idutente);
+            int executeUpdate = stm.executeUpdate();
+        } catch (SQLException ex) {
+            System.err.println("Errore nell'aggiornare password per l'utente con id:" + idutente);
+            retval=false;
+        } finally {
+            stm.close();
+        }
+        return retval;
+    }
     /*
      Da mettere la getpostgruppo ma va modificata molto...e soprattuto aspetto di vedere
      come gestire gli avatar perchè se ogni post ha bisogno dell'avatar per essere printoutato

@@ -40,6 +40,9 @@
                             <li>
                                 <a href="afterLogged/afterLogin?op=tocreation">Crea gruppo</a>
                             </li>
+                             <li>
+                                <a href="afterLogged/afterLogin?op=topersonalsettings">Impostazioni personali</a>
+                            </li>
                             <li class="divider">
                             <li>
                                 <a href="afterLogged/afterLogin?op=logout">Logout</a>

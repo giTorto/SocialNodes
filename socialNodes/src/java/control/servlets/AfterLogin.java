@@ -7,8 +7,11 @@ package control.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -26,14 +29,15 @@ import modelDB.Utente;
  * @author Giulian
  */
 public class AfterLogin extends HttpServlet {
+
     DBmanager manager;
-    
+
     @Override
     public void init() {
         // inizializza il DBManager dagli attributi di Application
         this.manager = (DBmanager) super.getServletContext().getAttribute("dbmanager");
     }
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -71,26 +75,23 @@ public class AfterLogin extends HttpServlet {
                 Timestamp data_acc = Timestamp.valueOf(request.getParameter("data_acc"));
                 Timestamp last_access = user.getLast_access();
                 Message data_accesso = new Message();
-                if (last_access!=null){
-                    data_accesso.setMessaggio("Benvenuto "+ user.getUsername() + "il tuo ultimo accesso è "+ last_access.toString());
-                }else{
-                    data_accesso.setMessaggio("Benvenuto " + user.getUsername() +" è il tuo primo accesso");
-                }                
+                if (last_access != null) {
+                    data_accesso.setMessaggio("Benvenuto " + user.getUsername() + "il tuo ultimo accesso è " + last_access.toString());
+                } else {
+                    data_accesso.setMessaggio("Benvenuto " + user.getUsername() + " è il tuo primo accesso");
+                }
                 session.setAttribute("data_accesso", data_accesso);
-                manager.setNewdate(data_acc,user.getId());
-                
+                manager.setNewdate(data_acc, user.getId());
+
                 //recupero dal bb e metto tra i request attribute gli oggetti che servono per creare correttamente la pagina main
                 //servono i gruppi dell'utente e le cose del quickdisplay
-                
-                
-                
                 dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
                 dispatcher.forward(request, response);
                 break;
             case "tocreation":
                 dispatcher = request.getRequestDispatcher("/afterLogged/createGruppo.jsp");
                 dispatcher.forward(request, response);
-              
+
                 break;
             case "showinviti":
                 //request.setAttribute("utente", user); dipende se si vuole lavorare su request o session
@@ -100,15 +101,19 @@ public class AfterLogin extends HttpServlet {
                 break;
             case "showgruppi":
                 //request.setAttribute("utente", user); dipende se si vuole lavorare su request o session
-                 //per l'utente ha più senso lavorare in sessione
+                //per l'utente ha più senso lavorare in sessione
                 dispatcher = request.getRequestDispatcher("/afterLogged/showGroups.jsp");
+                dispatcher.forward(request, response);
+                break;
+            case "topersonalsettings":
+                dispatcher = request.getRequestDispatcher("/afterLogged/showPersonalSettings.jsp");
                 dispatcher.forward(request, response);
                 break;
             case "logout":
 
                 session.removeAttribute("user");
                 session.invalidate();
-                Cookie [] cookies=request.getCookies();
+                Cookie[] cookies = request.getCookies();
                 for (Cookie cookie : cookies) {
                     cookie.setMaxAge(0);
                 }
@@ -120,8 +125,6 @@ public class AfterLogin extends HttpServlet {
                 break;
         }
 
-       
-        
     }
 
     /**
@@ -135,7 +138,62 @@ public class AfterLogin extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String operazione = request.getParameter("op");
+        RequestDispatcher dispatcher;
+        boolean ok_session_user = false;
+
+        HttpSession session = request.getSession(false);
+        Utente user = (Utente) session.getAttribute("user");
+        if (user != null) {
+            ok_session_user = true;
+        }
+        /*
+         QUA BISOGNA FARE L'ITERATOR PER PRENDRSI I VARI PARAMETRI
+         */
+        switch (operazione) {
+            case "personalsettings":
+                //processameto dei dati in arrivo dal form di modifica nel quale è possibilie cambiare username, password, avatar
+                String new_username = null;
+                String new_password = null;
+
+                //recupero nuovousername e salvataggio nel db
+                boolean ok_new_username = true;
+                try {
+                    new_username = request.getParameter("new_username");
+                } catch (Exception e) {
+                    ok_new_username = false;
+                }
+                if (ok_session_user && new_username != null && !new_username.equals("") && ok_new_username) {
+                    try {
+                        manager.updateUserName(user.getId(), new_username);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(AfterLogin.class.getName()).log(Level.SEVERE, null, ex);
+                        System.err.println("Afterlogin: personalsettings, errore nell'aggiornare username dell'utente " + user.getUsername());
+                    }
+                }
+
+                //recupero nuovapassword e salvataggio nel db
+                boolean ok_new_password = true;
+                try {
+                    new_password = request.getParameter("new_password");
+                } catch (Exception e) {
+                    ok_new_password = false;
+                }
+                if (ok_session_user && new_password != null && !new_password.equals("") && ok_new_password) {
+                    try {
+                        manager.updateUserPassword(user.getId(), new_password);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(AfterLogin.class.getName()).log(Level.SEVERE, null, ex);
+                        System.err.println("Afterlogin: personalsettings, errore nell'aggiornare password dell'utente " + user.getUsername());
+                    }
+                }
+
+                break;
+
+            default:
+            //fare qlcs
+            }
+
     }
 
     /**
