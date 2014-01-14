@@ -206,7 +206,7 @@ public class FirstCtrl extends HttpServlet {
                         } else {
                             data_accesso.setMessaggio("Benvenuto " + user.getUsername() + " è il tuo primo accesso");
                         }
-                        manager.setNewdate(data_acc, user.getId());
+//                        manager.setNewdate(data_acc, user.getId());
                         session.setAttribute("messaggio_main", data_accesso);
 
                         // request.setAttribute("user",user);

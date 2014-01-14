@@ -23,6 +23,7 @@ public class Utente {
     private Timestamp last_access;
     private String avatar_link;
     private int id;
+    private int isModeratore;
     private DBmanager manager;
 
     public Utente() {
@@ -151,4 +152,12 @@ public class Utente {
 //        return false;
 //        
 //    }
+
+    public int getIsModeratore() {
+        return isModeratore;
+    }
+
+    public void setIsModeratore(int isModeratore) {
+        this.isModeratore = isModeratore;
+    }
 }

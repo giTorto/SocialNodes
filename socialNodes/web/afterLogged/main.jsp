@@ -29,6 +29,18 @@
                 </div>
                 <div class="col-md-6 column">
                     <!--qua possiamo metterci una scritta header da usare in tutte le altre pagine-->
+                    <%
+                        if (user.getIsModeratore()==1) {
+                    %>
+                    <a href="<% out.print(request.getContextPath());%>/afterLogged/afterLogin?op=tomoderatore" 
+                       class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Pannello di controllo per moderatore</a>
+                    <%
+                    } else {
+                    %>
+                    <!--what happens else...-->
+                    <%
+                        }
+                    %>
                 </div>
                 <div class="col-md-4 column">
                     <div class="btn-group">
@@ -40,7 +52,7 @@
                             <li>
                                 <a href="afterLogged/afterLogin?op=tocreation">Crea gruppo</a>
                             </li>
-                             <li>
+                            <li>
                                 <a href="afterLogged/afterLogin?op=topersonalsettings">Impostazioni personali</a>
                             </li>
                             <li class="divider">
@@ -53,122 +65,122 @@
                 </div>
             </div>
         </div>
-            <div class="row clearfix" style="padding-top: 5em">
-                <div class="col-md-8 column">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <p>
-                            <h2>
-                                <jsp:getProperty name="messaggio_main" property="messaggio" />
-                                <% user.getNews();
-                                %>
-                            </h2>
-                            </p>
-                            <div class="page-header">
-                                <h1>
-                                    Notifiche dai gruppi <small></small>
-                                </h1>
-                            </div>
-                            <table class="table" style="background: whitesmoke">
-                                <thead>
-                                    <tr class="panel panel-primary" style="background-color: #006DCC; color: white">
-
-                                        <th>
-                                            Gruppo
-                                        </th>
-                                        <th>
-                                            Notifica
-                                        </th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            1
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                            <div class="page-header">
-                                <h1>
-                                    Nuovi inviti <small></small>
-                                </h1>
-                            </div>
-                            <table class="table" style="background: whitesmoke">
-                                <thead>
-                                    <tr class="panel panel-primary" style="background-color: #006DCC; color: white">
-                                        <th>
-                                            Gruppo
-                                        </th>
-                                        <th>
-                                            Invitato da
-                                        </th>
-                                        <th>
-                                            Accetti?
-                                        </th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!--Qua ci vuole un getinvitirecenti, con foreach per -->
-                                    <tr>
-                                        <td>
-                                            1
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-
-                                    </tr>
-                                </tbody>
-                            </table>
+        <div class="row clearfix" style="padding-top: 5em">
+            <div class="col-md-8 column">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>
+                        <h2>
+                            <jsp:getProperty name="messaggio_main" property="messaggio" />
+                            <% user.getNews();
+                            %>
+                        </h2>
+                        </p>
+                        <div class="page-header">
+                            <h1>
+                                Notifiche dai gruppi <small></small>
+                            </h1>
                         </div>
+                        <table class="table" style="background: whitesmoke">
+                            <thead>
+                                <tr class="panel panel-primary" style="background-color: #006DCC; color: white">
+
+                                    <th>
+                                        Gruppo
+                                    </th>
+                                    <th>
+                                        Notifica
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        1
+                                    </td>
+                                    <td>
+                                        TB - Monthly
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <div class="page-header">
+                            <h1>
+                                Nuovi inviti <small></small>
+                            </h1>
+                        </div>
+                        <table class="table" style="background: whitesmoke">
+                            <thead>
+                                <tr class="panel panel-primary" style="background-color: #006DCC; color: white">
+                                    <th>
+                                        Gruppo
+                                    </th>
+                                    <th>
+                                        Invitato da
+                                    </th>
+                                    <th>
+                                        Accetti?
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--Qua ci vuole un getinvitirecenti, con foreach per -->
+                                <tr>
+                                    <td>
+                                        1
+                                    </td>
+                                    <td>
+                                        TB - Monthly
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="col-md-4 column" style="padding-top: 5em; padding-left: 5em;">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div class="panel panel-primary"> 
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">
-                                        I miei gruppi
-                                    </h3>
-                                </div>
-                                <%
-                                    ArrayList<Gruppo> gruppi_miei = user.getGruppiOwn();
-                                    for (Gruppo gruppo : gruppi_miei) {
-                                        out.println("<div class=\"panel-body\">"
-                                                + "<a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\">" + gruppo.getNome() + "</a>"
-                                                + "</div>");
-                                    }
-                                %>
-
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">
-                                        Gruppi a cui partecipo
-                                    </h3>
-                                </div>
-                                <%
-                                    ArrayList<Gruppo> gruppi_parte = user.getGruppiParte();
-                                    for (Gruppo gruppo : gruppi_parte) {
-                                        out.println("<div class=\"panel-body\">"
-                                                + "<a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\">" + gruppo.getNome() + "</a>"
-                                                + "</div>");
-                                    }
-                                %>
-
+            </div>
+            <div class="col-md-4 column" style="padding-top: 5em; padding-left: 5em;">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="panel panel-primary"> 
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    I miei gruppi
+                                </h3>
                             </div>
+                            <%
+                                ArrayList<Gruppo> gruppi_miei = user.getGruppiOwn();
+                                for (Gruppo gruppo : gruppi_miei) {
+                                    out.println("<div class=\"panel-body\">"
+                                            + "<a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\">" + gruppo.getNome() + "</a>"
+                                            + "</div>");
+                                }
+                            %>
+
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    Gruppi a cui partecipo
+                                </h3>
+                            </div>
+                            <%
+                                ArrayList<Gruppo> gruppi_parte = user.getGruppiParte();
+                                for (Gruppo gruppo : gruppi_parte) {
+                                    out.println("<div class=\"panel-body\">"
+                                            + "<a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\">" + gruppo.getNome() + "</a>"
+                                            + "</div>");
+                                }
+                            %>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-    </body>
+</body>
 </html>

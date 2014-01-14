@@ -3,46 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package control.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modelDB.DBmanager;
+import modelDB.Message;
 
 /**
  *
  * @author Giulian
  */
 public class moderatoreCtrl extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet moderatoreCtrl</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet moderatoreCtrl at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+    
+    private DBmanager manager;
+    
+    @Override
+    public void init() {
+        // inizializza il DBManager dagli attributi di Application
+        this.manager = (DBmanager) super.getServletContext().getAttribute("dbmanager");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -57,7 +41,7 @@ public class moderatoreCtrl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
     }
 
     /**
@@ -71,7 +55,31 @@ public class moderatoreCtrl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String operazione = null;
+        operazione = request.getParameter("op");
+        Message messaggioBean = new Message();
+        messaggioBean.setMessaggio("");
+        messaggioBean.setTipoutente("");
+        messaggioBean.setValue("");
+        RequestDispatcher dispatcher;
+        request.setAttribute("messaggioBean", messaggioBean);
+        
+        if (operazione != null) {
+            switch (operazione) {
+                case "actionmoderatore":
+                    System.out.println("recuperiamo param dal form");
+                    String name = request.getParameter("name");
+                    String email = request.getParameter("email");
+                    System.out.println("ricevuto  " + name);
+                    System.out.println("ricevuto  " + email);
+//                    dispatcher=request.getRequestDispatcher("somepage.jsp");
+//                    dispatcher.forward(request, response);
+                    response.sendRedirect(request.getContextPath());
+                    break;
+            }
+        }
+        
+        
     }
 
     /**

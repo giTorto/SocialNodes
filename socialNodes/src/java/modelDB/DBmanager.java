@@ -121,6 +121,8 @@ public class DBmanager {
                     user.setUsername(rs.getString("username"));
                     user.setLast_access(rs.getTimestamp("data_ultimo_acc"));
                     user.setId(rs.getInt("idutente"));
+                    user.setIsModeratore(rs.getInt("moderatore"));
+                    user.setEmail(rs.getString("email"));
                     return user;
                 } else {
                     return null;
@@ -150,6 +152,8 @@ public class DBmanager {
                     user.setUsername(rs.getString("username"));
                     user.setLast_access(rs.getTimestamp("data_ultimo_acc"));
                     user.setId(rs.getInt("idutente"));
+                    user.setIsModeratore(rs.getInt("moderatore"));
+                    user.setEmail(rs.getString("email"));
                     return user;
                 } else {
                     return null;

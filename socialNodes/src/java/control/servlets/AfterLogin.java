@@ -123,6 +123,10 @@ public class AfterLogin extends HttpServlet {
                 //dispatcher.forward(request, response);
                 response.sendRedirect(request.getContextPath());
                 break;
+            case "tomoderatore":
+                dispatcher = request.getRequestDispatcher("/afterLogged/moderatore.jsp");
+                dispatcher.forward(request, response);
+                break;
         }
 
     }
