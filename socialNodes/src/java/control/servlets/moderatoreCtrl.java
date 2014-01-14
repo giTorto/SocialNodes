@@ -20,9 +20,9 @@ import modelDB.Message;
  * @author Giulian
  */
 public class moderatoreCtrl extends HttpServlet {
-    
+
     private DBmanager manager;
-    
+
     @Override
     public void init() {
         // inizializza il DBManager dagli attributi di Application
@@ -41,7 +41,7 @@ public class moderatoreCtrl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
 
     /**
@@ -63,23 +63,22 @@ public class moderatoreCtrl extends HttpServlet {
         messaggioBean.setValue("");
         RequestDispatcher dispatcher;
         request.setAttribute("messaggioBean", messaggioBean);
-        
+
         if (operazione != null) {
             switch (operazione) {
                 case "actionmoderatore":
                     System.out.println("recuperiamo param dal form");
-                    String name = request.getParameter("name");
-                    String email = request.getParameter("email");
-                    System.out.println("ricevuto  " + name);
-                    System.out.println("ricevuto  " + email);
-//                    dispatcher=request.getRequestDispatcher("somepage.jsp");
-//                    dispatcher.forward(request, response);
-                    response.sendRedirect(request.getContextPath());
+                    String isAttivo = request.getParameter("isAttivo");
+                    String nome_gruppo= request.getParameter("nome_gruppo");
+                    System.out.println("nome gruppo aggiornato:  " + nome_gruppo);
+                    System.out.println("il flag attivo/bloccato deve valere:  " + isAttivo);
+                    dispatcher=request.getRequestDispatcher("/afterLogged/moderatore.jsp");
+                    dispatcher.forward(request, response);
+                   // response.sendRedirect(request.getContextPath());
                     break;
             }
         }
-        
-        
+
     }
 
     /**

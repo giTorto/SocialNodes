@@ -646,6 +646,34 @@ public class DBmanager {
         return group;
     }
 
+    public ArrayList<Gruppo> getAllGruppi() throws SQLException {
+        PreparedStatement stm = con.prepareStatement("select * from UTENTE.GRUPPO");
+        ArrayList<Gruppo> allgruppi = new ArrayList<>();
+        try {
+            ResultSet rs = stm.executeQuery();
+            try {
+                while (rs.next()) {
+                    Gruppo group = new Gruppo();
+                    group.setNome(rs.getString("nome"));
+                    Date date = rs.getDate("data_creazione");
+                    long timestamp = date.getTime();
+                    Timestamp tsdate = new Timestamp(timestamp);
+                    group.setData_creazione(tsdate);
+                    group.setIdgruppo(rs.getInt("idgruppo"));
+                    group.setNomeOwner(getMoreUtente(rs.getInt("idowner")).getUsername());
+                    group.setIsPublic(rs.getInt("pubblico"));
+                    allgruppi.add(group);
+                }
+            } finally {
+                rs.close();
+            }
+        } finally {
+            stm.close();
+        }
+
+        return allgruppi;
+    }
+
     public Gruppo getGruppo(String nome) throws SQLException {
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
         PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppo g where g.nome=?");
@@ -808,7 +836,7 @@ public class DBmanager {
             int executeUpdate = stm.executeUpdate();
         } catch (SQLException ex) {
             System.err.println("Errore nell'aggiornare password per l'utente con id:" + idutente);
-            retval=false;
+            retval = false;
         } finally {
             stm.close();
         }

@@ -68,6 +68,17 @@ public class Utente {
         this.id = id;
     }
 
+    public ArrayList<Gruppo> getAllGruppi() {
+        ArrayList<Gruppo> all = new ArrayList<>();
+        try {
+            all = getManager().getAllGruppi();
+        } catch (SQLException ex) {
+            Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return all;
+    }
+
     public ArrayList<Gruppo> getInviti() {
         ArrayList<Gruppo> all = new ArrayList<>();
         try {
@@ -142,7 +153,7 @@ public class Utente {
     public void setManager(DBmanager manager) {
         this.manager = manager;
     }
-    
+
 //    public boolean owngruppo(Utente u, int idgruppo) {
 //        try {
 //            return manager.checkUtenteOwnGruppo(this, idgruppo);
@@ -152,7 +163,6 @@ public class Utente {
 //        return false;
 //        
 //    }
-
     public int getIsModeratore() {
         return isModeratore;
     }
