@@ -99,6 +99,10 @@ public class AfterLogin extends HttpServlet {
                 dispatcher = request.getRequestDispatcher("/afterLogged/showInviti.jsp");
                 dispatcher.forward(request, response);
                 break;
+            case "showgroups":
+                dispatcher = request.getRequestDispatcher("/afterLogged/showGroups.jsp");
+                dispatcher.forward(request, response);
+                break;
             case "showgruppi":
                 //request.setAttribute("utente", user); dipende se si vuole lavorare su request o session
                 //per l'utente ha più senso lavorare in sessione

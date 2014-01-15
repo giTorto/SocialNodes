@@ -386,7 +386,7 @@ public class DBmanager {
 
         ArrayList<Gruppo> gruppi = new ArrayList<>();
 
-        PreparedStatement stm = con.prepareStatement("SELECT NOME,DATA_CREAZIONE,IDGRUPPO "
+        PreparedStatement stm = con.prepareStatement("SELECT * "
                 + "FROM gruppo g, utente u where u.idutente = g.idowner and u.idutente =? ");
 
         try {
