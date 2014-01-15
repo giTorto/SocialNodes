@@ -254,6 +254,7 @@ public class DBmanager {
                     p.setIdgruppo(rs.getInt("idgruppo"));
                     p.setIdOwner(rs.getInt("idowner"));
                     p.setIsPublic(rs.getInt("pubblico"));
+                    p.setIsAttivo(rs.getInt("attivo"));
                     gruppi.add(p);
                 }
             } finally {
@@ -329,11 +330,12 @@ public class DBmanager {
 
                 while (rs.next()) {
                     Gruppo p = new Gruppo();
-
                     p.setNome(rs.getString("nome"));
                     p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
-                    p.setNomeOwner((this.getMoreUtente(id)).getUsername());
+                    p.setIdOwner(rs.getInt("idowner"));
+                    p.setIsPublic(rs.getInt("pubblico"));
+                    p.setIsAttivo(rs.getInt("attivo"));
                     gruppi.add(p);
                 }
             } finally {
@@ -398,6 +400,9 @@ public class DBmanager {
                     p.setNome(rs.getString("nome"));
                     p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
+                    p.setIdOwner(rs.getInt("idowner"));
+                    p.setIsPublic(rs.getInt("pubblico"));
+                    p.setIsAttivo(rs.getInt("attivo"));
                     p.setNomeOwner((this.getMoreUtente(id)).getUsername());
                     gruppi.add(p);
                 }
@@ -507,11 +512,12 @@ public class DBmanager {
         int idutente = u.getId();
         Date data = new Date(Calendar.getInstance().getTimeInMillis());
         PreparedStatement stm
-                = con.prepareStatement("INSERT INTO gruppo (nome,data_creazione,idowner,pubblico) values(?,?,?,?) ");
+                = con.prepareStatement("INSERT INTO gruppo (nome,data_creazione,idowner,pubblico,attivo) values(?,?,?,?,?) ");
         try {
             stm.setString(1, nome);
             stm.setDate(2, data);
             stm.setInt(3, idutente);
+            stm.setInt(5, 1);
             if (isPublic) {
                 stm.setInt(4, 1);
             } else {
@@ -635,6 +641,7 @@ public class DBmanager {
                     group.setIdgruppo(rs.getInt("idgruppo"));
                     group.setNomeOwner(getMoreUtente(rs.getInt("idowner")).getUsername());
                     group.setIsPublic(rs.getInt("pubblico"));
+                    group.setIsAttivo(rs.getInt("attivo"));
 
                 }
             } finally {
@@ -662,6 +669,7 @@ public class DBmanager {
                     group.setIdgruppo(rs.getInt("idgruppo"));
                     group.setNomeOwner(getMoreUtente(rs.getInt("idowner")).getUsername());
                     group.setIsPublic(rs.getInt("pubblico"));
+                    group.setIsAttivo(rs.getInt("attivo"));
                     allgruppi.add(group);
                 }
             } finally {
@@ -690,6 +698,7 @@ public class DBmanager {
                     group.setData_creazione(tsdate);
                     group.setIdgruppo(rs.getInt("idgruppo"));
                     group.setNomeOwner(getMoreUtente(rs.getInt("idowner")).getUsername());
+                    group.setIsAttivo(rs.getInt("attivo"));
                     gruppi.add(group);
                 }
             } finally {

@@ -21,11 +21,20 @@ import java.util.logging.Logger;
  */
 public class Gruppo {
 
+    public static DBmanager getManager() {
+        return manager;
+    }
+
+    public static void setManager(DBmanager aManager) {
+        manager = aManager;
+    }
+
     private int idOwner;
     private String nomeOwner;
     private String nome;
     private Timestamp data_creazione;
     private int isPublic;
+    private int isAttivo;
     private int idgruppo;
     static private DBmanager manager;
 
@@ -137,6 +146,14 @@ public class Gruppo {
      */
     public void setNomeOwner(String nomeOwner) {
         this.nomeOwner = nomeOwner;
+    }
+
+    public int getIsAttivo() {
+        return isAttivo;
+    }
+
+    public void setIsAttivo(int isAttivo) {
+        this.isAttivo = isAttivo;
     }
 
 }
