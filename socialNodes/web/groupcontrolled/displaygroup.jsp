@@ -18,77 +18,12 @@
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
-        <style>
-            html,body{
-                height:100%;
-                overflow:hidden;
-            }
-            h1{
-                -webkit-margin-before: 0;
-                -webkit-margin-after: 0;
-                margin-top:20px;
-                margin-bottom:5px;
-            }
-
-            div.msgBox{
-                width:80%;
-                background:#eee;
-                height:10%;
-                margin:1% 10% 0 10%;
-            }
-            div.msgBox textarea{
-                resize:none;
-                display:inline;
-                height:100%;
-                width:88%;
-            }
-            div.message{
-                width:98%;
-                background:#888;
-                margin:1% 1% 1% 1%;
-                color: #fff;
-
-            }
-
-            div.msg1{
-                background-color: #39b3d7;
-                border-color: #269abc;
-            }
-
-            div.msg2{
-                background-color: #5cb85c;
-                border-color: #4cae4c;
-            }	
-            div.forumWrapper{
-                overflow:hidden;
-                background:rgba(0,0,0,0.20);
-                width:80%;
-                margin:0 10% 0 10%;
-                height:75%;
-                overflow-y:scroll;
-            }
-            div.said{
-                text-align:right;
-                background:rgba(0,0,0,0.05);
-                font-weight:bold
-            }
-            div.send{
-                position:relative;
-                float:right;
-                top:25%;
-                width:10%;
-                height:100%;
-                vertical-align:middle
-            }	
-            span.glyphicon{
-                margin-right: 3px;
-                margin-left: 2px;
-            }
-        </style>
+        <link href="../stile.css/displaygroup.css" rel="stylesheet" type="text/css">
+      
     </head>
 
     <body>
-        <div style="left:74%;position:absolute;top:1%;" >
+        <div style="left:74%;position:absolute;top:1%;" ><!---- allora questo if bruttissimo va eliminato -->
 
             <%
                 if (gruppo.getNomeOwner().equals(user.getUsername())) {

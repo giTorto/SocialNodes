@@ -34,11 +34,11 @@
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="afterLogged/afterLogin?op=showgroups" class="btn btn-default">I miei gruppi <span class="glyphicon glyphicon-th"></span></a></li>
-                        <li><a href="afterLogged/afterLogin?op=tocreation" class="btn btn-default">Crea gruppo <span class="glyphicon glyphicon-plus"></span></a></li>
-                        <li><a href="afterLogged/afterLogin?op=showinviti" class="btn btn-default">Inviti <span class="glyphicon glyphicon-user"></span></a></li>
-                        <li><a href="afterLogged/afterLogin?op=topersonalsettings" class="btn btn-default">Impostazioni personali <span class="glyphicon glyphicon-cog"></span></a></li>
-                                <%
+                          <li><a href="/socialNodes/afterLogged/afterLogin?op=showgroups" class="btn btn-default">I miei gruppi <span class="glyphicon glyphicon-th"></span></a></li>
+                        <li><a href="/socialNodes/afterLogged/afterLogin?op=tocreation" class="btn btn-default">Crea gruppo <span class="glyphicon glyphicon-plus"></span></a></li>
+                        <li><a href="/socialNodes/afterLogged/afterLogin?op=showinviti" class="btn btn-default">Inviti <span class="glyphicon glyphicon-user"></span></a></li>
+                        <li><a href="/socialNodes/afterLogged/afterLogin?op=topersonalsettings" class="btn btn-default">Impostazioni personali <span class="glyphicon glyphicon-cog"></span></a></li>
+                        <%
                                     if (user.getIsModeratore() == 1) {
                                 %>
                         <li><a href="<% out.print(request.getContextPath());%>/afterLogged/afterLogin?op=tomoderatore" 
@@ -89,6 +89,7 @@
                                         }
                                     %>
 
+                                    <!--- manca una parte per i gruppi pubblici -->
                                 </div>
                             </div>
                         </div>

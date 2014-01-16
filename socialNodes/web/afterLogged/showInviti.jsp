@@ -20,7 +20,7 @@
         <div class="container" style="padding: 2em; padding-bottom: 4em;" >
             <div class="row clearfix">
                 <div class="col-md-2 column">
-                    <button type="button" class="btn btn-primary">Indietro</button>
+                    <button type="button" class="btn btn-primary" onclick="location.href='main.jsp'">Indietro</button>
                 </div>
                 <div class="col-md-6 column">
                     <!--qua possiamo metterci una scritta header da usare in tutte le altre pagine-->
