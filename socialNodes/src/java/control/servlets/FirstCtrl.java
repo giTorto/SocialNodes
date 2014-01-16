@@ -202,13 +202,13 @@ public class FirstCtrl extends HttpServlet {
 
                         Message data_accesso = new Message();
                         if (last_access != null) {
-                            data_accesso.setMessaggio("Benvenuto " + user.getUsername() + "il tuo ultimo accesso è " + last_access.toString());
+                            data_accesso.setMessaggio("Benvenuto " + user.getUsername() + " il tuo ultimo accesso è stato il " + last_access.toString());
                         } else {
                             data_accesso.setMessaggio("Benvenuto " + user.getUsername() + " è il tuo primo accesso");
                         }
-//                        manager.setNewdate(data_acc, user.getId());
+//                       
                         session.setAttribute("messaggio_main", data_accesso);
-
+                        manager.setNewdate(data_acc, user.getId());
                         // request.setAttribute("user",user);
                         dispatcher.forward(request, response);
 

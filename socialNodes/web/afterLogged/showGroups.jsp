@@ -57,8 +57,8 @@
             </div>
             <div class="row clearfix">
                 <div class="col-md-12 column">
-                    <div class="col-md-4 column" style="padding-top: 5em; padding-left: 5em;">
-                        <div class="panel panel-default">
+                    <!-- <div class="col-md-4 column" style="padding-top: 5em; padding-left: 5em;">-->
+                       <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="panel panel-primary"> 
                                     <div class="panel-heading">
@@ -67,17 +67,23 @@
                                         </h3>
                                     </div>
                                     
-                                    <table>
+                                    <table class="table">
                                         <thead>
+                                            
                                             <th>
                                                 Nome gruppo
                                             </th>
+           
                                             <th>
+                                               
+                                            </th>
+                                             <th>
                                                 Genera PDF
                                             </th>
                                             <th>
                                                 Modifica
                                             </th>
+                                            
                                         </thead>
                                         <tbody>
                                             <tr>
@@ -87,9 +93,10 @@
                                             ArrayList<Gruppo> gruppi_mio = user.getGruppiOwn();
                                                 for (Gruppo gruppo : gruppi_mio) {
                                             out.println("<tr>"
-                                                    + "<td> <a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\">" + gruppo.getNome() + "</a> </td>" 
+                                                    + "<td>" + gruppo.getNome() + "</td>" 
+                                                    + "<td> <a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\"> Vai al gruppo</a> </td>" 
                                                     + "<td> <a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl/generapdf?groupid=" + gruppo.getIdgruppo()+ "\">Pdf </a> </td>"
-                                                    + "<td> <a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl?op=settings&groupid=" + gruppo.getIdgruppo()+ "\">Modifica Impostazioni </a> </td>"
+                                                    + "<td> <a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl?op=settings&groupid=" + gruppo.getIdgruppo()+ "\"> Impostazioni </a> </td>"
                                                     + "</tr>");
                                             }
                                         %>
@@ -101,17 +108,67 @@
                                             Gruppi a cui partecipo
                                         </h3>
                                     </div>
-                                    <%
+                                        
+                                        <table class="table">
+                                            <thead>
+                                            <th>
+                                                Nome
+                                            </th>
+                                            <th>
+                                             
+                                            </th>
+                                        
+                                            </thead>
+                                     <%
                                         ArrayList<Gruppo> gruppi_parte = user.getGruppiParte();
                                         for (Gruppo gruppo : gruppi_parte) {
-                                            out.println("<div class=\"panel-body\">"
-                                                    + "<a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\">" + gruppo.getNome() + "</a>"
-                                                    + "</div>");
+                                            out.println("<tr >"
+                                                    + "<td>" +gruppo.getNome() +"</td>"
+                                                    + "<td><a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\">vai al gruppo</a> </td>"
+                                                    + "</tr>");
                                         }
                                     %>
+                                        </table>
+                                    
 
+                                     <div class="panel-heading">
+                                        <h3 class="panel-title">
+                                            Gruppi pubblici
+                                        </h3>
+                                    </div
+                                     <div class="panel-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+
+                                        <th>
+                                            Nome Gruppo
+                                        </th>
+                                        <th>
+                                          
+                                        </th>
+                                        <th>
+                                            # di post
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%  ArrayList<Gruppo> g = new ArrayList<Gruppo>();
+                                        g = (new Gruppo()).listaGruppiPubblici();
+                                        for (Gruppo gruppo : g) {
+                                            out.println("<tr>"
+                                                    + "<td> " + gruppo.getNome() +"</td>"
+                                                    + "<td>" + "<a href=\"" + request.getContextPath()
+                                                    + "/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\"> vai al gruppo </a>" + "</td>"
+                                                    + "<td>" + gruppo.getNumPost() + "</td></tr>");
+                                        }
+                                    %>
+                                </tbody>
+                            </table>
+                        </div>
+                                    
                                     <!--- manca una parte per i gruppi pubblici -->
-                                </div>
+                                <!--</div>-->
                             </div>
                         </div>
                     </div>

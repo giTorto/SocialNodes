@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -422,6 +423,8 @@ public class DBmanager {
         PreparedStatement stm;
         try {
             stm = con.prepareStatement("Update utente set data_ultimo_acc=? where idutente=? ");
+            stm.setTimestamp(1, data_acc);
+            stm.setInt(2, idutente);
             stm.executeUpdate();
 
         } catch (SQLException ex) {

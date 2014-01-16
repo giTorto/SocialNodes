@@ -43,17 +43,20 @@
                 <div class="panel message msg1"><div class="said ">Tizio ha scritto:</div>Come va?</div>
             </div></div>
         <div class="msgBox panel">
+            <form action="groupCtrl" method ="post"  enctype="multipart/form-data">
             <textarea class="form-control" id="msg" ></textarea>
             <div class="send" >
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default" id="submit"><span class="glyphicon glyphicon-arrow-up"> </span>Send</button>
+                    <input type="button" class="btn btn-default" name="submit" type="submit" value="send">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><span class="glyphicon glyphicon-picture"> </span>Aggiungi un'immagine</li>
+                        <li><input  type="file" name="file"> </li>
+                        
                     </ul>
                 </div>
+            </form>
             </div>
         </div>
 
