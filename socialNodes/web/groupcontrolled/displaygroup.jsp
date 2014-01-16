@@ -25,31 +25,6 @@
     <body>
         <div style="left:74%;position:absolute;top:1%;" ><!---- allora questo if bruttissimo va eliminato -->
 
-            <%
-                if (gruppo.getNomeOwner().equals(user.getUsername())) {
-            %>
-            <a href="<% out.print(request.getContextPath()); %>/afterLogged/groupCtrl?op=settings&groupid=<%=gruppo.getIdgruppo()%>" 
-               class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Impostazioni</a>
-            <%
-            } else {
-            %>
-            <!--what happens else...-->
-            <%
-                }
-            %>
-
-            <%
-                if (gruppo.getNomeOwner().equals(user.getUsername())) {
-            %>
-            <a href="<% out.print(request.getContextPath()); %>/afterLogged/groupCtrl/generapdf?groupid=<%=gruppo.getIdgruppo()%>"
-               class="btn btn-primary btn-large">Genera PDF</a>
-            <%
-            } else {
-            %>
-            <P>Goodbye, world
-                <%
-                    }
-                %>
 
 
                 <a href="#" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-left"></span> Indietro</a>
@@ -59,7 +34,7 @@
 
         <div style="text-align:center" >
             <h1>
-                Forum <small> <%out.print(gruppo.getNome());%></small>
+                Forum <small> <jsp:getProperty name="gruppo" property="nome" /> </small>
             </h1>
         </div>
         <div class="forumWrapper panel">

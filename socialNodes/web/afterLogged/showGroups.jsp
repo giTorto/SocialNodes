@@ -66,15 +66,36 @@
                                             I miei gruppi
                                         </h3>
                                     </div>
-                                    <%
-                                        ArrayList<Gruppo> gruppi_miei = user.getGruppiOwn();
-                                        for (Gruppo gruppo : gruppi_miei) {
-                                            out.println("<div class=\"panel-body\">"
-                                                    + "<a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\">" + gruppo.getNome() + "</a>"
-                                                    + "</div>");
-                                        }
-                                    %>
-
+                                    
+                                    <table>
+                                        <thead>
+                                            <th>
+                                                Nome gruppo
+                                            </th>
+                                            <th>
+                                                Genera PDF
+                                            </th>
+                                            <th>
+                                                Modifica
+                                            </th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                
+                                            </tr>
+                                             <%
+                                            ArrayList<Gruppo> gruppi_mio = user.getGruppiOwn();
+                                                for (Gruppo gruppo : gruppi_mio) {
+                                            out.println("<tr>"
+                                                    + "<td> <a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\">" + gruppo.getNome() + "</a> </td>" 
+                                                    + "<td> <a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl/generapdf?groupid=" + gruppo.getIdgruppo()+ "\">Pdf </a> </td>"
+                                                    + "<td> <a href=\"" + request.getContextPath() + "/afterLogged/groupCtrl?op=settings&groupid=" + gruppo.getIdgruppo()+ "\">Modifica Impostazioni </a> </td>"
+                                                    + "</tr>");
+                                            }
+                                        %>
+                                        </tbody>
+                                    </table>
+                                 
                                     <div class="panel-heading">
                                         <h3 class="panel-title">
                                             Gruppi a cui partecipo

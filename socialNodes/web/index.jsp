@@ -8,7 +8,7 @@
 <%@page import="modelDB.Gruppo" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:useBean id="messaggioBean" class="modelDB.Message" scope="request"/>
-<% ArrayList<Gruppo> g = new ArrayList<>();
+<% ArrayList<Gruppo> g = new ArrayList<Gruppo>();
     g = (new Gruppo()).listaGruppiPubblici(); %>
 <% Gruppo gru = null;
     int i = 0;%>
