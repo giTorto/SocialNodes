@@ -44,7 +44,7 @@
                         <li><a href="<% out.print(request.getContextPath());%>/afterLogged/afterLogin?op=tomoderatore" 
                                class="btn btn-default">Pannello di controllo per moderatore <span class="glyphicon glyphicon-pencil"></span></a></li>
                                 <%}%>
-                        <li><a href="afterLogged/afterLogin?op=logout" class="btn btn-default">Logout <span class="glyphicon glyphicon-log-out"></span></a></li>
+                        <li><a href="/socialNodes/afterLogged/afterLogin?op=logout" class="btn btn-default">Logout <span class="glyphicon glyphicon-log-out"></span></a></li>
                     </ul>
                 </div>
             </div>
