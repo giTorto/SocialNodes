@@ -7,10 +7,12 @@
 package ascoltatore;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import modelDB.DBmanager;
+import modelDB.Gruppo;
 
 /**
  * Web application lifecycle listener.
@@ -26,7 +28,9 @@ public class WebAppContextListener implements ServletContextListener {
         try {
             DBmanager manager = new DBmanager(dburl);
             sce.getServletContext().setAttribute("dbmanager", manager);//pubblico l'attributo per il context
-
+            ArrayList<Gruppo> g = new ArrayList<>();
+            g = (new Gruppo()).listaGruppiPubblici();
+            sce.getServletContext().setAttribute("public_groups", g);
         } catch (SQLException ex) {
             Logger.getLogger(getClass().getName()).severe(ex.toString());
             throw new RuntimeException(ex);

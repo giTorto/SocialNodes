@@ -46,7 +46,7 @@
                                
                         <c:set var="ismodera" scope="session" value="<%= user.getIsModeratore() %>" />
                                 <c:if test="${ismodera == 1}">
-                                        <li><a href="<% out.print(request.getContextPath());%>/afterLogged/afterLogin?op=tomoderatore" 
+                                        <li><a href="socialNodes/afterLogged/afterLogin?op=tomoderatore" 
                                class="btn btn-default">Pannello di controllo per moderatore <span class="glyphicon glyphicon-pencil"></span></a></li>
                                 </c:if>  
                         <li><a href="/socialNodes/afterLogged/afterLogin?op=logout" class="btn btn-default">Logout <span class="glyphicon glyphicon-log-out"></span></a></li>

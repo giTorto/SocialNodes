@@ -3,6 +3,7 @@
     Created on : 5-gen-2014, 10.37.13
     Author     : Giulian
 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="modelDB.Gruppo"%>
 <%@page import="java.util.ArrayList"%>
 <jsp:useBean id="user" type="modelDB.Utente" scope="session" />
@@ -80,25 +81,25 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <%
-                                                ArrayList<Gruppo> gruppi_invitato = user.getInviti();
-                                                for (Gruppo gruppo : gruppi_invitato) {
-                                                    out.println("<tr>"
-                                                            + "<td>"
-                                                            + gruppo.getNomeOwner()
-                                                            + "</td>"
-                                                            + "<td>"
-                                                            + gruppo.getNome()
-                                                            + "</td>"
-                                                            + "<td>"
-                                                            + gruppo.getData_creazione().toString()
-                                                            + "</td>"
-                                                            + "<td>"
-                                                            + " <input name=\"" + gruppo.getIdgruppo() + "\""
-                                                            + "        type=\"checkbox\" value=\"Accetto\" checked=\"checked\"/>"
-                                                            + "</td>");
-                                                }
-                                            %>                                                                                 
+                                                <c:forEach items="${gruppi}" var="gruppi">
+                                                    <tr>
+                                                        <td>
+                                                            <c:out value="${gruppi.nomeOwner}"/>
+                                                        </td>
+                                                        <td>
+                                                            <c:out value="${gruppi.nome}"/>
+                                                        </td>
+                                                        <td>
+                                                            <c:out value="${gruppi.data_creazione}"/>
+                                                        </td>
+                                                        <td>
+                                                            <input name="<c:out value="${gruppi.idgruppo}"/>" type="checkbox" value="Accetto" checked="checked" />
+                                                        </td>    
+                                                    </tr>
+                                                    
+                                                </c:forEach>
+      
+                                                                                                                          
                                         </tbody>
                                     </table> 
                                 </div>

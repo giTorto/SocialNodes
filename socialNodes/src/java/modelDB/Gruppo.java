@@ -112,7 +112,7 @@ public class Gruppo {
         this.idgruppo = idgruppo;
     }
 
-    static public ArrayList<Gruppo> listaGruppiPubblici() {
+    public ArrayList<Gruppo> listaGruppiPubblici() {
         ArrayList<Gruppo> all = new ArrayList<>();
         try {
             all = manager.getGruppiPubblici();

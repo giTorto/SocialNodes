@@ -3,6 +3,7 @@
     Created on : 3-gen-2014, 17.07.34
     Author     : Giulian
 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="modelDB.Utente"%>
 <%@page import="modelDB.Gruppo"%>
 <%@page import="java.util.ArrayList"%>
@@ -89,7 +90,8 @@
                                             <tr>
                                                 
                                             </tr>
-                                             <%
+                   
+                                            <%
                                             ArrayList<Gruppo> gruppi_mio = user.getGruppiOwn();
                                                 for (Gruppo gruppo : gruppi_mio) {
                                             out.println("<tr>"

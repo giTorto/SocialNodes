@@ -4,14 +4,13 @@
     Created on : 3-gen-2014, 11.14.14
     Author     : Giulian
 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="java.util.ArrayList"%>
 <%@page import="modelDB.Gruppo" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:useBean id="messaggioBean" class="modelDB.Message" scope="request"/>
-<% ArrayList<Gruppo> g = new ArrayList<Gruppo>();
-    g = (new Gruppo()).listaGruppiPubblici(); %>
-<% Gruppo gru = null;
-    int i = 0;%>
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -40,12 +39,8 @@
                         <p>
                             Per scambiare idee sugli argomenti trattati a lezione e condividere le soluzioni degli esercizi più difficili!
                         </p>
-                        <%
-                            String messaggio = messaggioBean.getMessaggio();
-                        %>
-                        <%if (messaggio != null) {
-                                out.println("Attenzione: " + messaggio);
-                            }%>
+                        
+                        <jsp:getProperty name="messaggioBean" property="messaggio" />
                         <p>
 
                         </p>
@@ -67,7 +62,7 @@
                             <div class="form-group">
                                 <label for="exampleInputPassword1">Password</label><input name="password" type="password" class="form-control" id="exampleInputPassword1" />
                             </div>
-                            <a href="<%=request.getServletContext().getContextPath()%>/FirstCtrl?op=gotorecoverpassword">Dimenticato la password?</a>
+                            <a href="/socialNodes/FirstCtrl?op=gotorecoverpassword">Dimenticato la password?</a>
                             <button   type="submit" class="btn btn-primary">Log in</button>                                                                     
                         </form>
                     </div>
@@ -99,13 +94,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <%
-                                        for (Gruppo gruppo : g) {
-                                            out.println("<tr><td>" + "<a href=\"" + request.getContextPath()
-                                                    + "/afterLogged/groupCtrl?op=displaygroup&groupid=" + gruppo.getIdgruppo() + "\">" + gruppo.getNome() + "</a>" + "</td>"
-                                                    + "<td>" + gruppo.getNumPost() + "</td></tr>");
-                                        }
-                                    %>
+                                    <c:forEach items="${public_groups}" var="gruppi">
+                                        <tr>
+                                            <td>
+                                                <a href="/socialNodes/afterLogged/groupCtrl?op=displaygroup&groupid=<c:out value="${gruppi.idgruppo}" />&ut=public"> <c:out value="${gruppi.nome}"/> </a>
+                                            </td>
+                                            <td>
+                                                <c:out value="${gruppi.numPost}" />
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
                                 </tbody>
                             </table>
                         </div>

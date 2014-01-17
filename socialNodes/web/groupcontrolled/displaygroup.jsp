@@ -3,7 +3,7 @@
     Created on : 9-gen-2014, 13.07.48
     Author     : Lorenzo
 --%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="modelDB.Utente"%>
 <%@page import="modelDB.Gruppo"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

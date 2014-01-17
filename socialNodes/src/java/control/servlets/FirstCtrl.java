@@ -85,7 +85,7 @@ public class FirstCtrl extends HttpServlet {
                 default:
                     //qua visto che il bean è nella request e poi però bisogna fare per forza il redirect per riscrivere l'url, il bean vien perso
                     //bisogna inventarsi qlcs per scrivere il messaggio, tipo bean con scope application
-                    messaggioBean.setMessaggio("Utilizza gli elementi disposti in questa pagina per compiere le operazioni che desideri");
+                    messaggioBean.setMessaggio("Attenzione: Utilizza gli elementi disposti in questa pagina per compiere le operazioni che desideri");
                     response.sendRedirect(request.getContextPath());
                     return;
 
@@ -179,7 +179,7 @@ public class FirstCtrl extends HttpServlet {
                         //l'utente non esiste response.sendRedirect(request.getContextPath() + "/logIn.jsp");
 
                         dispatcher = request.getRequestDispatcher("/index.jsp");
-                        messaggioBean.setMessaggio("L'e-mail o la password inserita non e' corretta");
+                        messaggioBean.setMessaggio("Attenzione: L'e-mail o la password inserita non e' corretta");
                         //request.setAttribute("messaggioBean", messaggioBean);
                         //dispatcher.forward(request, response);
                         response.sendRedirect(request.getContextPath());
@@ -264,7 +264,7 @@ public class FirstCtrl extends HttpServlet {
                                             //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
                                             output.close();
                                             dispatcher = request.getRequestDispatcher("/createAccount.jsp");
-                                            messaggioBean.setMessaggio("Per l'avatar è necessario scegliere un immagine");
+                                            messaggioBean.setMessaggio("Attenzione Per l'avatar è necessario scegliere un immagine");
                                             request.setAttribute("messaggioBean", messaggioBean);
                                             dispatcher.forward(request, response);
                                         } else {
@@ -288,7 +288,7 @@ public class FirstCtrl extends HttpServlet {
                                             //che username è già nel sistema
                                             //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
                                             dispatcher = request.getRequestDispatcher("/createAccount.jsp");
-                                            messaggioBean.setMessaggio("Username già in uso");
+                                            messaggioBean.setMessaggio("Attenzione Username già in uso");
                                             request.setAttribute("messaggioBean", messaggioBean);
                                             dispatcher.forward(request, response);
                                         }
@@ -300,7 +300,7 @@ public class FirstCtrl extends HttpServlet {
                                             //che email è già nel sistema
                                             //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
                                             dispatcher = request.getRequestDispatcher("/createAccount.jsp");
-                                            messaggioBean.setMessaggio("email già in uso");
+                                            messaggioBean.setMessaggio("Attenzione email già in uso");
                                             request.setAttribute("messaggioBean", messaggioBean);
                                             dispatcher.forward(request, response);
                                         }
@@ -309,7 +309,7 @@ public class FirstCtrl extends HttpServlet {
                                         password = Streams.asString(item.openStream());
                                         if (password == null || password.equals("")) {
                                             dispatcher = request.getRequestDispatcher("/createAccount.jsp");
-                                            messaggioBean.setMessaggio("Scegliere una password");
+                                            messaggioBean.setMessaggio("Attenzione Scegliere una password");
                                             request.setAttribute("messaggioBean", messaggioBean);
                                             dispatcher.forward(request, response);
                                         }
