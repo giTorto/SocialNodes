@@ -7,13 +7,17 @@ package control.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import modelDB.DBmanager;
+import modelDB.Gruppo;
 import modelDB.Message;
+import modelDB.Utente;
 
 /**
  *
@@ -55,6 +59,10 @@ public class moderatoreCtrl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+         HttpSession session = request.getSession(false);
+        Utente user = (Utente) session.getAttribute("user");
+        
         String operazione = null;
         operazione = request.getParameter("op");
         Message messaggioBean = new Message();
@@ -72,6 +80,10 @@ public class moderatoreCtrl extends HttpServlet {
                     String nome_gruppo= request.getParameter("nome_gruppo");
                     System.out.println("nome gruppo aggiornato:  " + nome_gruppo);
                     System.out.println("il flag attivo/bloccato deve valere:  " + isAttivo);
+                    
+                    ArrayList<Gruppo> allGruppi = user.getAllGruppi();
+                    
+                    request.setAttribute("allgruppi", allGruppi);
                     dispatcher=request.getRequestDispatcher("/afterLogged/moderatore.jsp");
                     dispatcher.forward(request, response);
                    // response.sendRedirect(request.getContextPath());

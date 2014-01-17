@@ -102,6 +102,13 @@ public class AfterLogin extends HttpServlet {
                 dispatcher.forward(request, response);
                 break;
             case "showgroups":
+                ArrayList<Gruppo> g = new ArrayList<Gruppo>();
+                ArrayList<Gruppo> gruppi_parte = user.getGruppiParte();
+                ArrayList<Gruppo> gruppi_mio = user.getGruppiOwn();
+                g = (new Gruppo()).listaGruppiPubblici();
+                request.setAttribute("gruppi_pubblici",g);
+                request.setAttribute("gruppi_miei", gruppi_mio);
+                request.setAttribute("gruppi_parte", gruppi_parte);
                 dispatcher = request.getRequestDispatcher("/afterLogged/showGroups.jsp");
                 dispatcher.forward(request, response);
                 break;

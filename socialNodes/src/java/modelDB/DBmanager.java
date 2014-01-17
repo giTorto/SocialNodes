@@ -255,6 +255,7 @@ public class DBmanager {
                     p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
                     p.setIdOwner(rs.getInt("idowner"));
+                    p.setNomeOwner( (this.getMoreUtente(rs.getInt("idowner"))).getUsername() );
                     p.setIsPublic(rs.getInt("pubblico"));
                     p.setIsAttivo(rs.getInt("attivo"));
                     gruppi.add(p);
@@ -336,6 +337,7 @@ public class DBmanager {
                     p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
                     p.setIdOwner(rs.getInt("idowner"));
+                    p.setNomeOwner( (this.getMoreUtente(rs.getInt("idowner"))).getUsername() );
                     p.setIsPublic(rs.getInt("pubblico"));
                     p.setIsAttivo(rs.getInt("attivo"));
                     gruppi.add(p);

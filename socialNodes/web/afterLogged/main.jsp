@@ -70,16 +70,7 @@
                                         
                                    
                                
-                                <% ArrayList<Message> elem = new ArrayList<Message>();
-                                    elem=user.getNewsInviti();
-                                    for (Message mes: elem){
-                                         out.println("<tr>"
-                                                    + "<td>" + mes.getMessaggio()+ "</td>" 
-                                                    + "<td>" + mes.getLink() + " </td>" 
-                                                    + "<td>"+ mes.getValue() + "</td>"
-                                                    + "</tr>");
-                                    }
-                                %>
+                                
                             </h2>
                             </p>
                             <div class="page-header">
