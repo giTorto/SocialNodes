@@ -113,11 +113,24 @@ public class Utente {
         return all;
     }
 
-    public ArrayList<Message> getNews() {
+    public ArrayList<Message> getNewsInviti() {
         ArrayList<Message> all = new ArrayList<>();
 
         try {
-            all = getManager().getNews(this.getLast_access(), this.getId());
+            all = getManager().getNewsInviti(this.getLast_access(), this.getId());
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return all;
+    }
+    
+     public ArrayList<Message> getNewsPost() {
+        ArrayList<Message> all = new ArrayList<>();
+
+        try {
+            all = getManager().getNewsPost(this.getLast_access(), this.getId());
 
         } catch (SQLException ex) {
             Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);

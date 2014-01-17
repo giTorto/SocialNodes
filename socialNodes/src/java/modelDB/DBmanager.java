@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -433,7 +434,7 @@ public class DBmanager {
 
     }
 
-    ArrayList<Message> getNews(Timestamp data_last_access, int id) throws SQLException {
+    ArrayList<Message> getNewsInviti(Timestamp data_last_access, int id) throws SQLException {
         ArrayList<Message> news = new ArrayList<>();
         PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppo g inner join gruppi_partecipanti gr on "
                 + " g.idgruppo = gr.idgruppo where gr.data_invio>? and gr.idutente=?");
@@ -454,18 +455,28 @@ public class DBmanager {
             }
             stm.close();
 
-            stm = con.prepareStatement("SELECT DISTINCT g.nome,g.idgruppo FROM (gruppo g inner join post p on g.idgruppo=p.idgruppo)"
+        } finally {
+
+            rs.close();
+        }
+        return news;
+    }
+
+    ArrayList<Message> getNewsPost(Timestamp data_last_access, int id) throws SQLException {
+        ArrayList<Message> news = new ArrayList<>();
+        PreparedStatement stm;
+           stm = con.prepareStatement("SELECT DISTINCT g.nome,g.idgruppo FROM (gruppo g inner join post p on g.idgruppo=p.idgruppo)"
                     + " where p.data_ora>? and ( g.idgruppo in "
                     + "( SELECT g.idgruppo from gruppo g inner join utente u on u.idutente=g.idowner where u.idutente=?) "
                     + "OR g.idgruppo in (SELECT g.idgruppo from gruppo g inner join gruppi_partecipanti gr on "
                     + "g.idgruppo=gr.idgruppo where gr.idutente = ? ) )");
-
             stm.setTimestamp(1, data_last_access);
             stm.setInt(2, id);
             stm.setInt(3, id);
+           
+        ResultSet rs = stm.executeQuery();
 
-            rs = stm.executeQuery();
-
+        try {
             while (rs.next()) {
                 Message p = new Message();
                 p.setMessaggio("Sei stato invitato al gruppo " + rs.getString("nome"));
@@ -473,6 +484,8 @@ public class DBmanager {
                 p.setValue((rs.getTimestamp("data_ora")).toString());
                 news.add(p);
             }
+            
+            
         } finally {
 
             rs.close();
@@ -854,7 +867,138 @@ public class DBmanager {
         }
         return retval;
     }
-    /*
+    
+    
+    /**
+     * Ricerca l'ID del file basandosi sul nome. Se il file viene trovato, viene
+     * impostato un campo per indicarlo come recente
+     * @param idgruppo id del gruppo in cui si è e lo si sta richiedendo
+     * @param fileName Nome del file
+     * @param user Nome dell'utente da linkare
+     * @return Url del file associato al nome Utente o stringa vuota
+     */
+    public int getLinkByName(String fileName, String user, int idgruppo) {
+        int retVal = 0;
+        try {
+
+            ResultSet rs;
+
+            PreparedStatement stm
+                    = con.prepareStatement("SELECT * FROM POST p inner join utente u on p.idwriter = u.idutente WHERE u.username = ? AND realname=? "
+                            + "AND idgruppo = ?");
+            stm.setString(1, user);
+            stm.setString(2, fileName);
+            stm.setInt(3,idgruppo);
+            rs = stm.executeQuery();
+            rs.next();
+            retVal = rs.getInt("idpost");
+
+            stm.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return retVal;
+    }
+
+    /**
+     * Ricerca l'ID del file basandosi sul nome. Il file ricercato è quello
+     * aggiunto per ultimo
+     *
+     * @param fileName Nome del FIlE da cercare
+     * @return ID del file o stringa vuota
+     */
+    public int getLRULink(String fileName,int idgruppo) {
+
+        int retVal = 0;
+        try {
+
+            ResultSet rs;
+
+            PreparedStatement stm
+                    = con.prepareStatement("SELECT * FROM POST WHERE realname=? "
+                            + "AND idgruppo = ? ORDER BY data_ora DESC FETCH FIRST 1 ROWS ONLY");
+            stm.setString(1, fileName);
+            stm.setInt(2,idgruppo);
+            rs = stm.executeQuery();
+            rs.next();
+            retVal = rs.getInt("idpost");
+            
+
+            stm.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return retVal;
+    }
+
+        
+
+    
+
+    /**
+     * Trova nel DB i dati di un file basandosi sul suo id
+     *
+     * @param idpost id del file
+     * @return i dati trovati o un set vuoto
+     */
+    public HashMap<String, String> getRealAndDBName(int idpost) throws SQLException {
+        ResultSet rs;
+        HashMap<String, String> retVal = new HashMap<String, String>();
+        //String query="SELECT GROUPID,REALNAME,DBNAME FROM USERS.FILES WHERE FILEID="+id+" AND GROUPID ="+groupId;
+        //String query="SELECT GROUPID,REALNAME,DBNAME FROM USERS.FILES WHERE FILEID="+id+" AND GROUPID IN ("+GET_GROUPS_QUERY+userId+")";
+        PreparedStatement pr = con.prepareStatement("SELECT * FROM POST where idpost=?");
+
+        try {
+            pr.setInt(1, idpost);
+
+            rs = pr.executeQuery();
+            if (rs.next()) {
+                retVal.put("path", "media\\" + rs.getString("idgruppo") + "\\" + rs.getString("dbname"));
+                retVal.put("name", rs.getString("realname"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return retVal;
+    }
+
+    
+        /**
+     * Aggiunge un nuovo file al DB
+     *
+     * @param user l'utente che ha aggiunto il post
+     * @param idgruppo ID del gruppo in cui è stato posto
+     * @param realname nome del file secondo l'utente
+     * @param dbname nome univoco del file generato automaticamente
+     * @param testo il testo del post
+     */
+    public void addPostFile(Utente user, int idgruppo, String realname, String dbname, String testo) throws SQLException {
+        int idutente = user.getId();
+
+        Date data = new Date(Calendar.getInstance().getTimeInMillis());
+
+        PreparedStatement stm
+                = con.prepareStatement("INSERT INTO POST (data_ora,testo,idwriter,idgruppo,realname,dbname) values(?,?,?,?,?,?) ");
+
+        try {
+            stm.setDate(1, data);
+            stm.setString(2, testo);
+            stm.setInt(3, idutente);
+            stm.setInt(4, idgruppo);
+            stm.setString(5, realname);
+            stm.setString(6, dbname);
+            int executeUpdate = stm.executeUpdate();
+        } catch (SQLException ex) {
+
+        } finally {
+            stm.close();
+        }
+
+    }
+    
+        /*
      Da mettere la getpostgruppo ma va modificata molto...e soprattuto aspetto di vedere
      come gestire gli avatar perchè se ogni post ha bisogno dell'avatar per essere printoutato
      allora finchè non sappiamo come gestire gli avatar non ci serve recuperare i post
@@ -878,4 +1022,5 @@ public class DBmanager {
 //        
 //        return retval;
 //    }
+    
 }

@@ -47,6 +47,7 @@
             <textarea class="form-control" id="msg" ></textarea>
             <div class="send" >
                 <div class="btn-group">
+                    <input type="hidden" name="idgruppo" value="<jsp:getProperty name="gruppo" property="id"></jsp:getProperty>" >
                     <input type="button" class="btn btn-default" name="submit" type="submit" value="send">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
