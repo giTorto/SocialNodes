@@ -62,7 +62,7 @@
                             <h2>
                                 <jsp:getProperty name="messaggio_main" property="messaggio" />
                                 <% ArrayList<Message> elem = new ArrayList<Message>();
-                                    elem=user.getNews();
+                                    elem=user.getNewsInviti();
                                     for (Message mes: elem){
                                          out.println("<tr>"
                                                     + "<td>" + mes.getMessaggio()+ "</td>" 

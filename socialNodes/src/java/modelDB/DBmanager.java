@@ -322,7 +322,7 @@ public class DBmanager {
     public ArrayList<Gruppo> getGruppiParte(int id) throws SQLException {
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
 
-        PreparedStatement stm = con.prepareStatement("SELECT NOME, DATA_CREAZIONE, IDGRUPPO FROM gruppi_partecipanti g natural join gruppo gr  where g.idutente =? and invito_acc>0");
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppi_partecipanti g natural join gruppo gr  where g.idutente =? and invito_acc>0");
 
         try {
             stm.setInt(1, id);

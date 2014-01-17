@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import modelDB.DBmanager;
 import modelDB.Gruppo;
+import modelDB.Message;
 import modelDB.Utente;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -122,7 +123,13 @@ public class groupCtrl extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String operazione = request.getParameter("op");
+        String operazione;
+
+        operazione = request.getParameter("op");
+        if (operazione == null) {
+            operazione = "";
+        }
+
         RequestDispatcher dispatcher;
 
         HttpSession session = request.getSession(false);
@@ -336,9 +343,10 @@ public class groupCtrl extends HttpServlet {
 
             break;
 
-            default: {
-                //   dispatcher = request.getRequestDispatcher("/errorpage.jsp");
-                //   dispatcher.forward(request, response);
+            case "": { // caso in cui sto facendo aggiunta post
+
+                //  
+                dispatcher = request.getRequestDispatcher("/errorpage.jsp");
                 Integer idgruppo = 0;
                 String messaggio = "";
 
@@ -391,17 +399,26 @@ public class groupCtrl extends HttpServlet {
                                 }
                             }
                         } else {
-
-                            if ((item.getFieldName()).equals("idgruppo")) {
-                                idgruppo = Integer.parseInt(Streams.asString(item.openStream()));
-                            } else if ((item.getFieldName()).equals("messaggio")) {
-                                messaggio = Streams.asString(item.openStream());
+                            switch (item.getFieldName()) {
+                                case "idgruppo":
+                                    idgruppo = Integer.parseInt(Streams.asString(item.openStream()));
+                                    break;
+                                case "messaggio":
+                                    messaggio = Streams.asString(item.openStream());
+                                    if (messaggio == null || messaggio == "") {
+                                        Message error = new Message();
+                                        error.setMessaggio("E' necessario inserire del testo");
+                                        request.setAttribute("messaggioBean", error);
+                                        dispatcher.forward(request, response);
+                                    }
+                                    break;
                             }
                         }
                     }
                     String resultament = checkText(messaggio, fileName, tmp, idgruppo);
                     manager.addPostFile(user, idgruppo, fileName, tmp, resultament);
-
+                    dispatcher.forward(request, response);
+                    
                 } catch (FileUploadException ex) {
                     Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
