@@ -346,7 +346,7 @@ public class groupCtrl extends HttpServlet {
             case "": { // caso in cui sto facendo aggiunta post
 
                 //  
-                dispatcher = request.getRequestDispatcher("/errorpage.jsp");
+                
                 Integer idgruppo = 0;
                 String messaggio = "";
 
@@ -405,10 +405,11 @@ public class groupCtrl extends HttpServlet {
                                     break;
                                 case "messaggio":
                                     messaggio = Streams.asString(item.openStream());
-                                    if (messaggio == null || messaggio == "") {
+                                    if (messaggio == null || "".equals(messaggio)) {
                                         Message error = new Message();
                                         error.setMessaggio("E' necessario inserire del testo");
                                         request.setAttribute("messaggioBean", error);
+                                        dispatcher = request.getRequestDispatcher("socialNode/afterLogged/groupCtrl?op=displaygroup&groupid=" + idgruppo);
                                         dispatcher.forward(request, response);
                                     }
                                     break;
@@ -417,6 +418,7 @@ public class groupCtrl extends HttpServlet {
                     }
                     String resultament = checkText(messaggio, fileName, tmp, idgruppo);
                     manager.addPostFile(user, idgruppo, fileName, tmp, resultament);
+                    dispatcher = request.getRequestDispatcher("socialNode/afterLogged/groupCtrl?op=displaygroup&groupid=" + idgruppo);
                     dispatcher.forward(request, response);
                     
                 } catch (FileUploadException ex) {

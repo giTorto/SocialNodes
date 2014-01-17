@@ -3,6 +3,7 @@
     Created on : 3-gen-2014, 17.07.13
     Author     : Giulian
 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="modelDB.Message" %>
 <%@page import="modelDB.Utente"%>
 <%@page import="modelDB.Gruppo"%>
@@ -42,10 +43,12 @@
                         <li><a href="/socialNodes/afterLogged/afterLogin?op=tocreation" class="btn btn-default">Crea gruppo <span class="glyphicon glyphicon-plus"></span></a></li>
                         <li><a href="/socialNodes/afterLogged/afterLogin?op=showinviti" class="btn btn-default">Inviti <span class="glyphicon glyphicon-user"></span></a></li>
                         <li><a href="/socialNodes/afterLogged/afterLogin?op=topersonalsettings" class="btn btn-default">Impostazioni personali <span class="glyphicon glyphicon-cog"></span></a></li>
-                                <% if (user.getIsModeratore() == 1) {%>
-                        <li><a href="<% out.print(request.getContextPath());%>/afterLogged/afterLogin?op=tomoderatore" 
+                               
+                        <c:set var="ismodera" scope="session" value="<%= user.getIsModeratore() %>" />
+                                <c:if test="${ismodera == 1}">
+                                        <li><a href="<% out.print(request.getContextPath());%>/afterLogged/afterLogin?op=tomoderatore" 
                                class="btn btn-default">Pannello di controllo per moderatore <span class="glyphicon glyphicon-pencil"></span></a></li>
-                                <%}%>
+                                </c:if>  
                         <li><a href="/socialNodes/afterLogged/afterLogin?op=logout" class="btn btn-default">Logout <span class="glyphicon glyphicon-log-out"></span></a></li>
                     </ul>
                 </div>
@@ -61,6 +64,12 @@
                             <p>
                             <h2>
                                 <jsp:getProperty name="messaggio_main" property="messaggio" />
+                              
+                               
+                                  
+                                        
+                                   
+                               
                                 <% ArrayList<Message> elem = new ArrayList<Message>();
                                     elem=user.getNewsInviti();
                                     for (Message mes: elem){
