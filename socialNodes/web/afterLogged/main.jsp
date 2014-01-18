@@ -51,7 +51,7 @@
                                class="btn btn-default">Pannello di controllo per moderatore <span class="glyphicon glyphicon-pencil"></span></a></li>
                                 </c:if>  
                                
-                               <img src="<c:url value="${user.avatar_link}" />" >
+                               <img src="<c:out value="${user.avatar_link}" />" style="width: 100px; height:100px " >
                         <li><a href="/socialNodes/afterLogged/afterLogin?op=logout" class="btn btn-default">Logout <span class="glyphicon glyphicon-log-out"></span></a></li>
                     </ul>
                 </div>

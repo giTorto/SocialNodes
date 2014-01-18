@@ -204,11 +204,11 @@ public class FirstCtrl extends HttpServlet {
 //                       
                         session.setAttribute("messaggio_main", data_accesso);
                         ServletContext ctx = getServletContext();
-                        //la parte qui sotto non funziona
+                        //la parte qui sotto setta il link all'inizio ;)
                         if(user.getAvatar_link().equals("££standard_avatar$$.png")){
                             user.setAvatar_link(request.getContextPath()+"/standard_image/££standard_avatar$$.png");
                         }else{
-                             user.setAvatar_link(ctx.getRealPath("") + "\\media\\avatar\\"+user.getAvatar_link());
+                             user.setAvatar_link(request.getContextPath()+ "/media/avatar/"+user.getAvatar_link());
                         }
                         manager.setNewdate(data_acc, user.getId());
                         // request.setAttribute("user",user);
@@ -221,8 +221,10 @@ public class FirstCtrl extends HttpServlet {
                     }
                     break;
                 case ""://caso in cui sto creando un account
+                        boolean imgyes= false;
+                        String tmp = null;
                     try {
-                        String path, relPath, fileName, tmp;
+                        String path, relPath, fileName;
                         ServletFileUpload fileUpload = new ServletFileUpload();
                         FileItemIterator items;
 
@@ -261,6 +263,7 @@ public class FirstCtrl extends HttpServlet {
                                             output.write(data);
                                         }
                                          output.close();
+                                         imgyes= true;
                                          
                                       /*  if (!MyUtil.isImage(new File(path))) { non funziona
                                             //qui devo passare attraverso un bean o something like that per segnalare
@@ -326,7 +329,12 @@ public class FirstCtrl extends HttpServlet {
                         Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     //dbmanager inseriscie riga nella tabella utente
-                    manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
+                    if (!imgyes){
+                            manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
+                    }else{
+                         manager.addUtente(username, email, password,tmp); 
+                    }
+ 
                     //response.sendRedirect(request.getContextPath() + "/logIn.jsp");
                     dispatcher = request.getRequestDispatcher("/index.jsp");
                     messaggioBean.setValue(email);

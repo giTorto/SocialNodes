@@ -1031,5 +1031,22 @@ public class DBmanager {
 //        
 //        return retval;
 //    }
+
+    public void addUtente(String username, String email, String password, String img)throws SQLException {
+        
+        PreparedStatement stm;
+        stm = con.prepareStatement("INSERT INTO utente (username,email,password,moderatore, avatar_image) "
+                + "values (?,?,?,?,?)");
+        try {
+            stm.setString(1, username);
+            stm.setString(2, email);
+            stm.setString(3, password);
+            stm.setInt(4, 0);
+            stm.setString(5,img);
+            stm.executeUpdate();
+        } finally {
+            stm.close();
+        }
+    }
     
 }
