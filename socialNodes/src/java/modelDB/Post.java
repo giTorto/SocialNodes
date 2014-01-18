@@ -16,10 +16,11 @@ import java.util.Date;
 public class Post {
     private String testo;
     private Timestamp data_ora;
-    private int idwriter;
+    private Utente writer;
     private int idgruppo;
     private String link;
     private DBmanager manager;
+    private String realname;
     
     Post(){
         manager = new DBmanager();
@@ -57,15 +58,15 @@ public class Post {
     /**
      * @return the idwriter
      */
-    public int getIdwriter() {
-        return idwriter;
+    public Utente getWriter() {
+        return writer;
     }
 
     /**
-     * @param idwriter the idwriter to set
+     * @param writer the idwriter to set
      */
-    public void setIdwriter(int idwriter) {
-        this.idwriter = idwriter;
+    public void setWriter(Utente writer) {
+        this.writer = writer;
     }
 
     /**
@@ -94,6 +95,20 @@ public class Post {
      */
     public void setLink(String link) {
         this.link = link;
+    }
+
+    /**
+     * @return the realname
+     */
+    public String getRealname() {
+        return realname;
+    }
+
+    /**
+     * @param realname the realname to set
+     */
+    public void setRealname(String realname) {
+        this.realname = realname;
     }
     
 }

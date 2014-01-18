@@ -38,9 +38,15 @@
             </h1>
         </div>
         <div class="forumWrapper panel">
-            <div id="forum">
-                <div class="panel message msg1"><div class="said ">Tizio ha scritto:</div>Ciao</div>
-                <div class="panel message msg1"><div class="said ">Tizio ha scritto:</div>Come va?</div>
+              <c:forEach items="${lista_post}" var="post">
+                    <div class="panel message msg1"><div class="said ">    
+                        <c:out value="${post.writer.username}" />
+                        <c:out value="${post.writer.avatar_link}"/>
+                    </div>
+                                    <c:out value="${post.testo}"/>
+                                    <a href="<c:url value="${post.link}"/>"> <c:out value="${post.realname}"/>  </a>
+                             </div>
+                </c:forEach>
             </div></div>
         <div class="msgBox panel">
             <form action="groupCtrl" method ="post"  enctype="multipart/form-data">

@@ -40,6 +40,10 @@
         <servlet-name>Generapdf</servlet-name>
         <servlet-class>genericServlets.Generapdf</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FileDownload</servlet-name>
+        <servlet-class>genericServlets.FileDownload</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>FirstCtrl</servlet-name>
         <url-pattern>/FirstCtrl</url-pattern>
@@ -63,6 +67,10 @@
     <servlet-mapping>
         <servlet-name>Generapdf</servlet-name>
         <url-pattern>/afterLogged/groupCtrl/generapdf</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FileDownload</servlet-name>
+        <url-pattern>/afterLogged/groupCtrl/fileDownload</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

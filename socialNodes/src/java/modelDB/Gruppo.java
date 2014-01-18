@@ -126,7 +126,7 @@ public class Gruppo {
     public int getNumPost() {
         ArrayList<Post> all = new ArrayList<>();
         try {
-            all = manager.getPostsGruppo(this.idgruppo);
+            all = manager.getPostsGruppo(this);
         } catch (SQLException ex) {
             Logger.getLogger(Gruppo.class.getName()).log(Level.SEVERE, null, ex);
             System.err.println("DbManager, getnumpost: errore nel recupero dei post per il gruppo con groupid=" + this.idgruppo + "\n");
@@ -155,5 +155,7 @@ public class Gruppo {
     public void setIsAttivo(int isAttivo) {
         this.isAttivo = isAttivo;
     }
+    
+    
 
 }

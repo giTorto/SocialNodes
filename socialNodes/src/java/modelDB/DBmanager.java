@@ -273,52 +273,6 @@ public class DBmanager {
 
     }
 
-    /**
-     * Permette di ottenere facilmente la lista di tutti i post di un gruppo ora
-     * perfezionata, in ogni post c'è un oggetto Utente che è il writer
-     *
-     * @param idgruppo dai in input l'id del gruppo desiderato
-     * @return ricevi la lista dei post in ordine di data inversa
-     * @throws SQLException
-     */
-    public ArrayList<Post> getPostsGruppo(int idgruppo) throws SQLException {
-
-        ArrayList<Post> posts = new ArrayList<>();
-
-        String link;
-        PreparedStatement stm = con.prepareStatement("SELECT * FROM post "
-                + "WHERE idgruppo = ? ORDER BY data_ora DESC");
-
-        try {
-            stm.setInt(1, idgruppo);
-            ResultSet rs = stm.executeQuery();
-
-            try {
-
-                while (rs.next()) {
-                    Post p = new Post();
-                    //Utente tu = getMoreUtente(rs.getInt("idwriter"));
-                    p.setTesto(rs.getString("testo"));
-                    p.setData_ora(rs.getTimestamp("data_ora"));
-                    p.setIdwriter(rs.getInt("idwriter"));
-                    if (rs.getString("dbname") != null) {
-                        link = "<a href='fileDownload?fileId=" + rs.getInt("idpost") + "'>" + rs.getString("realname") + "</a>";
-                        p.setLink(link);
-                    };
-                    posts.add(p);
-                }
-            } finally {
-
-                rs.close();
-            }
-        } finally {
-
-            stm.close();
-        }
-
-        return posts;
-
-    }
 
     public ArrayList<Gruppo> getGruppiParte(int id) throws SQLException {
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
@@ -997,6 +951,55 @@ public class DBmanager {
         } finally {
             stm.close();
         }
+
+    }
+    
+     /**
+     * Permette di ottenere facilmente la lista di tutti i post di un gruppo ora
+     * perfezionata, in ogni post c'è un oggetto Utente che è il writer
+     *
+     * @param g dai in input il gruppo di cui vuoi vedere i post
+     * @return ricevi la lista dei post in ordine di data inversa
+     * @throws SQLException
+     */
+    public ArrayList<Post> getPostsGruppo(Gruppo g) throws SQLException {
+
+        ArrayList<Post> posts = new ArrayList<Post>();
+        int id = g.getIdgruppo();
+        String link = "";
+        PreparedStatement stm
+                = con.prepareStatement("SELECT * FROM post "
+                        + "WHERE idgruppo = ? ORDER BY data_ora DESC");
+
+        try {
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+
+            try {
+
+                while (rs.next()) {
+                    Post p = new Post();
+                    //Utente tu = getMoreUtente(rs.getInt("idwriter"));
+                    p.setTesto(rs.getString("testo"));
+                    p.setData_ora(rs.getTimestamp("data_ora"));
+                    p.setWriter(getMoreUtente(rs.getInt("idwriter")));
+                    p.setRealname(rs.getString("realname"));
+                    if (rs.getString("dbname") != null) {
+                        link = "/afterLogged/groupCtrl/fileDownload?fileId=" + rs.getInt("idpost");
+                        p.setLink(link);
+                    };
+                    posts.add(p);
+                }
+            } finally {
+
+                rs.close();
+            }
+        } finally {
+
+            stm.close();
+        }
+
+        return posts;
 
     }
     

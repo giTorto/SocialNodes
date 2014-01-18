@@ -29,6 +29,7 @@ import javax.servlet.http.HttpSession;
 import modelDB.DBmanager;
 import modelDB.Gruppo;
 import modelDB.Message;
+import modelDB.Post;
 import modelDB.Utente;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -71,15 +72,17 @@ public class groupCtrl extends HttpServlet {
         switch (operazione) {
             case "displaygroup":
                 Gruppo gruppo_disp = null;
+                ArrayList<Post> posts = new ArrayList<>();
                 try {
-                    String groupid = request.getParameter("groupid");
-
+                    String groupid = request.getParameter("groupid");                
                     gruppo_disp = manager.getGruppo(Integer.parseInt(groupid));
+                    posts= manager.getPostsGruppo(gruppo_disp);
                 } catch (SQLException e) {
                     System.err.println("groupCtrl: case displaygroup, errore nel recuperare il gruppo dal db");
                 }
 
                 request.setAttribute("gruppo", gruppo_disp);
+                request.setAttribute("lista_post", posts);
 
                 dispatcher = request.getRequestDispatcher("/groupcontrolled/displaygroup.jsp");
                 dispatcher.forward(request, response);
@@ -409,7 +412,7 @@ public class groupCtrl extends HttpServlet {
                                         Message error = new Message();
                                         error.setMessaggio("E' necessario inserire del testo");
                                         request.setAttribute("messaggioBean", error);
-                                        dispatcher = request.getRequestDispatcher("socialNode/afterLogged/groupCtrl?op=displaygroup&groupid=" + idgruppo);
+                                        dispatcher = request.getRequestDispatcher("/socialNodes/afterLogged/groupCtrl?op=displaygroup&groupid=" + idgruppo);
                                         dispatcher.forward(request, response);
                                     }
                                     break;
@@ -418,8 +421,8 @@ public class groupCtrl extends HttpServlet {
                     }
                     String resultament = checkText(messaggio, fileName, tmp, idgruppo);
                     manager.addPostFile(user, idgruppo, fileName, tmp, resultament);
-                    dispatcher = request.getRequestDispatcher("socialNode/afterLogged/groupCtrl?op=displaygroup&groupid=" + idgruppo);
-                    dispatcher.forward(request, response);
+                    response.sendRedirect("/socialNodes/afterLogged/groupCtrl?op=displaygroup&groupid="+idgruppo);
+                    
                     
                 } catch (FileUploadException ex) {
                     Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, null, ex);

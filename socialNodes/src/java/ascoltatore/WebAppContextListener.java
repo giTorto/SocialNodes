@@ -13,6 +13,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import modelDB.DBmanager;
 import modelDB.Gruppo;
+import modelDB.Message;
 
 /**
  * Web application lifecycle listener.
@@ -30,6 +31,9 @@ public class WebAppContextListener implements ServletContextListener {
             sce.getServletContext().setAttribute("dbmanager", manager);//pubblico l'attributo per il context
             ArrayList<Gruppo> g = new ArrayList<>();
             g = (new Gruppo()).listaGruppiPubblici();
+            Message mess = new Message();
+            mess.setMessaggio("");
+            sce.getServletContext().setAttribute("messaggioBean", dburl);
             sce.getServletContext().setAttribute("public_groups", g);
         } catch (SQLException ex) {
             Logger.getLogger(getClass().getName()).severe(ex.toString());
