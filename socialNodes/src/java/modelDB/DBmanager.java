@@ -933,13 +933,15 @@ public class DBmanager {
     public void addPostFile(Utente user, int idgruppo, String realname, String dbname, String testo) throws SQLException {
         int idutente = user.getId();
 
-        Date data = new Date(Calendar.getInstance().getTimeInMillis());
+       Calendar calendar = Calendar.getInstance();
+                        java.util.Date now = calendar.getTime();
+                        Timestamp data_acc = new Timestamp(now.getTime());
 
         PreparedStatement stm
                 = con.prepareStatement("INSERT INTO POST (data_ora,testo,idwriter,idgruppo,realname,dbname) values(?,?,?,?,?,?) ");
 
         try {
-            stm.setDate(1, data);
+            stm.setTimestamp(1, data_acc);
             stm.setString(2, testo);
             stm.setInt(3, idutente);
             stm.setInt(4, idgruppo);

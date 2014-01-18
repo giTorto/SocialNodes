@@ -27,8 +27,8 @@
 
 
 
-                <a href="#" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-left"></span> Indietro</a>
-                <a href="#" class="btn btn-primary"><span class="glyphicon glyphicon-new-window"></span> Logout</a>
+                <a href="/socialNodes/afterLogged/afterLogin?op=showgroups" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-left"></span> Indietro</a>
+                <a href="/socialNodes/afterLogged/afterLogin?op=logout" class="btn btn-primary"><span class="glyphicon glyphicon-new-window"></span> Logout</a>
 
         </div>
 
@@ -40,8 +40,9 @@
         <div class="forumWrapper panel">
               <c:forEach items="${lista_post}" var="post">
                     <div class="panel message msg1"><div class="said ">    
-                        <c:out value="${post.writer.username}" />
+                        <c:out value="${post.writer.username}" />  alle <c:out value="${post.data_ora}" />
                         <c:out value="${post.writer.avatar_link}"/>
+                       
                     </div>
                                     <c:out value="${post.testo}"/>
                                     <a href="<c:url value="${post.link}"/>"> <c:out value="${post.realname}"/>  </a>
