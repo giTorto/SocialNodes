@@ -19,7 +19,7 @@
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
         <link href="../stile.css/displaygroup.css" rel="stylesheet" type="text/css">
-      
+
     </head>
 
     <body>
@@ -27,8 +27,8 @@
 
 
 
-                <a href="/socialNodes/afterLogged/afterLogin?op=showgroups" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-left"></span> Indietro</a>
-                <a href="/socialNodes/afterLogged/afterLogin?op=logout" class="btn btn-primary"><span class="glyphicon glyphicon-new-window"></span> Logout</a>
+            <a href="/socialNodes/afterLogged/afterLogin?op=showgroups" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-left"></span> Indietro</a>
+            <a href="/socialNodes/afterLogged/afterLogin?op=logout" class="btn btn-primary"><span class="glyphicon glyphicon-new-window"></span> Logout</a>
 
         </div>
 
@@ -38,19 +38,20 @@
             </h1>
         </div>
         <div class="forumWrapper panel">
-              <c:forEach items="${lista_post}" var="post">
-                    <div class="panel message msg1"><div class="said ">    
+            <c:forEach items="${lista_post}" var="post">
+                <div class="panel message msg1">
+                    <div class="said ">    
                         <c:out value="${post.writer.username}" />  alle <c:out value="${post.data_ora}" />
                         <c:out value="${post.writer.avatar_link}"/>
-                       
+
                     </div>
-                                    <c:out value="${post.testo}"/>
-                                    <a href="<c:url value="${post.link}"/>"> <c:out value="${post.realname}"/>  </a>
-                             </div>
-                </c:forEach>
-            </div></div>
-        <div class="msgBox panel">
-            <form action="groupCtrl" method ="post"  enctype="multipart/form-data">
+                    <c:out value="${post.testo}"/></br>
+                    <b>File</b>:<a href="<c:url value="${post.link}"/>"> <c:out value="${post.realname}"/>  </a>
+                </div>
+            </c:forEach>
+        </div></div>
+    <div class="msgBox panel">
+        <form action="groupCtrl" method ="post"  enctype="multipart/form-data">
             <textarea class="form-control" name="messaggio" ></textarea>
             <div class="send" >
                 <div class="btn-group">
@@ -61,13 +62,13 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li><input  type="file" name="file"> </li>
-                        
+
                     </ul>
                 </div>
-            </form>
-            </div>
-        </div>
+        </form>
+    </div>
+</div>
 
-    </body>
+</body>
 </html>
 

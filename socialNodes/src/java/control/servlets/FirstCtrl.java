@@ -188,12 +188,7 @@ public class FirstCtrl extends HttpServlet {
 
                         dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
                         HttpSession sessione = request.getSession(true);
-                        try {
-                            user = manager.getMoreUtente(username);
-                        } catch (SQLException e) {
-                            response.sendRedirect(request.getContextPath());
-                        }
-                        sessione.setAttribute("user", user);
+                                           
 
                         Timestamp last_access = user.getLast_access();
                         Calendar calendar = Calendar.getInstance();
@@ -208,8 +203,16 @@ public class FirstCtrl extends HttpServlet {
                         }
 //                       
                         session.setAttribute("messaggio_main", data_accesso);
+                        ServletContext ctx = getServletContext();
+                        //la parte qui sotto non funziona
+                        if(user.getAvatar_link().equals("££standard_avatar$$.png")){
+                            user.setAvatar_link(request.getContextPath()+"/standard_image/££standard_avatar$$.png");
+                        }else{
+                             user.setAvatar_link(ctx.getRealPath("") + "\\media\\avatar\\"+user.getAvatar_link());
+                        }
                         manager.setNewdate(data_acc, user.getId());
                         // request.setAttribute("user",user);
+                        sessione.setAttribute("user", user);
                         dispatcher.forward(request, response);
 
                         // HttpSession sessione = request.getSession(true);
@@ -257,18 +260,18 @@ public class FirstCtrl extends HttpServlet {
                                         while ((data = is.read()) != -1) {
                                             output.write(data);
                                         }
-
-                                        if (!MyUtil.isImage(new File(path))) {
+                                         output.close();
+                                         
+                                      /*  if (!MyUtil.isImage(new File(path))) { non funziona
                                             //qui devo passare attraverso un bean o something like that per segnalare
                                             //che il file non è un immagine
                                             //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
-                                            output.close();
+                                           
                                             dispatcher = request.getRequestDispatcher("/createAccount.jsp");
                                             messaggioBean.setMessaggio("Attenzione Per l'avatar è necessario scegliere un immagine");
                                             request.setAttribute("messaggioBean", messaggioBean);
                                             dispatcher.forward(request, response);
-                                        } else {
-                                        }
+                                        } */
 
                                     } catch (IOException ioe) {
                                         throw new ServletException(ioe.getMessage());
@@ -325,7 +328,7 @@ public class FirstCtrl extends HttpServlet {
                     //dbmanager inseriscie riga nella tabella utente
                     manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
                     //response.sendRedirect(request.getContextPath() + "/logIn.jsp");
-                    dispatcher = request.getRequestDispatcher("/logIn.jsp");
+                    dispatcher = request.getRequestDispatcher("/index.jsp");
                     messaggioBean.setValue(email);
                     request.setAttribute("messaggioBean", messaggioBean);
                     dispatcher.forward(request, response);

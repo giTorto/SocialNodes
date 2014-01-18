@@ -81,6 +81,7 @@ public class DBmanager {
         // usare SEMPRE i PreparedStatement, anche per query banali. 
         // *** MAI E POI MAI COSTRUIRE LE QUERY CONCATENANDO STRINGHE !!!! 
         PreparedStatement stm = con.prepareStatement("SELECT * FROM utente WHERE email = ? AND password = ?");
+        Utente user;
         try {
             stm.setString(1, email);
             stm.setString(2, password);
@@ -88,10 +89,11 @@ public class DBmanager {
 
             try {
                 if (rs.next()) {
-                    Utente user = new Utente();
+                    user = new Utente();
                     user.setUsername(rs.getString("username"));
                     user.setEmail(email);
                     user.setLast_access(rs.getTimestamp("data_ultimo_acc"));
+                    user.setAvatar_link(rs.getString("avatar_image"));
                     user.setId(rs.getInt("idutente"));
                     return user;
                 } else {
@@ -107,7 +109,7 @@ public class DBmanager {
         } finally { // ricordarsi SEMPRE di chiudere i PreparedStatement in un blocco finally
             stm.close();
         }
-
+        
     }
 
     public Utente getMoreUtente(int id) throws SQLException {
