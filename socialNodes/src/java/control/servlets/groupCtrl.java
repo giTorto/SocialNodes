@@ -43,9 +43,9 @@ import util.MyUtil;
  * @author Giulian
  */
 public class groupCtrl extends HttpServlet {
-
+    
     private DBmanager manager;
-
+    
     @Override
     public void init() {
         // inizializza il DBManager dagli attributi di Application
@@ -65,53 +65,53 @@ public class groupCtrl extends HttpServlet {
             throws ServletException, IOException {
         String operazione = request.getParameter("op");
         RequestDispatcher dispatcher;
-
+        
         HttpSession session = request.getSession(false);
         Utente user = (Utente) session.getAttribute("user");
-
+        
         switch (operazione) {
             case "displaygroup":
                 Gruppo gruppo_disp = null;
                 ArrayList<Post> posts = new ArrayList<>();
                 try {
-                    String groupid = request.getParameter("groupid");                
+                    String groupid = request.getParameter("groupid");                    
                     gruppo_disp = manager.getGruppo(Integer.parseInt(groupid));
-                    posts= manager.getPostsGruppo(gruppo_disp);
+                    posts = manager.getPostsGruppo(gruppo_disp);
                 } catch (SQLException e) {
                     System.err.println("groupCtrl: case displaygroup, errore nel recuperare il gruppo dal db");
                 }
-
+                
                 request.setAttribute("gruppo", gruppo_disp);
                 request.setAttribute("lista_post", posts);
-
+                
                 dispatcher = request.getRequestDispatcher("/groupcontrolled/displaygroup.jsp");
                 dispatcher.forward(request, response);
-
+                
                 break;
-
+            
             case "settings":
                 Gruppo gruppo_sett = null;
                 try {
                     String groupid = request.getParameter("groupid");
-
+                    
                     gruppo_sett = manager.getGruppo(Integer.parseInt(groupid));
                 } catch (SQLException e) {
                     System.err.println("groupCtrl: case displaygroup, errore nel recuperare il gruppo dal db");
                 }
-
+                
                 request.setAttribute("gruppo", gruppo_sett);
-
+                
                 dispatcher = request.getRequestDispatcher("/groupcontrolled/settings_group.jsp");
                 dispatcher.forward(request, response);
-
+                
                 break;
-
+            
             default:
                 //da decidere cosa fare
                 response.sendRedirect(request.getContextPath());
                 return;
         }
-
+        
     }
 
     /**
@@ -125,19 +125,19 @@ public class groupCtrl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
         String operazione;
-
+        
         operazione = request.getParameter("op");
         if (operazione == null) {
             operazione = "";
         }
-
+        
         RequestDispatcher dispatcher;
-
+        
         HttpSession session = request.getSession(false);
         Utente user = (Utente) session.getAttribute("user");
-
+        
         switch (operazione) {
             case "creagruppo": //codice per gestire la creazione di un gruppo
             {
@@ -159,7 +159,7 @@ public class groupCtrl extends HttpServlet {
                 } catch (Exception e) {
                     ok_crea_gruppo = false;
                 }
-
+                
                 try {
                     inviti2parse = request.getParameter("areainviti");
                     if (inviti2parse == null) {
@@ -168,7 +168,7 @@ public class groupCtrl extends HttpServlet {
                 } catch (Exception e) {
                     ok_inviti = false;
                 }
-
+                
                 try {
                     String radio = request.getParameter("radios");
                     if (radio.equals("privato")) {
@@ -181,13 +181,13 @@ public class groupCtrl extends HttpServlet {
                 } catch (Exception e) {
                     ok_radio = false;
                 }
-
+                
                 if (ok_crea_gruppo && !"".equals(inviti2parse) && !"".equals(creazione_gruppoNome) && creazione_gruppoNome != null) {
                     try {
                         Utente ownernewgroup = (Utente) ((HttpServletRequest) request).getSession().getAttribute("user");
                         try {
                             manager.creaGruppo(user, creazione_gruppoNome, isPublic);
-
+                            
                             Gruppo gruppo_appena_creato = manager.getGruppo(creazione_gruppoNome);
                             ArrayList<String> username_invitati = MyUtil.parseFromString(inviti2parse);
                             utentiSbagliati = MyUtil.sendinviti(username_invitati, gruppo_appena_creato.getIdgruppo(), manager);
@@ -198,7 +198,7 @@ public class groupCtrl extends HttpServlet {
                             Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, null, ex);
                             System.err.println("Groupctrl: errore nel creare un gruppo " + ex.getMessage());
                         }
-
+                        
                     } catch (Exception e) {
                         System.err.println("Groupctrl: errore! " + e.getMessage());
                     }
@@ -212,7 +212,7 @@ public class groupCtrl extends HttpServlet {
                 dispatcher.forward(request, response);
             }
             break;
-
+            
             case "accettainviti": //codice per gestire gli inviti accettati dall'utente
             {
                 ArrayList<Integer> groupids = new ArrayList<Integer>();
@@ -224,7 +224,7 @@ public class groupCtrl extends HttpServlet {
                         groupids.add(Integer.parseInt(param));
                     }
                 }
-
+                
                 try {
                     Utente utente = (Utente) request.getSession().getAttribute("user");
                     try {
@@ -233,7 +233,7 @@ public class groupCtrl extends HttpServlet {
                         }
                     } catch (SQLException ex) {
                         Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, null, ex);
-
+                        
                     }
                 } catch (Exception e) {
                     System.err.println("errore nel gestire gli inviti");
@@ -243,7 +243,7 @@ public class groupCtrl extends HttpServlet {
                 dispatcher.forward(request, response);
             }
             break;
-
+            
             case "modificagruppo": {
                 System.out.println("modificagruppo!!!");
                 //dichiarazione parametri passati dal form modificagruppo
@@ -297,16 +297,21 @@ public class groupCtrl extends HttpServlet {
                 } catch (Exception e) {
                     ok_radio = false;
                 }
-
+                
                 if (ok_radio && (gruppo.getIsPublic() != isPublic)) {
                     //se è stato cambiato il flag allora agisici di conseguenza
                     System.out.println("grouctrl: modificagruppo sto cambiando le impostazioni del gruppo perchè è stato impostato un nuovo flag");
                     try {
                         manager.updateGroupFlag(gruppo.getIdgruppo(), isPublic);
+                        //se si passa da pubblico a privato basta il cambio flag
+                        //se si passa da privato a pubblico rimuovere partecipanti e invitati dalla tabella gruppi_partecipanti
+                        if (isPublic == 1) {
+                            manager.deleteParticipantsGruppo(gruppo.getIdgruppo());
+                        }
                     } catch (SQLException e) {
                         System.err.println("groupCtrl: modificagruppo: errore nel cambio flag al gruppo");
                     }
-                    //codice per gestire le FAMOSE CONSIDERAZIONI circa il passaggio dei partecipanti da pubblico a privato ecc
+                    
                 }
 
                 //gestione degli eventuali inviti, da fare solo se il radios=privato
@@ -335,7 +340,7 @@ public class groupCtrl extends HttpServlet {
                             System.err.println("Groupctrl: modificagruppo, errore nel mandare nuovi inviti " + ex.getMessage());
                         }
                     }
-
+                    
                 }
 
                 //fine modificagruppo
@@ -343,26 +348,25 @@ public class groupCtrl extends HttpServlet {
 //                dispatcher.forward(request, response);
                 response.sendRedirect(request.getContextPath());
             }
-
+            
             break;
-
+            
             case "": { // caso in cui sto facendo aggiunta post
 
                 //  
-                
                 Integer idgruppo = 0;
                 String messaggio = "";
-
+                
                 String fileName, relPath;
                 String path;
                 String tmp = null;
                 fileName = null;
                 InputStream inStream;
-
+                
                 try {
                     ServletFileUpload fileUpload = new ServletFileUpload();
                     FileItemIterator items = fileUpload.getItemIterator(request);
-
+                    
                     while (items.hasNext()) {
                         FileItemStream item = items.next();
                         if (!item.isFormField()) {
@@ -384,16 +388,16 @@ public class groupCtrl extends HttpServlet {
                                     tmp = tmp + MyUtil.getExtension(fileName);
                                     path += "\\" + tmp;
                                     relPath += "\\" + (idgruppo + "\\" + tmp);
-
+                                    
                                     output = new BufferedOutputStream(new FileOutputStream(path, false));
                                     int data = -1;
                                     while ((data = is.read()) != -1) {
                                         output.write(data);
                                     }
-
+                                    
                                 } catch (IOException ioe) {
                                     throw new ServletException(ioe.getMessage());
-
+                                    
                                 } finally {
                                     is.close();
                                     if (output != null) {
@@ -421,17 +425,16 @@ public class groupCtrl extends HttpServlet {
                     }
                     String resultament = checkText(messaggio, fileName, tmp, idgruppo);
                     manager.addPostFile(user, idgruppo, fileName, tmp, resultament);
-                    response.sendRedirect("/socialNodes/afterLogged/groupCtrl?op=displaygroup&groupid="+idgruppo);
-                    
+                    response.sendRedirect("/socialNodes/afterLogged/groupCtrl?op=displaygroup&groupid=" + idgruppo);
                     
                 } catch (FileUploadException ex) {
                     Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
                     Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
+                
             }
-
+            
         }
     }
 
@@ -447,7 +450,7 @@ public class groupCtrl extends HttpServlet {
 
     MessageDigest messageDigest = null;
     final String dollars = "$$";
-
+    
     public void makeDir(String path) throws ServletException {
         File theDir = new File(path);
         if (!theDir.exists()) {
@@ -456,9 +459,9 @@ public class groupCtrl extends HttpServlet {
                 throw new ServletException("Cannot create a DIR");
             }
         }
-
+        
     }
-
+    
     public String md5(String gen) {
         if (messageDigest == null) {
             try {
@@ -472,7 +475,7 @@ public class groupCtrl extends HttpServlet {
         for (int i = 0; i < mdbytes.length; i++) {
             sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
         }
-
+        
         return sb.toString();
     }
 
@@ -494,7 +497,7 @@ public class groupCtrl extends HttpServlet {
         if (text != null && !text.equals("")) {
             while (!text.equals("")) {
                 end = text.indexOf(dollars);
-
+                
                 if (end < 0) {
                     parts.add(index, text);
                     names.add(index, null);
@@ -518,28 +521,28 @@ public class groupCtrl extends HttpServlet {
                             names.add(index, null);
                         }
                         index++;
-
+                        
                     }
                     found = !found;
                     text = text.substring(end + 2);
                 }
-
+                
             }
             for (int i = 0; i < parts.size(); i++) {
                 nameFound = names.get(i);
                 textFound = parts.get(i);
                 if (null != nameFound) {
-
+                    
                     String tmp = createLink(textFound, nameFound, fileId, idgruppo);
                     retVal += tmp;
-
+                    
                 } else {
                     retVal += textFound;
                 }
             }
-
+            
         }
-
+        
         return retVal;
     }
 
@@ -553,11 +556,11 @@ public class groupCtrl extends HttpServlet {
      */
     public String createLink(String text, String name, String id, int idgruppo) {
         int idt = 0;
-
+        
         if (!(id == null)) {
             idt = Integer.parseInt(id);
         }
-
+        
         int tmp;
         if ("-1".equals(id) || id == null) {
             if (!(name.equals("") || name.equals(" "))) {
@@ -566,14 +569,14 @@ public class groupCtrl extends HttpServlet {
                 } else {
                     tmp = manager.getLinkByName(text, name, idgruppo);
                 }
-
+                
             } else {
                 tmp = manager.getLRULink(text, idgruppo);
             }
         } else {
             tmp = idt;
         }
-
+        
         if ("".equals(tmp) || tmp == 0) {
             text = text.toLowerCase();
             if ((name.contains("http") && text.contains("//")) || (name.contains("//") && name.contains("https"))) {
@@ -582,17 +585,17 @@ public class groupCtrl extends HttpServlet {
                 } else {
                     return "<a href='" + name + "://" + text + "'>" + text.substring(2) + "</a>";
                 }
-
+                
             } else if (text.contains("www")) {
                 return "<a href='http://" + text + "'>" + text + "</a>";
-
+                
             } else {
                 return text;
             }
         } else {
-
+            
             return "<a href='fileDownload?fileId=" + tmp + "'>" + text + "</a>";
         }
     }
-
+    
 }

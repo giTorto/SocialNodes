@@ -28,7 +28,7 @@
         <!--Socialnodes navbar-->
         <div class="navbar navbar-default" role="navigation">
             <div class="container">
-                
+
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="sr-only">Toggle navigation</span>
@@ -36,28 +36,27 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Socialnodes</a>
+                    <a class="navbar-brand" href="#">Socialnodes  <img src="<c:out value="${user.avatar_link}" />" style="width: 70px; height:70px " > </a>
                 </div>
+
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="/socialNodes/afterLogged/afterLogin?op=showgroups" class="btn btn-default">I miei gruppi <span class="glyphicon glyphicon-th"></span></a></li>
                         <li><a href="/socialNodes/afterLogged/afterLogin?op=tocreation" class="btn btn-default">Crea gruppo <span class="glyphicon glyphicon-plus"></span></a></li>
                         <li><a href="/socialNodes/afterLogged/afterLogin?op=showinviti" class="btn btn-default">Inviti <span class="glyphicon glyphicon-user"></span></a></li>
                         <li><a href="/socialNodes/afterLogged/afterLogin?op=topersonalsettings" class="btn btn-default">Impostazioni personali <span class="glyphicon glyphicon-cog"></span></a></li>
-                               
-                        <c:set var="ismodera" scope="session" value="<%= user.getIsModeratore() %>" />
+                                <c:set var="ismodera" scope="session" value="<%= user.getIsModeratore()%>" />
                                 <c:if test="${ismodera == 1}">
-                                        <li><a href="socialNodes/afterLogged/afterLogin?op=tomoderatore" 
-                               class="btn btn-default">Pannello di controllo per moderatore <span class="glyphicon glyphicon-pencil"></span></a></li>
-                                </c:if>  
-                               
-                               <img src="<c:out value="${user.avatar_link}" />" style="width: 100px; height:100px " >
+                            <li><a href="socialNodes/afterLogged/afterLogin?op=tomoderatore" 
+                                   class="btn btn-default">Pannello di controllo per moderatore <span class="glyphicon glyphicon-pencil"></span></a></li>
+                                </c:if>                                                         
                         <li><a href="/socialNodes/afterLogged/afterLogin?op=logout" class="btn btn-default">Logout <span class="glyphicon glyphicon-log-out"></span></a></li>
                     </ul>
                 </div>
             </div>
         </div>
         <!--/Socialnodes navbar-->
+
 
         <div class="container" style="padding: 5em;">
             <div class="row clearfix">
@@ -67,13 +66,13 @@
                             <p>
                             <h2>
                                 <jsp:getProperty name="messaggio_main" property="messaggio" />
-                              
-                               
-                                  
-                                        
-                                   
-                               
-                                
+
+
+
+
+
+
+
                             </h2>
                             </p>
                             <div class="page-header">

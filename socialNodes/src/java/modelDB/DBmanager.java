@@ -81,7 +81,7 @@ public class DBmanager {
         // usare SEMPRE i PreparedStatement, anche per query banali. 
         // *** MAI E POI MAI COSTRUIRE LE QUERY CONCATENANDO STRINGHE !!!! 
         PreparedStatement stm = con.prepareStatement("SELECT * FROM utente WHERE email = ? AND password = ?");
-        Utente user;
+
         try {
             stm.setString(1, email);
             stm.setString(2, password);
@@ -89,11 +89,12 @@ public class DBmanager {
 
             try {
                 if (rs.next()) {
-                    user = new Utente();
+                    Utente user = new Utente();
                     user.setUsername(rs.getString("username"));
                     user.setEmail(email);
                     user.setLast_access(rs.getTimestamp("data_ultimo_acc"));
                     user.setAvatar_link(rs.getString("avatar_image"));
+                    user.setIsModeratore(rs.getInt("moderatore"));
                     user.setId(rs.getInt("idutente"));
                     return user;
                 } else {
@@ -109,7 +110,7 @@ public class DBmanager {
         } finally { // ricordarsi SEMPRE di chiudere i PreparedStatement in un blocco finally
             stm.close();
         }
-        
+
     }
 
     public Utente getMoreUtente(int id) throws SQLException {
@@ -124,9 +125,10 @@ public class DBmanager {
                     Utente user = new Utente();
                     user.setUsername(rs.getString("username"));
                     user.setLast_access(rs.getTimestamp("data_ultimo_acc"));
-                    user.setId(rs.getInt("idutente"));
                     user.setIsModeratore(rs.getInt("moderatore"));
                     user.setEmail(rs.getString("email"));
+                    user.setAvatar_link(rs.getString("avatar_image"));
+                    user.setId(rs.getInt("idutente"));
                     return user;
                 } else {
                     return null;
@@ -158,6 +160,8 @@ public class DBmanager {
                     user.setId(rs.getInt("idutente"));
                     user.setIsModeratore(rs.getInt("moderatore"));
                     user.setEmail(rs.getString("email"));
+                    user.setAvatar_link(rs.getString("avatar_image"));
+
                     return user;
                 } else {
                     return null;
@@ -257,7 +261,7 @@ public class DBmanager {
                     p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
                     p.setIdOwner(rs.getInt("idowner"));
-                    p.setNomeOwner( (this.getMoreUtente(rs.getInt("idowner"))).getUsername() );
+                    p.setNomeOwner((this.getMoreUtente(rs.getInt("idowner"))).getUsername());
                     p.setIsPublic(rs.getInt("pubblico"));
                     p.setIsAttivo(rs.getInt("attivo"));
                     gruppi.add(p);
@@ -274,7 +278,6 @@ public class DBmanager {
         return gruppi;
 
     }
-
 
     public ArrayList<Gruppo> getGruppiParte(int id) throws SQLException {
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
@@ -293,7 +296,7 @@ public class DBmanager {
                     p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
                     p.setIdOwner(rs.getInt("idowner"));
-                    p.setNomeOwner( (this.getMoreUtente(rs.getInt("idowner"))).getUsername() );
+                    p.setNomeOwner((this.getMoreUtente(rs.getInt("idowner"))).getUsername());
                     p.setIsPublic(rs.getInt("pubblico"));
                     p.setIsAttivo(rs.getInt("attivo"));
                     gruppi.add(p);
@@ -423,15 +426,15 @@ public class DBmanager {
     ArrayList<Message> getNewsPost(Timestamp data_last_access, int id) throws SQLException {
         ArrayList<Message> news = new ArrayList<>();
         PreparedStatement stm;
-           stm = con.prepareStatement("SELECT DISTINCT g.nome,g.idgruppo FROM (gruppo g inner join post p on g.idgruppo=p.idgruppo)"
-                    + " where p.data_ora>? and ( g.idgruppo in "
-                    + "( SELECT g.idgruppo from gruppo g inner join utente u on u.idutente=g.idowner where u.idutente=?) "
-                    + "OR g.idgruppo in (SELECT g.idgruppo from gruppo g inner join gruppi_partecipanti gr on "
-                    + "g.idgruppo=gr.idgruppo where gr.idutente = ? ) )");
-            stm.setTimestamp(1, data_last_access);
-            stm.setInt(2, id);
-            stm.setInt(3, id);
-           
+        stm = con.prepareStatement("SELECT DISTINCT g.nome,g.idgruppo FROM (gruppo g inner join post p on g.idgruppo=p.idgruppo)"
+                + " where p.data_ora>? and ( g.idgruppo in "
+                + "( SELECT g.idgruppo from gruppo g inner join utente u on u.idutente=g.idowner where u.idutente=?) "
+                + "OR g.idgruppo in (SELECT g.idgruppo from gruppo g inner join gruppi_partecipanti gr on "
+                + "g.idgruppo=gr.idgruppo where gr.idutente = ? ) )");
+        stm.setTimestamp(1, data_last_access);
+        stm.setInt(2, id);
+        stm.setInt(3, id);
+
         ResultSet rs = stm.executeQuery();
 
         try {
@@ -442,8 +445,7 @@ public class DBmanager {
                 p.setValue((rs.getTimestamp("data_ora")).toString());
                 news.add(p);
             }
-            
-            
+
         } finally {
 
             rs.close();
@@ -825,11 +827,11 @@ public class DBmanager {
         }
         return retval;
     }
-    
-    
+
     /**
      * Ricerca l'ID del file basandosi sul nome. Se il file viene trovato, viene
      * impostato un campo per indicarlo come recente
+     *
      * @param idgruppo id del gruppo in cui si è e lo si sta richiedendo
      * @param fileName Nome del file
      * @param user Nome dell'utente da linkare
@@ -846,7 +848,7 @@ public class DBmanager {
                             + "AND idgruppo = ?");
             stm.setString(1, user);
             stm.setString(2, fileName);
-            stm.setInt(3,idgruppo);
+            stm.setInt(3, idgruppo);
             rs = stm.executeQuery();
             rs.next();
             retVal = rs.getInt("idpost");
@@ -866,7 +868,7 @@ public class DBmanager {
      * @param fileName Nome del FIlE da cercare
      * @return ID del file o stringa vuota
      */
-    public int getLRULink(String fileName,int idgruppo) {
+    public int getLRULink(String fileName, int idgruppo) {
 
         int retVal = 0;
         try {
@@ -877,11 +879,10 @@ public class DBmanager {
                     = con.prepareStatement("SELECT * FROM POST WHERE realname=? "
                             + "AND idgruppo = ? ORDER BY data_ora DESC FETCH FIRST 1 ROWS ONLY");
             stm.setString(1, fileName);
-            stm.setInt(2,idgruppo);
+            stm.setInt(2, idgruppo);
             rs = stm.executeQuery();
             rs.next();
             retVal = rs.getInt("idpost");
-            
 
             stm.close();
         } catch (SQLException ex) {
@@ -890,10 +891,6 @@ public class DBmanager {
 
         return retVal;
     }
-
-        
-
-    
 
     /**
      * Trova nel DB i dati di un file basandosi sul suo id
@@ -922,8 +919,7 @@ public class DBmanager {
         return retVal;
     }
 
-    
-        /**
+    /**
      * Aggiunge un nuovo file al DB
      *
      * @param user l'utente che ha aggiunto il post
@@ -935,9 +931,9 @@ public class DBmanager {
     public void addPostFile(Utente user, int idgruppo, String realname, String dbname, String testo) throws SQLException {
         int idutente = user.getId();
 
-       Calendar calendar = Calendar.getInstance();
-                        java.util.Date now = calendar.getTime();
-                        Timestamp data_acc = new Timestamp(now.getTime());
+        Calendar calendar = Calendar.getInstance();
+        java.util.Date now = calendar.getTime();
+        Timestamp data_acc = new Timestamp(now.getTime());
 
         PreparedStatement stm
                 = con.prepareStatement("INSERT INTO POST (data_ora,testo,idwriter,idgruppo,realname,dbname) values(?,?,?,?,?,?) ");
@@ -957,8 +953,8 @@ public class DBmanager {
         }
 
     }
-    
-     /**
+
+    /**
      * Permette di ottenere facilmente la lista di tutti i post di un gruppo ora
      * perfezionata, in ogni post c'è un oggetto Utente che è il writer
      *
@@ -1006,8 +1002,21 @@ public class DBmanager {
         return posts;
 
     }
-    
-        /*
+
+    public void deleteParticipantsGruppo(int idgruppo) throws SQLException {
+        PreparedStatement stm = con.prepareStatement("DELETE FROM GRUPPI_PARTECIPANTI WHERE IDGRUPPO = ?");
+        try {
+            stm.setInt(1, idgruppo);
+            int executeUpdate = stm.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("DbManager: deleteParticipantsGruppo, errore nel rimuovere partecipanti e invitati per il gruppo con id: " + idgruppo);
+        } finally {
+            stm.close();
+        }
+
+    }
+
+    /*
      Da mettere la getpostgruppo ma va modificata molto...e soprattuto aspetto di vedere
      come gestire gli avatar perchè se ogni post ha bisogno dell'avatar per essere printoutato
      allora finchè non sappiamo come gestire gli avatar non ci serve recuperare i post
@@ -1031,9 +1040,8 @@ public class DBmanager {
 //        
 //        return retval;
 //    }
+    public void addUtente(String username, String email, String password, String img) throws SQLException {
 
-    public void addUtente(String username, String email, String password, String img)throws SQLException {
-        
         PreparedStatement stm;
         stm = con.prepareStatement("INSERT INTO utente (username,email,password,moderatore, avatar_image) "
                 + "values (?,?,?,?,?)");
@@ -1042,11 +1050,11 @@ public class DBmanager {
             stm.setString(2, email);
             stm.setString(3, password);
             stm.setInt(4, 0);
-            stm.setString(5,img);
+            stm.setString(5, img);
             stm.executeUpdate();
         } finally {
             stm.close();
         }
     }
-    
+
 }
