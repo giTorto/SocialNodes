@@ -51,19 +51,47 @@
             </c:forEach>
         </div></div>
     <div class="msgBox panel">
+        <c:set var="isAttivo" scope="page" value="<%= gruppo.getIsAttivo()%>" />
         <form action="groupCtrl" method ="post"  enctype="multipart/form-data">
-            <textarea class="form-control" name="messaggio" ></textarea>
+
+            <c:choose>
+                <c:when test="${isAttivo == 1}">
+                    <textarea class="form-control" name="messaggio"></textarea>
+                </c:when>
+
+                <c:otherwise>
+                    <textarea class="form-control" name="messaggio" disabled></textarea>
+                </c:otherwise>
+            </c:choose>
+
+
+
             <div class="send" >
                 <div class="btn-group">
                     <input type="hidden" name="idgruppo" value="<jsp:getProperty name="gruppo" property="idgruppo"></jsp:getProperty>" >
-                    <input class="btn btn-default" name="submit" type="submit" value="send">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><input  type="file" name="file"> </li>
 
-                    </ul>
+                    <c:choose>
+                        <c:when test="${isAttivo == 1}">
+                            <input class="btn btn-default" name="submit" type="submit" value="send">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><input  type="file" name="file"> </li>
+                            </ul>
+                        </c:when>
+                        <c:otherwise>
+                            <input class="btn btn-default" name="submit" type="submit" value="send" disabled>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" disabled>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><input  type="file" name="file"> </li>
+                            </ul>
+                        </c:otherwise>
+                    </c:choose>
+
+
                 </div>
         </form>
     </div>
