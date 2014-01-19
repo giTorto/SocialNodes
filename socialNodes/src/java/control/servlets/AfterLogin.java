@@ -5,24 +5,35 @@
  */
 package control.servlets;
 
+import java.util.ArrayList;
+import javax.servlet.http.Cookie;
+import modelDB.Gruppo;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import modelDB.DBmanager;
-import modelDB.Gruppo;
-import modelDB.Message;
 import modelDB.Utente;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+import util.MyUtil;
+import modelDB.Message;
 
 /**
  *
@@ -106,7 +117,7 @@ public class AfterLogin extends HttpServlet {
                 ArrayList<Gruppo> gruppi_parte = user.getGruppiParte();
                 ArrayList<Gruppo> gruppi_mio = user.getGruppiOwn();
                 g = (new Gruppo()).listaGruppiPubblici();
-                request.setAttribute("gruppi_pubblici",g);
+                request.setAttribute("gruppi_pubblici", g);
                 request.setAttribute("gruppi_miei", gruppi_mio);
                 request.setAttribute("gruppi_parte", gruppi_parte);
                 dispatcher = request.getRequestDispatcher("/afterLogged/showGroups.jsp");
@@ -155,10 +166,20 @@ public class AfterLogin extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String operazione = request.getParameter("op");
+        String operazione, username = null;
+        Message messaggioBean = new Message();
+        messaggioBean.setMessaggio("");
+        messaggioBean.setValue("");
+        messaggioBean.setTipoutente("");
+        String new_username = null;
+        String new_password = null;
+        String op = request.getParameter("op");
         RequestDispatcher dispatcher;
-        boolean ok_session_user = false;
+        if (op == null) {
+            op = "personalsetting";
+        }
 
+        boolean ok_session_user = false;
         HttpSession session = request.getSession(false);
         Utente user = (Utente) session.getAttribute("user");
         if (user != null) {
@@ -167,50 +188,145 @@ public class AfterLogin extends HttpServlet {
         /*
          QUA BISOGNA FARE L'ITERATOR PER PRENDRSI I VARI PARAMETRI
          */
-        switch (operazione) {
-            case "personalsettings":
-                //processameto dei dati in arrivo dal form di modifica nel quale è possibilie cambiare username, password, avatar
-                String new_username = null;
-                String new_password = null;
-
-                //recupero nuovousername e salvataggio nel db
-                boolean ok_new_username = true;
+        switch (op) {
+            case "personalsetting"://caso in cui sto modificando le impostazioni personali
+                boolean imgyes = false;
+                String tmp = null;
                 try {
-                    new_username = request.getParameter("new_username");
-                } catch (Exception e) {
-                    ok_new_username = false;
-                }
-                if (ok_session_user && new_username != null && !new_username.equals("") && ok_new_username) {
-                    try {
-                        manager.updateUserName(user.getId(), new_username);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(AfterLogin.class.getName()).log(Level.SEVERE, null, ex);
-                        System.err.println("Afterlogin: personalsettings, errore nell'aggiornare username dell'utente " + user.getUsername());
+                    String path, relPath, fileName;
+                    ServletFileUpload fileUpload = new ServletFileUpload();
+                    FileItemIterator items;
+
+                    items = fileUpload.getItemIterator(request);
+
+                    while (items.hasNext()) {
+                        FileItemStream item = items.next();
+                        if (!item.isFormField()) {
+                            //String mimetype= new MimetypesFileTypeMap().getContentType(item);
+                            //String type = mimetype.split("/")[0];
+                            InputStream is = new BufferedInputStream(item.openStream());
+                            if (is.available() > 0) {
+                                BufferedOutputStream output = null;
+                                try {
+                                    String tipo;
+                                    ServletContext scx = getServletContext();
+                                    path = scx.getRealPath("") + "\\media";
+                                    relPath = "media";
+                                    makeDir(path);
+                                    path += "\\" + "avatar";
+                                    makeDir(path);
+                                    fileName = MyUtil.formatName(item.getName());;
+                                    //seed è il seme per l'algoritmo di hashing, per renderlo unico è composto dal nome del file, l'id utente e il tempo preciso al millisecondo (che garantisce)
+
+                                    tmp = username;
+                                    tipo = MyUtil.getExtension(fileName);
+
+                                    tmp = tmp + tipo;
+                                    path += "\\" + tmp;
+                                    relPath += "\\avatar\\" + tmp;
+
+                                    output = new BufferedOutputStream(new FileOutputStream(path, false));
+
+                                    int data = -1;
+                                    while ((data = is.read()) != -1) {
+                                        output.write(data);
+                                    }
+                                    output.close();
+                                    imgyes = true;
+
+                                } catch (IOException ioe) {
+                                    throw new ServletException(ioe.getMessage());
+                                    //System.err.println("Errore nello scrivere il file appena caricato all'interno del filesystem: " + ioe.getLocalizedMessage());
+                                } finally {
+                                    is.close();
+                                    if (output != null) {
+                                        output.close();
+                                    }
+                                }
+                            }
+                        } else {
+                            switch (item.getFieldName()) {
+                                case "new_username":
+                                    new_username = Streams.asString(item.openStream());
+                                    //recupero nuovousername e salvataggio nel db
+                                    if (new_username != null && !new_username.equals("")) {
+                                        try {
+                                            manager.updateUserName(user.getId(), new_username);
+                                        } catch (SQLException ex) {
+                                            Logger.getLogger(AfterLogin.class.getName()).log(Level.SEVERE, null, ex);
+                                            System.err.println("Afterlogin: personalsettings, errore nell'aggiornare username dell'utente " + user.getUsername());
+                                        }
+                                    }
+                                    break;
+                                case "new_password":
+                                    new_password = Streams.asString(item.openStream());
+                                    //recupero nuovapassword e salvataggio nel db
+                                    if (new_password != null && !new_password.equals("")) {
+                                        try {
+                                            manager.updateUserPassword(user.getId(), new_password);
+                                        } catch (SQLException ex) {
+                                            Logger.getLogger(AfterLogin.class.getName()).log(Level.SEVERE, null, ex);
+                                            System.err.println("Afterlogin: personalsettings, errore nell'aggiornare password dell'utente " + user.getUsername());
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
                     }
+                } catch (FileUploadException ex) {
+                    Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                //recupero nuovapassword e salvataggio nel db
-                boolean ok_new_password = true;
-                try {
-                    new_password = request.getParameter("new_password");
-                } catch (Exception e) {
-                    ok_new_password = false;
-                }
-                if (ok_session_user && new_password != null && !new_password.equals("") && ok_new_password) {
-                    try {
-                        manager.updateUserPassword(user.getId(), new_password);
-                    } catch (SQLException ex) {
-                        Logger.getLogger(AfterLogin.class.getName()).log(Level.SEVERE, null, ex);
-                        System.err.println("Afterlogin: personalsettings, errore nell'aggiornare password dell'utente " + user.getUsername());
-                    }
-                }
-
+                response.sendRedirect(request.getContextPath() + "/afterLogged/afterLogin?op=showgroups");
                 break;
-
             default:
-            //fare qlcs
-            }
 
+        }
+
+        /*switch (operazione) {
+         case "personalsettings":
+         //processameto dei dati in arrivo dal form di modifica nel quale è possibilie cambiare username, password, avatar
+         String new_username = null;
+         String new_password = null;
+
+         //recupero nuovousername e salvataggio nel db
+         boolean ok_new_username = true;
+         try {
+         new_username = request.getParameter("new_username");
+         } catch (Exception e) {
+         ok_new_username = false;
+         }
+         if (ok_session_user && new_username != null && !new_username.equals("") && ok_new_username) {
+         try {
+         manager.updateUserName(user.getId(), new_username);
+         } catch (SQLException ex) {
+         Logger.getLogger(AfterLogin.class.getName()).log(Level.SEVERE, null, ex);
+         System.err.println("Afterlogin: personalsettings, errore nell'aggiornare username dell'utente " + user.getUsername());
+         }
+         }
+
+         //recupero nuovapassword e salvataggio nel db
+         boolean ok_new_password = true;
+         try {
+         new_password = request.getParameter("new_password");
+         } catch (Exception e) {
+         ok_new_password = false;
+         }
+         if (ok_session_user && new_password != null && !new_password.equals("") && ok_new_password) {
+         try {
+         manager.updateUserPassword(user.getId(), new_password);
+         } catch (SQLException ex) {
+         Logger.getLogger(AfterLogin.class.getName()).log(Level.SEVERE, null, ex);
+         System.err.println("Afterlogin: personalsettings, errore nell'aggiornare password dell'utente " + user.getUsername());
+         }
+         }
+
+         break;
+    
+
+         default:
+         //fare qlcs
+         }*/
     }
 
     /**
@@ -222,5 +338,16 @@ public class AfterLogin extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    public void makeDir(String path) throws ServletException {
+        File theDir = new File(path);
+        if (!theDir.exists()) {
+            boolean result = theDir.mkdir();
+            if (!result) {
+                throw new ServletException("Cannot create a DIR");
+            }
+        }
+
+    }
 
 }

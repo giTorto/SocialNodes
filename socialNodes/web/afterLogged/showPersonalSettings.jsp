@@ -18,8 +18,8 @@
 
         <div class="container">
             <div class="row clearfix">
-                 <div class="col-md-2 column">
-                    <button type="button" class="btn btn-primary" onclick="location.href='main.jsp'">Indietro</button>
+                <div class="col-md-2 column">
+                    <button type="button" class="btn btn-primary" onclick="location.href = 'main.jsp'">Indietro</button>
                 </div>
                 <div class="col-md-12 column">
                     <div class="page-header">
@@ -41,8 +41,6 @@
             <div class="row clearfix">
                 <div class="col-md-12 column">
                     <form role="form" action="/socialNodes/afterLogged/afterLogin" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="op" value="personalsettings">
-
                         <div class="form-group">
                             <label for="exampleInputUsername1">Nuovo Username</label><input name="new_username" value="<%= user.getUsername()%>" type="text" class="form-control" id="exampleInputUsername1">
                         </div>                        
