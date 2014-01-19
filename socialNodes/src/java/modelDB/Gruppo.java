@@ -155,7 +155,16 @@ public class Gruppo {
     public void setIsAttivo(int isAttivo) {
         this.isAttivo = isAttivo;
     }
-    
-    
+
+    public int getNumPartecipanti() {
+        List<Integer> users_ids = null;
+        try {
+            users_ids = manager.getUtenti(this.idgruppo);
+        } catch (SQLException e) {
+            //merda!
+        }
+
+        return users_ids.size();
+    }
 
 }

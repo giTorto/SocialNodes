@@ -148,6 +148,13 @@ public class AfterLogin extends HttpServlet {
                 response.sendRedirect(request.getContextPath());
                 break;
             case "tomoderatore":
+                ArrayList<Gruppo> allgruppi = null;
+                try {
+                    allgruppi = user.getAllGruppi();
+                } catch (Exception e) {
+                    //merda!
+                }
+                request.setAttribute("allgruppi", allgruppi);
                 dispatcher = request.getRequestDispatcher("/afterLogged/moderatore.jsp");
                 dispatcher.forward(request, response);
                 break;

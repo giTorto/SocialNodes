@@ -1057,4 +1057,41 @@ public class DBmanager {
         }
     }
 
+    public void updateAttivoGruppo(int idgruppo, int flag_attivo) throws SQLException {
+        PreparedStatement stm = con.prepareStatement("UPDATE GRUPPO   SET ATTIVO = ?  WHERE IDGRUPPO= ?");
+        try {
+            stm.setInt(1, flag_attivo);
+            stm.setInt(2, idgruppo);
+            int executeUpdate = stm.executeUpdate();
+        } catch (SQLException ex) {
+            System.err.println("DbManager: updateAttivoGruppo, Errore nell'aggiornare il flag del gruppo con id " + idgruppo);
+        } finally {
+            stm.close();
+        }
+    }
+
+    public void addSimplePost(Utente user, int idgruppo, String testo) throws SQLException {
+        int idutente = user.getId();
+
+        Calendar calendar = Calendar.getInstance();
+        java.util.Date now = calendar.getTime();
+        Timestamp data_acc = new Timestamp(now.getTime());
+
+        PreparedStatement stm
+                = con.prepareStatement("INSERT INTO post (testo,idwriter,idgruppo,data_ora)\n"
+                        + "VALUES (?,?,?,?) ");
+        try {
+            stm.setString(1, testo);
+            stm.setInt(2, idutente);
+            stm.setInt(3, idgruppo);
+            stm.setTimestamp(4, data_acc);
+            int executeUpdate = stm.executeUpdate();
+        } catch (SQLException ex) {
+            //merda!
+        } finally {
+            stm.close();
+        }
+
+    }
+
 }

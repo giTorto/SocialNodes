@@ -7,6 +7,7 @@ package control.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import modelDB.DBmanager;
 import modelDB.Gruppo;
 import modelDB.Message;
 import modelDB.Utente;
+import util.MyUtil;
 
 /**
  *
@@ -59,10 +61,10 @@ public class moderatoreCtrl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-         HttpSession session = request.getSession(false);
+
+        HttpSession session = request.getSession(false);
         Utente user = (Utente) session.getAttribute("user");
-        
+
         String operazione = null;
         operazione = request.getParameter("op");
         Message messaggioBean = new Message();
@@ -77,16 +79,35 @@ public class moderatoreCtrl extends HttpServlet {
                 case "actionmoderatore":
                     System.out.println("recuperiamo param dal form");
                     String isAttivo = request.getParameter("isAttivo");
-                    String nome_gruppo= request.getParameter("nome_gruppo");
-                    System.out.println("nome gruppo aggiornato:  " + nome_gruppo);
+                    String groupid = request.getParameter("groupid");
+                    System.out.println("groupid aggiornato:  " + groupid);
                     System.out.println("il flag attivo/bloccato deve valere:  " + isAttivo);
-                    
-                    ArrayList<Gruppo> allGruppi = user.getAllGruppi();
-                    
-                    request.setAttribute("allgruppi", allGruppi);
-                    dispatcher=request.getRequestDispatcher("/afterLogged/moderatore.jsp");
+                    //bloccare/sbloccare un gruppo
+                    if (isAttivo == null) {
+                        isAttivo = "0";
+                    }
+                    int idgruppo = Integer.parseInt(groupid);
+                    int attivo = Integer.parseInt(isAttivo);
+                    if (idgruppo > 0) {
+                        try {
+                            Gruppo g = manager.getGruppo(idgruppo);
+                            if (g.getIsAttivo() != attivo) {
+                                //aggiorna il db
+                                if (attivo == 0) {
+                                    //sto bloccando il gruppo
+                                    MyUtil.bloccaGruppo(user, idgruppo, manager);
+                                } else {
+                                    MyUtil.attivaGruppo(idgruppo, manager); //sto sbloccando il gruppo
+                                }
+                            }
+                        } catch (SQLException e) {
+                            //merda!
+                        }
+                    }
+
+                    dispatcher = request.getRequestDispatcher("/afterLogged/moderatore.jsp");
                     dispatcher.forward(request, response);
-                   // response.sendRedirect(request.getContextPath());
+                    // response.sendRedirect(request.getContextPath());
                     break;
             }
         }

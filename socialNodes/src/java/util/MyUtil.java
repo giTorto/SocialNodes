@@ -156,4 +156,24 @@ public class MyUtil {
 
     }
 
+    public static void bloccaGruppo(Utente u, int idgruppo, DBmanager manager) {
+        try {
+            manager.updateAttivoGruppo(idgruppo, 0);
+        } catch (SQLException e) {
+        }
+        //gestisci il blocco dei post, tipo pubblica il post "gruppo chiuso" e fai qlcs con le date
+        try {
+            manager.addSimplePost(u, idgruppo, "QUESTO FORUM E' STATO BLOCCATO DAI MODERATORI DEL SOCIALNETWORK\n");
+        } catch (SQLException e) {
+        }
+    }
+
+    public static void attivaGruppo(int idgruppo, DBmanager manager) {
+        try {
+            manager.updateAttivoGruppo(idgruppo, 1);
+        } catch (SQLException e) {
+        }
+        //gestisci il blocco dei post, tipo rimuovi  il post "gruppo chiuso"
+    }
+
 }
