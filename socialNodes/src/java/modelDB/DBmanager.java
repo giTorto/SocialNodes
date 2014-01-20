@@ -25,11 +25,11 @@ import java.util.logging.Logger;
  * @author Giulian
  */
 public class DBmanager {
-
+    
     private static transient Connection con;//transient = non serializzabile
     private static final String DRIVER = "org.apache.derby.jdbc.ClientDriver";
     private static final String DBURL = "jdbc:derby://localhost:1527/socialdb;user=utente;password=utente";
-
+    
     DBmanager() {
         try {
             Class.forName(DRIVER, true, getClass().getClassLoader());
@@ -39,32 +39,32 @@ public class DBmanager {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
-
+    
     public DBmanager(String dburl) throws SQLException {
-
+        
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver", true, getClass().getClassLoader());
         } catch (Exception e) {
             throw new RuntimeException(e.toString(), e);
         }
-
+        
         Connection con = DriverManager.getConnection(dburl);
-
+        
         this.con = con;
-
+        
     }
-
+    
     public static void shutdown() {
         try {
             DriverManager.getConnection("jdbc:derby:;shutdown=true");
         } catch (SQLException ex) {
-
+            
             Logger.getLogger(DBmanager.class.getName()).info(ex.getMessage());
-
+            
         }
-
+        
     }
 
     /**
@@ -81,12 +81,12 @@ public class DBmanager {
         // usare SEMPRE i PreparedStatement, anche per query banali. 
         // *** MAI E POI MAI COSTRUIRE LE QUERY CONCATENANDO STRINGHE !!!! 
         PreparedStatement stm = con.prepareStatement("SELECT * FROM utente WHERE email = ? AND password = ?");
-
+        
         try {
             stm.setString(1, email);
             stm.setString(2, password);
             ResultSet rs = stm.executeQuery();
-
+            
             try {
                 if (rs.next()) {
                     Utente user = new Utente();
@@ -99,27 +99,27 @@ public class DBmanager {
                     return user;
                 } else {
                     return null;
-
+                    
                 }
-
+                
             } finally {
                 // ricordarsi SEMPRE di chiudere i ResultSet in un blocco finally 
                 rs.close();
             }
-
+            
         } finally { // ricordarsi SEMPRE di chiudere i PreparedStatement in un blocco finally
             stm.close();
         }
-
+        
     }
-
+    
     public Utente getMoreUtente(int id) throws SQLException {
-
+        
         PreparedStatement stm = con.prepareStatement("SELECT * FROM utente WHERE idutente = ?");
         try {
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
-
+            
             try {
                 if (rs.next()) {
                     Utente user = new Utente();
@@ -132,26 +132,26 @@ public class DBmanager {
                     return user;
                 } else {
                     return null;
-
+                    
                 }
-
+                
             } finally {
                 // ricordarsi SEMPRE di chiudere i ResultSet in un blocco finally 
                 rs.close();
             }
-
+            
         } finally { // ricordarsi SEMPRE di chiudere i PreparedStatement in un blocco finally
             stm.close();
         }
     }
-
+    
     public Utente getMoreUtente(String email_utente) throws SQLException {
-
+        
         PreparedStatement stm = con.prepareStatement("SELECT * FROM utente WHERE email = ?");
         try {
             stm.setString(1, email_utente);
             ResultSet rs = stm.executeQuery();
-
+            
             try {
                 if (rs.next()) {
                     Utente user = new Utente();
@@ -161,29 +161,29 @@ public class DBmanager {
                     user.setIsModeratore(rs.getInt("moderatore"));
                     user.setEmail(rs.getString("email"));
                     user.setAvatar_link(rs.getString("avatar_image"));
-
+                    
                     return user;
                 } else {
                     return null;
-
+                    
                 }
-
+                
             } finally {
                 // ricordarsi SEMPRE di chiudere i ResultSet in un blocco finally 
                 rs.close();
             }
-
+            
         } finally { // ricordarsi SEMPRE di chiudere i PreparedStatement in un blocco finally
             stm.close();
         }
     }
-
+    
     public String getPasswordUtente(String email_utente) throws SQLException {
         PreparedStatement stm = con.prepareStatement("SELECT * FROM utente WHERE email = ?");
         try {
             stm.setString(1, email_utente);
             ResultSet rs = stm.executeQuery();
-
+            
             try {
                 if (rs.next()) {
                     String retval = rs.getString("password");
@@ -191,43 +191,43 @@ public class DBmanager {
                 } else {
                     return null;
                 }
-
+                
             } finally {
                 // ricordarsi SEMPRE di chiudere i ResultSet in un blocco finally 
                 rs.close();
             }
-
+            
         } finally { // ricordarsi SEMPRE di chiudere i PreparedStatement in un blocco finally
             stm.close();
         }
     }
-
+    
     public boolean nameAlreadyExist(String username) throws SQLException {
         PreparedStatement stm = con.prepareStatement("Select * from utente where username=?");
         stm.setString(1, username);
         ResultSet rs = stm.executeQuery();
-
+        
         if (rs.next() == false) {
             return false;
         } else {
             return true;
         }
     }
-
+    
     public boolean mailAlreadyExist(String email) throws SQLException {
         PreparedStatement stm = con.prepareStatement("Select * from utente where username=?");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
-
+        
         if (rs.next() == false) {
             return false;
         } else {
             return true;
         }
     }
-
+    
     public void addUtente(String username, String email, String password) throws SQLException {
-
+        
         PreparedStatement stm;
         stm = con.prepareStatement("INSERT INTO utente (username,email,password,moderatore) "
                 + "values (?,?,?,?)");
@@ -240,21 +240,21 @@ public class DBmanager {
         } finally {
             stm.close();
         }
-
+        
     }
-
+    
     public ArrayList<Gruppo> getGruppiPubblici() throws SQLException {
-
+        
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
-
+        
         PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppo where pubblico=? ");
-
+        
         try {
             stm.setInt(1, 1);
             ResultSet rs = stm.executeQuery();
-
+            
             try {
-
+                
                 while (rs.next()) {
                     Gruppo p = new Gruppo();
                     p.setNome(rs.getString("nome"));
@@ -267,29 +267,29 @@ public class DBmanager {
                     gruppi.add(p);
                 }
             } finally {
-
+                
                 rs.close();
             }
         } finally {
-
+            
             stm.close();
         }
-
+        
         return gruppi;
-
+        
     }
-
+    
     public ArrayList<Gruppo> getGruppiParte(int id) throws SQLException {
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
-
+        
         PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppi_partecipanti g natural join gruppo gr  where g.idutente =? and invito_acc>0");
-
+        
         try {
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
-
+            
             try {
-
+                
                 while (rs.next()) {
                     Gruppo p = new Gruppo();
                     p.setNome(rs.getString("nome"));
@@ -302,29 +302,29 @@ public class DBmanager {
                     gruppi.add(p);
                 }
             } finally {
-
+                
                 rs.close();
             }
         } finally {
-
+            
             stm.close();
         }
-
+        
         return gruppi;
     }
-
+    
     public ArrayList<Gruppo> getInviti(int id) throws SQLException {
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
-
+        
         PreparedStatement stm = con.prepareStatement("SELECT gr.nome, gr.data_creazione, gr.idgruppo, gr.idowner "
                 + "FROM gruppi_partecipanti g inner join gruppo gr on g.idgruppo=gr.idgruppo where g.idutente =? and invito_acc=0");
-
+        
         try {
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
-
+            
             try {
-
+                
                 while (rs.next()) {
                     Gruppo p = new Gruppo();
                     p.setNome(rs.getString("nome"));
@@ -334,30 +334,30 @@ public class DBmanager {
                     gruppi.add(p);
                 }
             } finally {
-
+                
                 rs.close();
             }
         } finally {
-
+            
             stm.close();
         }
-
+        
         return gruppi;
     }
-
+    
     public ArrayList<Gruppo> getGruppiOwn(int id) throws SQLException {
-
+        
         ArrayList<Gruppo> gruppi = new ArrayList<>();
-
+        
         PreparedStatement stm = con.prepareStatement("SELECT * "
                 + "FROM gruppo g, utente u where u.idutente = g.idowner and u.idutente =? ");
-
+        
         try {
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
-
+            
             try {
-
+                
                 while (rs.next()) {
                     Gruppo p = new Gruppo();
                     p.setNome(rs.getString("nome"));
@@ -370,17 +370,17 @@ public class DBmanager {
                     gruppi.add(p);
                 }
             } finally {
-
+                
                 rs.close();
             }
         } finally {
-
+            
             stm.close();
         }
-
+        
         return gruppi;
     }
-
+    
     public void setNewdate(Timestamp data_acc, int idutente) {
         PreparedStatement stm;
         try {
@@ -388,25 +388,25 @@ public class DBmanager {
             stm.setTimestamp(1, data_acc);
             stm.setInt(2, idutente);
             stm.executeUpdate();
-
+            
         } catch (SQLException ex) {
             Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
-
+    
     ArrayList<Message> getNewsInviti(Timestamp data_last_access, int id) throws SQLException {
         ArrayList<Message> news = new ArrayList<>();
         PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppo g inner join gruppi_partecipanti gr on "
                 + " g.idgruppo = gr.idgruppo where gr.data_invio>? and gr.idutente=?");
-
+        
         stm.setTimestamp(1, data_last_access);
         stm.setInt(2, id);
-
+        
         ResultSet rs = stm.executeQuery();
-
+        
         try {
-
+            
             while (rs.next()) {
                 Message p = new Message();
                 p.setMessaggio("Sei stato invitato al gruppo " + rs.getString("nome"));
@@ -415,14 +415,14 @@ public class DBmanager {
                 news.add(p);
             }
             stm.close();
-
+            
         } finally {
-
+            
             rs.close();
         }
         return news;
     }
-
+    
     ArrayList<Message> getNewsPost(Timestamp data_last_access, int id) throws SQLException {
         ArrayList<Message> news = new ArrayList<>();
         PreparedStatement stm;
@@ -434,9 +434,9 @@ public class DBmanager {
         stm.setTimestamp(1, data_last_access);
         stm.setInt(2, id);
         stm.setInt(3, id);
-
+        
         ResultSet rs = stm.executeQuery();
-
+        
         try {
             while (rs.next()) {
                 Message p = new Message();
@@ -445,15 +445,15 @@ public class DBmanager {
                 p.setValue((rs.getTimestamp("data_ora")).toString());
                 news.add(p);
             }
-
+            
         } finally {
-
+            
             rs.close();
         }
-
+        
         return news;
     }
-
+    
     public List<Gruppo> getInvitiGruppi(Utente u) throws SQLException {
         List<Gruppo> gruppi = new ArrayList<Gruppo>();
         int id = u.getId();
@@ -483,7 +483,7 @@ public class DBmanager {
         }
         return gruppi;
     }
-
+    
     public void creaGruppo(Utente u, String nome, boolean isPublic) throws SQLException {
         int idutente = u.getId();
         Date data = new Date(Calendar.getInstance().getTimeInMillis());
@@ -507,7 +507,7 @@ public class DBmanager {
             stm.close();
         }
     }
-
+    
     public void updatePartecipanti(int idutente, int id_gruppo_accettato) throws SQLException {
         PreparedStatement stm = con.prepareStatement("UPDATE GRUPPI_PARTECIPANTI   SET INVITO_ACC = 1  WHERE IDUTENTE=? AND idgruppo=?");
         try {
@@ -520,7 +520,7 @@ public class DBmanager {
             stm.close();
         }
     }
-
+    
     public void insertInvito(int groupid, int idutente) throws SQLException {
         PreparedStatement stm = con.prepareStatement("INSERT INTO gruppi_partecipanti (idgruppo,idutente,invito_acc,data_invio) values(?,?,?,?)");
         int zero = 0;
@@ -530,7 +530,7 @@ public class DBmanager {
             stm.setInt(2, idutente);
             stm.setInt(3, zero);
             stm.setDate(4, data);
-
+            
             int executeUpdate = stm.executeUpdate();
         } catch (Exception e) {
             System.err.println("errore nel inserire l'invito");
@@ -538,47 +538,47 @@ public class DBmanager {
             stm.close();
         }
     }
-
+    
     public Utente getMoreByUserName(String ut) throws SQLException {
-
+        
         PreparedStatement stm = con.prepareStatement("SELECT * FROM utente WHERE username = ?");
         try {
             stm.setString(1, ut);
             ResultSet rs = stm.executeQuery();
-
+            
             try {
                 if (rs.next()) {
                     Utente user = new Utente();
                     user.setUsername(rs.getString("username"));
-
+                    
                     user.setId(rs.getInt("idutente"));
                     return user;
                 } else {
                     return null;
-
+                    
                 }
-
+                
             } finally {
                 // ricordarsi SEMPRE di chiudere i ResultSet in un blocco finally 
                 rs.close();
             }
-
+            
         } finally { // ricordarsi SEMPRE di chiudere i PreparedStatement in un blocco finally
             stm.close();
         }
     }
-
+    
     public boolean controllaInvitogià_esistente(int groupid, int idutente) throws SQLException {//ritorna true se c'è già un invito, false altrimenti
 
         boolean retval = false;
         try {
             PreparedStatement stm = con.prepareStatement("select * from gruppi_partecipanti where idgruppo= ? and idutente= ?");
-
+            
             stm.setInt(1, groupid);
             stm.setInt(2, idutente);
-
+            
             ResultSet rs = stm.executeQuery();
-
+            
             if (!rs.next()) {
                 System.out.println("No data");
                 retval = false;
@@ -608,7 +608,7 @@ public class DBmanager {
             ResultSet rs = stm.executeQuery();
             try {
                 while (rs.next()) {
-
+                    
                     group.setNome(rs.getString("nome"));
                     Date date = rs.getDate("data_creazione");
                     long timestamp = date.getTime();
@@ -618,7 +618,9 @@ public class DBmanager {
                     group.setNomeOwner(getMoreUtente(rs.getInt("idowner")).getUsername());
                     group.setIsPublic(rs.getInt("pubblico"));
                     group.setIsAttivo(rs.getInt("attivo"));
-
+                    group.setIdOwner(rs.getInt("idowner"));
+                    
+                    
                 }
             } finally {
                 rs.close();
@@ -628,7 +630,7 @@ public class DBmanager {
         }
         return group;
     }
-
+    
     public ArrayList<Gruppo> getAllGruppi() throws SQLException {
         PreparedStatement stm = con.prepareStatement("select * from UTENTE.GRUPPO");
         ArrayList<Gruppo> allgruppi = new ArrayList<>();
@@ -646,6 +648,7 @@ public class DBmanager {
                     group.setNomeOwner(getMoreUtente(rs.getInt("idowner")).getUsername());
                     group.setIsPublic(rs.getInt("pubblico"));
                     group.setIsAttivo(rs.getInt("attivo"));
+                    group.setIdOwner(rs.getInt("idowner"));
                     allgruppi.add(group);
                 }
             } finally {
@@ -654,10 +657,10 @@ public class DBmanager {
         } finally {
             stm.close();
         }
-
+        
         return allgruppi;
     }
-
+    
     public Gruppo getGruppo(String nome) throws SQLException {
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
         PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppo g where g.nome=?");
@@ -675,6 +678,7 @@ public class DBmanager {
                     group.setIdgruppo(rs.getInt("idgruppo"));
                     group.setNomeOwner(getMoreUtente(rs.getInt("idowner")).getUsername());
                     group.setIsAttivo(rs.getInt("attivo"));
+                    group.setIdOwner(rs.getInt("idowner"));
                     gruppi.add(group);
                 }
             } finally {
@@ -685,97 +689,97 @@ public class DBmanager {
         }
         return gruppi.get(0);
     }
-
+    
     public int getNumPostPerGruppo(int idgruppo) throws SQLException {
-
+        
         PreparedStatement stm
                 = con.prepareStatement("SELECT COUNT (p.idgruppo) AS count "
                         + "FROM post p  "
                         + "WHERE p.idgruppo = ?");
-
+        
         try {
             stm.setInt(1, idgruppo);
             ResultSet resultSet = stm.executeQuery();
-
+            
             try {
                 if (resultSet.next()) {
                     return resultSet.getInt("count");
                 } else {
                     return 0;
                 }
-
+                
             } finally {
                 resultSet.close();
             }
         } finally {
             stm.close();
         }
-
+        
     }
-
+    
     public Date getDataUltimoPost(int idgruppo) throws SQLException {
         Date data = null;
-
+        
         PreparedStatement stm = con.prepareStatement("SELECT max(data_ora) as maxdata from post where idgruppo = ? ");
-
+        
         try {
             stm.setInt(1, idgruppo);
             ResultSet resultSet = stm.executeQuery();
-
+            
             try {
                 if (resultSet.next()) {
                     return resultSet.getDate("maxdata");
                 } else {
                     return null;
                 }
-
+                
             } finally {
                 resultSet.close();
             }
         } finally {
             stm.close();
         }
-
+        
     }
-
+    
     public List<Integer> getUtenti(int idgruppo) throws SQLException {
-
+        
         List<Integer> allUsers = new ArrayList<Integer>();
         PreparedStatement stm
                 = con.prepareStatement("SELECT DISTINCT  idutente FROM gruppi_partecipanti "
                         + "                                    WHERE idgruppo = ?  and invito_acc=1");
-
+        
         try {
             stm.setInt(1, idgruppo);
             ResultSet rs = stm.executeQuery();
-
+            
             try {
-
+                
                 while (rs.next()) {
-
+                    
                     Integer ut = new Integer(rs.getInt("idutente"));
-
+                    
                     allUsers.add(ut);
                 }
             } finally {
-
+                
                 rs.close();
             }
         } finally {
-
+            
             stm.close();
         }
-
+        
         return allUsers;
     }
-
+    
     public void updateGroupName(int idgroup, String nuovo_nome) throws SQLException {
-
+        
         PreparedStatement stm = con.prepareStatement("UPDATE GRUPPO   SET NOME = ?  WHERE IDGRUPPO = ?");
         try {
             stm.setString(1, nuovo_nome);
             stm.setInt(2, idgroup);
-
+            
             int executeUpdate = stm.executeUpdate();
         } catch (SQLException ex) {
             System.err.println("Errore nell'aggiornare il gruppo con id:" + idgroup);
@@ -783,14 +787,14 @@ public class DBmanager {
             stm.close();
         }
     }
-
+    
     public void updateGroupFlag(int idgroup, int isPublic) throws SQLException {
-
+        
         PreparedStatement stm = con.prepareStatement("UPDATE GRUPPO   SET PUBBLICO = ?  WHERE IDGRUPPO = ?");
         try {
             stm.setInt(1, isPublic);
             stm.setInt(2, idgroup);
-
+            
             int executeUpdate = stm.executeUpdate();
         } catch (SQLException ex) {
             System.err.println("Errore nell'aggiornare il flag del gruppo con id:" + idgroup);
@@ -798,7 +802,7 @@ public class DBmanager {
             stm.close();
         }
     }
-
+    
     public void updateUserName(int idutente, String new_username) throws SQLException {
         PreparedStatement stm = con.prepareStatement("UPDATE UTENTE   SET username = ?  WHERE IDUTENTE = ?");
         try {
@@ -811,7 +815,7 @@ public class DBmanager {
             stm.close();
         }
     }
-
+    
     public boolean updateUserPassword(int idutente, String new_password) throws SQLException {
         boolean retval = true;
         PreparedStatement stm = con.prepareStatement("UPDATE UTENTE   SET password = ?  WHERE IDUTENTE = ?");
@@ -840,9 +844,9 @@ public class DBmanager {
     public int getLinkByName(String fileName, String user, int idgruppo) {
         int retVal = 0;
         try {
-
+            
             ResultSet rs;
-
+            
             PreparedStatement stm
                     = con.prepareStatement("SELECT * FROM POST p inner join utente u on p.idwriter = u.idutente WHERE u.username = ? AND realname=? "
                             + "AND idgruppo = ?");
@@ -852,12 +856,12 @@ public class DBmanager {
             rs = stm.executeQuery();
             rs.next();
             retVal = rs.getInt("idpost");
-
+            
             stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         return retVal;
     }
 
@@ -869,12 +873,12 @@ public class DBmanager {
      * @return ID del file o stringa vuota
      */
     public int getLRULink(String fileName, int idgruppo) {
-
+        
         int retVal = 0;
         try {
-
+            
             ResultSet rs;
-
+            
             PreparedStatement stm
                     = con.prepareStatement("SELECT * FROM POST WHERE realname=? "
                             + "AND idgruppo = ? ORDER BY data_ora DESC FETCH FIRST 1 ROWS ONLY");
@@ -883,12 +887,12 @@ public class DBmanager {
             rs = stm.executeQuery();
             rs.next();
             retVal = rs.getInt("idpost");
-
+            
             stm.close();
         } catch (SQLException ex) {
             Logger.getLogger(DBmanager.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         return retVal;
     }
 
@@ -904,10 +908,10 @@ public class DBmanager {
         //String query="SELECT GROUPID,REALNAME,DBNAME FROM USERS.FILES WHERE FILEID="+id+" AND GROUPID ="+groupId;
         //String query="SELECT GROUPID,REALNAME,DBNAME FROM USERS.FILES WHERE FILEID="+id+" AND GROUPID IN ("+GET_GROUPS_QUERY+userId+")";
         PreparedStatement pr = con.prepareStatement("SELECT * FROM POST where idpost=?");
-
+        
         try {
             pr.setInt(1, idpost);
-
+            
             rs = pr.executeQuery();
             if (rs.next()) {
                 retVal.put("path", "media\\" + rs.getString("idgruppo") + "\\" + rs.getString("dbname"));
@@ -930,14 +934,14 @@ public class DBmanager {
      */
     public void addPostFile(Utente user, int idgruppo, String realname, String dbname, String testo) throws SQLException {
         int idutente = user.getId();
-
+        
         Calendar calendar = Calendar.getInstance();
         java.util.Date now = calendar.getTime();
         Timestamp data_acc = new Timestamp(now.getTime());
-
+        
         PreparedStatement stm
                 = con.prepareStatement("INSERT INTO POST (data_ora,testo,idwriter,idgruppo,realname,dbname) values(?,?,?,?,?,?) ");
-
+        
         try {
             stm.setTimestamp(1, data_acc);
             stm.setString(2, testo);
@@ -947,11 +951,11 @@ public class DBmanager {
             stm.setString(6, dbname);
             int executeUpdate = stm.executeUpdate();
         } catch (SQLException ex) {
-
+            
         } finally {
             stm.close();
         }
-
+        
     }
 
     /**
@@ -963,20 +967,20 @@ public class DBmanager {
      * @throws SQLException
      */
     public ArrayList<Post> getPostsGruppo(Gruppo g) throws SQLException {
-
+        
         ArrayList<Post> posts = new ArrayList<Post>();
         int id = g.getIdgruppo();
         String link = "";
         PreparedStatement stm
                 = con.prepareStatement("SELECT * FROM post "
                         + "WHERE idgruppo = ? ORDER BY data_ora DESC");
-
+        
         try {
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
-
+            
             try {
-
+                
                 while (rs.next()) {
                     Post p = new Post();
                     //Utente tu = getMoreUtente(rs.getInt("idwriter"));
@@ -991,18 +995,18 @@ public class DBmanager {
                     posts.add(p);
                 }
             } finally {
-
+                
                 rs.close();
             }
         } finally {
-
+            
             stm.close();
         }
-
+        
         return posts;
-
+        
     }
-
+    
     public void deleteParticipantsGruppo(int idgruppo) throws SQLException {
         PreparedStatement stm = con.prepareStatement("DELETE FROM GRUPPI_PARTECIPANTI WHERE IDGRUPPO = ?");
         try {
@@ -1013,7 +1017,7 @@ public class DBmanager {
         } finally {
             stm.close();
         }
-
+        
     }
 
     /*
@@ -1041,7 +1045,7 @@ public class DBmanager {
 //        return retval;
 //    }
     public void addUtente(String username, String email, String password, String img) throws SQLException {
-
+        
         PreparedStatement stm;
         stm = con.prepareStatement("INSERT INTO utente (username,email,password,moderatore, avatar_image) "
                 + "values (?,?,?,?,?)");
@@ -1056,7 +1060,7 @@ public class DBmanager {
             stm.close();
         }
     }
-
+    
     public void updateAttivoGruppo(int idgruppo, int flag_attivo) throws SQLException {
         PreparedStatement stm = con.prepareStatement("UPDATE GRUPPO   SET ATTIVO = ?  WHERE IDGRUPPO= ?");
         try {
@@ -1069,14 +1073,14 @@ public class DBmanager {
             stm.close();
         }
     }
-
+    
     public void addSimplePost(Utente user, int idgruppo, String testo) throws SQLException {
         int idutente = user.getId();
-
+        
         Calendar calendar = Calendar.getInstance();
         java.util.Date now = calendar.getTime();
         Timestamp data_acc = new Timestamp(now.getTime());
-
+        
         PreparedStatement stm
                 = con.prepareStatement("INSERT INTO post (testo,idwriter,idgruppo,data_ora)\n"
                         + "VALUES (?,?,?,?) ");
@@ -1091,7 +1095,7 @@ public class DBmanager {
         } finally {
             stm.close();
         }
-
+        
     }
-
+    
 }

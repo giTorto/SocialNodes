@@ -8,6 +8,14 @@
         <filter-name>FilterAfterlogin</filter-name>
         <filter-class>filtri.FilterAfterlogin</filter-class>
     </filter>
+    <filter>
+        <filter-name>FilterGroupCtrl</filter-name>
+        <filter-class>filtri.FilterGroupCtrl</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>FilterGroupCtrl</filter-name>
+        <servlet-name>groupCtrl</servlet-name>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>FilterAfterlogin</filter-name>
         <servlet-name>AfterLogin</servlet-name>
