@@ -97,7 +97,7 @@
                                     <c:forEach items="${public_groups}" var="gruppi">
                                         <tr>
                                             <td>
-                                                <a href="/socialNodes/afterLogged/groupCtrl?op=displaygroup&groupid=<c:out value="${gruppi.idgruppo}" />&ut=public"> <c:out value="${gruppi.nome}"/> </a>
+                                                <a href="/socialNodes/FirstCtrl?op=displaygroup&groupid=<c:out value="${gruppi.idgruppo}" />&ut=public"> <c:out value="${gruppi.nome}"/> </a>
                                             </td>
                                             <td>
                                                 <c:out value="${gruppi.numPost}" />

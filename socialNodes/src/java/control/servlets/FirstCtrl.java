@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +28,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import modelDB.DBmanager;
+import modelDB.Gruppo;
 import modelDB.Message;
+import modelDB.Post;
 import modelDB.Utente;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -79,6 +82,25 @@ public class FirstCtrl extends HttpServlet {
                     break;
                 case "gotorecoverpassword":
                     dispatcher = request.getRequestDispatcher("/recoverpassword.jsp");
+
+                    break;
+
+                case "displaygroup":
+                    Gruppo gruppo_disp = null;
+                    ArrayList<Post> posts = new ArrayList<>();
+                    try {
+                        String groupid = request.getParameter("groupid");
+                        gruppo_disp = manager.getGruppo(Integer.parseInt(groupid));
+                        posts = manager.getPostsGruppo(gruppo_disp);
+                    } catch (SQLException e) {
+                        System.err.println("groupCtrl: case displaygroup, errore nel recuperare il gruppo dal db");
+                    }
+
+                    request.setAttribute("gruppo", gruppo_disp);
+                    request.setAttribute("lista_post", posts);
+
+                    dispatcher = request.getRequestDispatcher("/groupcontrolled/displaygroup.jsp");
+                    dispatcher.forward(request, response);
 
                     break;
 
@@ -188,7 +210,6 @@ public class FirstCtrl extends HttpServlet {
 
                         dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
                         HttpSession sessione = request.getSession(true);
-                                           
 
                         Timestamp last_access = user.getLast_access();
                         Calendar calendar = Calendar.getInstance();
@@ -205,10 +226,10 @@ public class FirstCtrl extends HttpServlet {
                         session.setAttribute("messaggio_main", data_accesso);
                         ServletContext ctx = getServletContext();
                         //la parte qui sotto setta il link all'inizio ;)
-                        if(user.getAvatar_link().equals("££standard_avatar$$.png")){
-                            user.setAvatar_link(request.getContextPath()+"/standard_image/££standard_avatar$$.png");
-                        }else{
-                             user.setAvatar_link(request.getContextPath()+ "/media/avatar/"+user.getAvatar_link());
+                        if (user.getAvatar_link().equals("££standard_avatar$$.png")) {
+                            user.setAvatar_link(request.getContextPath() + "/standard_image/££standard_avatar$$.png");
+                        } else {
+                            user.setAvatar_link(request.getContextPath() + "/media/avatar/" + user.getAvatar_link());
                         }
                         manager.setNewdate(data_acc, user.getId());
                         // request.setAttribute("user",user);
@@ -221,8 +242,8 @@ public class FirstCtrl extends HttpServlet {
                     }
                     break;
                 case ""://caso in cui sto creando un account
-                        boolean imgyes= false;
-                        String tmp = null;
+                    boolean imgyes = false;
+                    String tmp = null;
                     try {
                         String path, relPath, fileName;
                         ServletFileUpload fileUpload = new ServletFileUpload();
@@ -262,20 +283,19 @@ public class FirstCtrl extends HttpServlet {
                                         while ((data = is.read()) != -1) {
                                             output.write(data);
                                         }
-                                         output.close();
-                                         imgyes= true;
-                                         
-                                      /*  if (!MyUtil.isImage(new File(path))) { non funziona
-                                            //qui devo passare attraverso un bean o something like that per segnalare
-                                            //che il file non è un immagine
-                                            //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
-                                           
-                                            dispatcher = request.getRequestDispatcher("/createAccount.jsp");
-                                            messaggioBean.setMessaggio("Attenzione Per l'avatar è necessario scegliere un immagine");
-                                            request.setAttribute("messaggioBean", messaggioBean);
-                                            dispatcher.forward(request, response);
-                                        } */
+                                        output.close();
+                                        imgyes = true;
 
+                                        /*  if (!MyUtil.isImage(new File(path))) { non funziona
+                                         //qui devo passare attraverso un bean o something like that per segnalare
+                                         //che il file non è un immagine
+                                         //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
+                                           
+                                         dispatcher = request.getRequestDispatcher("/createAccount.jsp");
+                                         messaggioBean.setMessaggio("Attenzione Per l'avatar è necessario scegliere un immagine");
+                                         request.setAttribute("messaggioBean", messaggioBean);
+                                         dispatcher.forward(request, response);
+                                         } */
                                     } catch (IOException ioe) {
                                         throw new ServletException(ioe.getMessage());
                                     } finally {
@@ -329,12 +349,12 @@ public class FirstCtrl extends HttpServlet {
                         Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     //dbmanager inseriscie riga nella tabella utente
-                    if (!imgyes){
-                            manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
-                    }else{
-                         manager.addUtente(username, email, password,tmp); 
+                    if (!imgyes) {
+                        manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
+                    } else {
+                        manager.addUtente(username, email, password, tmp);
                     }
- 
+
                     //response.sendRedirect(request.getContextPath() + "/logIn.jsp");
                     dispatcher = request.getRequestDispatcher("/index.jsp");
                     messaggioBean.setValue(email);
