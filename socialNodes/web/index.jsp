@@ -39,7 +39,7 @@
                         <p>
                             Per scambiare idee sugli argomenti trattati a lezione e condividere le soluzioni degli esercizi più difficili!
                         </p>
-                        
+
                         <c:out value="${messaggioBean.messaggio}" />
                         <p>
 
@@ -81,10 +81,9 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <table class="table">
+                            <table class="table" id="tabletable">
                                 <thead>
                                     <tr>
-
                                         <th>
                                             Nome Gruppo
                                         </th>
@@ -113,6 +112,17 @@
                 </div>
             </div>
         </div>
+
+        <script src="https://dl.dropboxusercontent.com/u/43318531/jquery.dataTables.js"></script>
+        <script src="https://dl.dropboxusercontent.com/u/43318531/jquery.dataTables.min.js"></script>
+        <script src="https://dl.dropboxusercontent.com/u/43318531/jquery.js"></script>
+
+        <script>
+                                $(document).ready(function() {
+                                    $("#tabletable").dataTable();
+                                });
+        </script>
+
     </body>
 
 </html>

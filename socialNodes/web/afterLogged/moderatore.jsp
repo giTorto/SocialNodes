@@ -41,6 +41,9 @@
                     form.submit();
                 }
             </script>
+
+
+
             <style type="text/css"></style>
     </head>
     <body>
@@ -62,8 +65,8 @@
                     <h3>
                         Tutti i gruppi, attivare/bloccare un gruppo alla volta! <small> la casella con un segno di spunta indica che il gruppo è attivo</small>
                     </h3>
-                    <table class="table">
-                        <tbody>
+                    <table class="table" id="tablemoderatore">
+                        <thead>
                             <tr>
                                 <th>Nome gruppo</th>
                                 <th># partecipanti</th>
@@ -72,6 +75,8 @@
                                 <th>Attività gruppo: on/off</th>
                                 <th>Update</th>
                             </tr>
+                        </thead>
+                        <tbody>
                             <c:set var="allgruppi" scope="page" value="<%= user.getAllGruppi()%>" />
                             <c:forEach items="${allgruppi}" var="gruppo">
 
@@ -134,7 +139,15 @@
                                                 </div>
                                                 </div>
                                                 </div>
+                            
+                                                <script src="https://dl.dropboxusercontent.com/u/43318531/jquery.dataTables.js"></script>
+                                                <script src="https://dl.dropboxusercontent.com/u/43318531/jquery.dataTables.min.js"></script>
+                                                <script src="https://dl.dropboxusercontent.com/u/43318531/jquery.js"></script>
 
-
-
-                                                </body></html>
+                                                <script>
+                                                            $(document).ready(function() {
+                                                                $("#tablemoderatore").dataTable();
+                                                            });
+                                                </script>
+                                                </body>
+                                                </html>
