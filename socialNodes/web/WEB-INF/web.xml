@@ -4,6 +4,14 @@
         <filter-name>SessionFilter</filter-name>
         <filter-class>filtri.SessionFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>FilterAfterlogin</filter-name>
+        <filter-class>filtri.FilterAfterlogin</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>FilterAfterlogin</filter-name>
+        <servlet-name>AfterLogin</servlet-name>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>SessionFilter</filter-name>
         <url-pattern>/afterLogged/*</url-pattern>
