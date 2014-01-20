@@ -208,7 +208,7 @@ public class FirstCtrl extends HttpServlet {
                         return;
                     } else {
 
-                        dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
+                   
                         HttpSession sessione = request.getSession(true);
 
                         Timestamp last_access = user.getLast_access();
@@ -234,11 +234,11 @@ public class FirstCtrl extends HttpServlet {
                         manager.setNewdate(data_acc, user.getId());
                         // request.setAttribute("user",user);
                         sessione.setAttribute("user", user);
-                        dispatcher.forward(request, response);
+                        
 
                         // HttpSession sessione = request.getSession(true);
                         // sessione.setAttribute("user", user);
-                        // response.sendRedirect(request.getContextPath() + "/afterLogged/main.jsp");
+                         response.sendRedirect(request.getContextPath() + "/afterLogged/afterLogin?op=main");
                     }
                     break;
                 case ""://caso in cui sto creando un account

@@ -52,6 +52,9 @@ public class FilterAfterlogin implements Filter {
         boolean ok = false;
         //ricerca parametro con cui si accede alla afterlogin
         String operazione = request.getParameter("op");
+        if (operazione==null){
+            operazione="";
+        }
         RequestDispatcher dispatcher;
 
         HttpSession session = ((HttpServletRequest) request).getSession(false);

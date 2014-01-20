@@ -62,6 +62,9 @@ public class FilterGroupCtrl implements Filter {
         String operazione = request.getParameter("op");
         RequestDispatcher dispatcher;
 
+        if (operazione==null){
+            operazione="";
+        }
         HttpSession session = ((HttpServletRequest) request).getSession(false);
         Utente user = (Utente) session.getAttribute("user");
 

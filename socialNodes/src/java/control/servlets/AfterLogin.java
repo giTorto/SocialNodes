@@ -83,7 +83,7 @@ public class AfterLogin extends HttpServlet {
 
         switch (operazione) {
             case "main":
-                Timestamp data_acc = Timestamp.valueOf(request.getParameter("data_acc"));
+             
                 Timestamp last_access = user.getLast_access();
                 Message data_accesso = new Message();
                 if (last_access != null) {
@@ -92,8 +92,18 @@ public class AfterLogin extends HttpServlet {
                     data_accesso.setMessaggio("Benvenuto " + user.getUsername() + " è il tuo primo accesso");
                 }
                 session.setAttribute("data_accesso", data_accesso);
-                manager.setNewdate(data_acc, user.getId());
-
+                
+                
+                try{
+                ArrayList<Message> newInviti = new ArrayList<>();
+                newInviti = manager.getNewsInviti(last_access,user.getId());
+                ArrayList<Message> newPosts = new ArrayList<>();
+                newPosts = manager.getNewsPost(last_access, user.getId());
+                request.setAttribute("nuovInviti", newInviti);
+                request.setAttribute("nuoviPosts", newPosts);
+                }catch (SQLException e){                  
+                }
+                
                 //recupero dal bb e metto tra i request attribute gli oggetti che servono per creare correttamente la pagina main
                 //servono i gruppi dell'utente e le cose del quickdisplay
                 dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
@@ -225,7 +235,7 @@ public class AfterLogin extends HttpServlet {
                                     fileName = MyUtil.formatName(item.getName());;
                                     //seed è il seme per l'algoritmo di hashing, per renderlo unico è composto dal nome del file, l'id utente e il tempo preciso al millisecondo (che garantisce)
 
-                                    tmp = username;
+                                    tmp = user.getUsername();
                                     tipo = MyUtil.getExtension(fileName);
 
                                     tmp = tmp + tipo;
@@ -238,12 +248,17 @@ public class AfterLogin extends HttpServlet {
                                     while ((data = is.read()) != -1) {
                                         output.write(data);
                                     }
+                                    
                                     output.close();
                                     imgyes = true;
+                                    user.setAvatar_link(request.getContextPath()+"/media/avatar/"+tmp);
+                                    manager.setNewImage(user.getId(), tmp);
 
                                 } catch (IOException ioe) {
                                     throw new ServletException(ioe.getMessage());
                                     //System.err.println("Errore nello scrivere il file appena caricato all'interno del filesystem: " + ioe.getLocalizedMessage());
+                                } catch (SQLException s){
+                                    
                                 } finally {
                                     is.close();
                                     if (output != null) {
@@ -290,7 +305,8 @@ public class AfterLogin extends HttpServlet {
 
         }
 
-        /*switch (operazione) {
+        /* 
+         switch (operazione) {
          case "personalsettings":
          //processameto dei dati in arrivo dal form di modifica nel quale è possibilie cambiare username, password, avatar
          String new_username = null;
@@ -319,6 +335,7 @@ public class AfterLogin extends HttpServlet {
          } catch (Exception e) {
          ok_new_password = false;
          }
+        
          if (ok_session_user && new_password != null && !new_password.equals("") && ok_new_password) {
          try {
          manager.updateUserPassword(user.getId(), new_password);
@@ -333,7 +350,8 @@ public class AfterLogin extends HttpServlet {
 
          default:
          //fare qlcs
-         }*/
+         }
+         */
     }
 
     /**

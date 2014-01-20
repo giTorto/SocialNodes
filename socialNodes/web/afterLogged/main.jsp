@@ -94,15 +94,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            1
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-
-                                    </tr>
+                                    <c:forEach items="${nuoviPosts}" var="post">
+                                            <tr>
+                                                <td>
+                                                    <c:out value="${post.messaggio}"/>
+                                                </td>
+                                                <td>
+                                                    <c:out value="${post.link}" />
+                                                </td>
+                                            </tr>
+                                    </c:forEach>
 
                                 </tbody>
                             </table>
@@ -115,28 +116,26 @@
                                 <thead>
                                     <tr class="panel panel-primary" style="background-color: #006DCC; color: white">
                                         <th>
-                                            Gruppo
+                                            Sei stato 
                                         </th>
                                         <th>
-                                            Invitato da
+                                            Vai a vedere
                                         </th>
-                                        <th>
-                                            Accetti?
-                                        </th>
-
+                                    
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <!--Qua ci vuole un getinvitirecenti, con foreach per -->
-                                    <tr>
-                                        <td>
-                                            1
-                                        </td>
-                                        <td>
-                                            TB - Monthly
-                                        </td>
-
-                                    </tr>
+                                     <c:forEach items="${nuovInviti}" var="inviti">
+                                            <tr>
+                                                <td>
+                                                    <c:out value="${inviti.messaggio}"/>
+                                                </td>
+                                                <td>
+                                                    <c:out value="${inviti.link}" />
+                                                </td>
+                                            </tr>
+                                    </c:forEach>
                                 </tbody>
                             </table>
                         </div>

@@ -247,7 +247,7 @@ public class DBmanager {
         
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
         
-        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppo where pubblico=? ");
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppo g inner join utente u on u.idutente = g.idowner where pubblico=? ");
         
         try {
             stm.setInt(1, 1);
@@ -261,7 +261,7 @@ public class DBmanager {
                     p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
                     p.setIdOwner(rs.getInt("idowner"));
-                    p.setNomeOwner((this.getMoreUtente(rs.getInt("idowner"))).getUsername());
+                    p.setNomeOwner(rs.getString("username"));
                     p.setIsPublic(rs.getInt("pubblico"));
                     p.setIsAttivo(rs.getInt("attivo"));
                     gruppi.add(p);
@@ -282,7 +282,7 @@ public class DBmanager {
     public ArrayList<Gruppo> getGruppiParte(int id) throws SQLException {
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
         
-        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppi_partecipanti g natural join gruppo gr  where g.idutente =? and invito_acc>0");
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppi_partecipanti g natural join (gruppo gr inner join utente u on gr.idowner = u.idowner)  where g.idutente =? and invito_acc>0");
         
         try {
             stm.setInt(1, id);
@@ -296,7 +296,7 @@ public class DBmanager {
                     p.setData_creazione(rs.getTimestamp("data_creazione"));
                     p.setIdgruppo(rs.getInt("idgruppo"));
                     p.setIdOwner(rs.getInt("idowner"));
-                    p.setNomeOwner((this.getMoreUtente(rs.getInt("idowner"))).getUsername());
+                    p.setNomeOwner(rs.getString("username"));
                     p.setIsPublic(rs.getInt("pubblico"));
                     p.setIsAttivo(rs.getInt("attivo"));
                     gruppi.add(p);
@@ -395,14 +395,14 @@ public class DBmanager {
         
     }
     
-    ArrayList<Message> getNewsInviti(Timestamp data_last_access, int id) throws SQLException {
+    public ArrayList<Message> getNewsInviti(Timestamp data_last_access, int id) throws SQLException {
         ArrayList<Message> news = new ArrayList<>();
-        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppo g inner join gruppi_partecipanti gr on "
-                + " g.idgruppo = gr.idgruppo where gr.data_invio>? and gr.idutente=?");
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppo g inner join gruppi_partecipanti gr on g.idgruppo = gr.idgruppo where  gr.idutente=? and data_invio>? ");
         
-        stm.setTimestamp(1, data_last_access);
-        stm.setInt(2, id);
-        
+       
+        stm.setInt(1, id);
+         stm.setTimestamp(2, data_last_access);
+         
         ResultSet rs = stm.executeQuery();
         
         try {
@@ -423,16 +423,16 @@ public class DBmanager {
         return news;
     }
     
-    ArrayList<Message> getNewsPost(Timestamp data_last_access, int id) throws SQLException {
+    public ArrayList<Message> getNewsPost(Timestamp data_last_access, int id) throws SQLException {
         ArrayList<Message> news = new ArrayList<>();
         PreparedStatement stm;
-        stm = con.prepareStatement("SELECT DISTINCT g.nome,g.idgruppo FROM (gruppo g inner join post p on g.idgruppo=p.idgruppo)"
-                + " where p.data_ora>? and ( g.idgruppo in "
-                + "( SELECT g.idgruppo from gruppo g inner join utente u on u.idutente=g.idowner where u.idutente=?) "
-                + "OR g.idgruppo in (SELECT g.idgruppo from gruppo g inner join gruppi_partecipanti gr on "
-                + "g.idgruppo=gr.idgruppo where gr.idutente = ? ) )");
+        stm = con.prepareStatement("SELECT DISTINCT g.nome,g.idgruppo "
+                + "FROM gruppo g inner join post p on g.idgruppo=p.idgruppo "
+                + "where p.data_ora>? and g.idgruppo in " +
+        "( SELECT g.idgruppo from gruppo g inner join utente u on u.idutente=g.idowner where u.idutente=?) " +
+        "OR g.idgruppo in (SELECT g.idgruppo from gruppo g inner join gruppi_partecipanti gr on g.idgruppo=gr.idgruppo where gr.idutente = ? and invito_acc=1 )");
         stm.setTimestamp(1, data_last_access);
-        stm.setInt(2, id);
+        stm.setInt(2, id); 
         stm.setInt(3, id);
         
         ResultSet rs = stm.executeQuery();
@@ -440,9 +440,9 @@ public class DBmanager {
         try {
             while (rs.next()) {
                 Message p = new Message();
-                p.setMessaggio("Sei stato invitato al gruppo " + rs.getString("nome"));
-                p.setLink("<a href=afterLogged/afterLogin?op=showGroups?id=" + (rs.getInt("idgruppo")) + ">" + "Guarda gli inviti</a> ");
-                p.setValue((rs.getTimestamp("data_ora")).toString());
+                p.setMessaggio("C'è un nuovo post nel gruppo " + rs.getString("nome"));
+                p.setLink("<a href=afterLogged/afterLogin?op=showGroups?id=" + (rs.getInt("idgruppo")) + ">" + "Guarda i nuovi post</a> ");
+               
                 news.add(p);
             }
             
@@ -1073,6 +1073,24 @@ public class DBmanager {
             stm.close();
         }
     }
+
+    public void setNewImage(int idutente, String username) throws SQLException{
+        PreparedStatement stm = con.prepareStatement("UPDATE utente SET avatar_image=? where idutente=?");
+        
+        try{
+            
+        
+        stm.setInt(2, idutente);
+        stm.setString(1, username);
+        
+         int executeUpdate = stm.executeUpdate();
+        }catch(SQLException ex){
+            
+        }finally{
+            stm.close();
+        }
+        
+    }
     
     public void addSimplePost(Utente user, int idgruppo, String testo) throws SQLException {
         int idutente = user.getId();
@@ -1082,7 +1100,7 @@ public class DBmanager {
         Timestamp data_acc = new Timestamp(now.getTime());
         
         PreparedStatement stm
-                = con.prepareStatement("INSERT INTO post (testo,idwriter,idgruppo,data_ora)\n"
+                = con.prepareStatement("INSERT INTO post (testo,idwriter,idgruppo,data_ora) "
                         + "VALUES (?,?,?,?) ");
         try {
             stm.setString(1, testo);

@@ -1,8 +1,7 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
- * and open the t
- emplate in the editor.
+ * and open the template in the editor.
  */
 package modelDB;
 
@@ -11,6 +10,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 /**
  *
