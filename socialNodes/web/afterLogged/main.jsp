@@ -97,7 +97,7 @@
                                     <c:forEach items="${nuoviPosts}" var="post">
                                             <tr>
                                                 <td>
-                                                    <c:out value="${post.messaggio}"/>
+                                                    <c:out value="${post.messaggio}" escapeXml="false"/>
                                                 </td>
                                                 <td>
                                                     <a href="<c:url value="${post.link}" />" > Vai al gruppo</a>

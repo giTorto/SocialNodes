@@ -56,10 +56,10 @@
             <div class="panel message msg1">
                 <div class="said ">    
                     <c:out value="${post.writer.username}" />  alle <c:out value="${post.data_ora}" />
-                    <c:out value="${post.writer.avatar_link}"/>
+                    <img src="<c:out value="${post.writer.avatar_link}" escapeXml="false" />" style="width: 20px; height:20px " >
 
                 </div>
-                <c:out value="${post.testo}"/></br>
+                <c:out value="${post.testo}" escapeXml="false"/></br>
                 <b>File</b>:<a href="<c:url value="${post.link}"/>"> <c:out value="${post.realname}"/>  </a>
             </div>
         </c:forEach>

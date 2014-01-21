@@ -18,6 +18,9 @@
 
         <div class="container">
             <div class="row clearfix">
+                <div class="col-md-2 column">
+                    <button type="button" class="btn btn-primary" onclick="location.href='index.jsp'">Indietro</button>
+                </div>    
                 <div class="col-md-12 column">
                     <div class="page-header">
                         <h1>

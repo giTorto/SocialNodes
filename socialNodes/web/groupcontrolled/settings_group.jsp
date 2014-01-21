@@ -49,9 +49,11 @@
     <body>
         <div class="container" style="padding: 2em; padding-bottom: 4em;" >
             <div class="row clearfix">
+             
                 <div class="col-md-2 column">
-                    <button type="button" class="btn btn-primary">Indietro</button>
-                </div>
+                    <button type="button" class="btn btn-primary" onclick="location.href='/socialNodes/afterLogged/afterLogin?op=showgroups'">Indietro</button>
+                </div>    
+                
                 <div class="col-md-6 column">
                     <!--qua possiamo metterci una scritta header da usare in tutte le altre pagine-->
                 </div>
@@ -60,14 +62,15 @@
                         <button class="btn btn-primary">Azioni</button> <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span></button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="afterLogin?op=showinviti">Inviti</a>
+                                <a href="/socialNodes/afterLogged/afterLogin?op=showinviti">Inviti</a>
                             </li>
                             <li>
-                                <a href="afterLogin?op=tocreation">Crea gruppo</a>
+                                <a href="/socialNodes/afterLogged/afterLogin?op=tocreation">Crea gruppo</a>
                             </li>
                             <li class="divider">
+
                             <li>
-                                <a href="afterLogin?op=logout">Logout</a>
+                                <a href="/socialNodes/afterLogged/afterLogin?op=logout">Logout</a>
                             </li>
                             </li>
                         </ul>

@@ -416,7 +416,7 @@ public class groupCtrl extends HttpServlet {
                                         Message error = new Message();
                                         error.setMessaggio("E' necessario inserire del testo");
                                         request.setAttribute("messaggioBean", error);
-                                        dispatcher = request.getRequestDispatcher("/socialNodes/afterLogged/groupCtrl?op=displaygroup&groupid=" + idgruppo);
+                                        dispatcher = request.getRequestDispatcher("groupCtrl?op=displaygroup&groupid=" + idgruppo);
                                         dispatcher.forward(request, response);
                                     }
                                     break;
@@ -596,7 +596,7 @@ public class groupCtrl extends HttpServlet {
             }
         } else {
 
-            return "<a href='fileDownload?fileId=" + tmp + "'>" + text + "</a>";
+            return "<a href='groupCtrl/fileDownload?fileId=" + tmp + "'>" + text + "</a>";
         }
     }
 

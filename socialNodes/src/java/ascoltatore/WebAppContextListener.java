@@ -64,6 +64,7 @@ public class WebAppContextListener implements ServletContextListener {
         final String password = "socialnodes123";
 
         Session session = Session.getDefaultInstance(props, new Authenticator() {
+            @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
