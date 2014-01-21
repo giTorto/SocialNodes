@@ -147,6 +147,7 @@ public class AfterLogin extends HttpServlet {
 
                 session.removeAttribute("user");
                 session.invalidate();
+                
                 Cookie[] cookies = request.getCookies();
                 for (Cookie cookie : cookies) {
                     cookie.setMaxAge(0);

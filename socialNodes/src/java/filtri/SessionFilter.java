@@ -46,8 +46,7 @@ public class SessionFilter implements Filter {
      * @exception ServletException if a servlet error occurs
      */
     public void doFilter(ServletRequest request, ServletResponse response,
-            FilterChain chain)
-            throws IOException, ServletException {
+            FilterChain chain) throws IOException, ServletException {
 
         boolean authorized = false;
         if (request instanceof HttpServletRequest) {
@@ -55,7 +54,10 @@ public class SessionFilter implements Filter {
             if (session != null) {
                 Utente user = (Utente) session.getAttribute("user");
                 if (user != null) {
-                    authorized = true;
+                    //per ora devo aggiungere questo controllo if per problemi con la gestione della sessione
+                    if (user.getId() >= 1 && user.getUsername() != null) {
+                        authorized = true;
+                    }
                 }
             }
         }
