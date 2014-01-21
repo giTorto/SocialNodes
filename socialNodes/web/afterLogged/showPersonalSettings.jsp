@@ -48,7 +48,8 @@
                             <label for="exampleInputPassword1">Nuova  Password</label><input name="new_password" type="password" placeholder="se non scrivi niente la tua password resterà invariata" class="form-control" id="exampleInputPassword1">
                         </div>
                         <div class="form-group">
-                            <img alt="140x140" src="http://lorempixel.com/140/140/" />
+
+                            <img src="<%= user.getAvatar_link()%>" style="width: 70px; height:70px " >
                             <label for="exampleInputFile">Cambia Avatar</label><input name="new_avatar" type="file" id="exampleInputFile">
                         </div>
                         <button style="float: right" type="submit" class="btn btn-primary">OK <span class="glyphicon glyphicon-ok"></span></button>

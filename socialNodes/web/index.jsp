@@ -39,11 +39,12 @@
                         <p>
                             Per scambiare idee sugli argomenti trattati a lezione e condividere le soluzioni degli esercizi più difficili!
                         </p>
-
-                        <%=messaggioBean.getMessaggio() %>
-                        <p>
-
-                        </p>
+                        <c:set var="messaggio" scope="page" value="<%=messaggioBean.getMessaggio()%>" />
+                        <c:if test="${messaggio != null}">
+                            <p>
+                            <h3 style="color: #0063DC"> <c:out value="${messaggio}"/> </h3>
+                            </p>             
+                        </c:if>
                         <p>
                             <a class="btn btn-primary btn-large" onclick="location.href = 'FirstCtrl?op=gotocrea'" 
                                align="right" style="float: right">Registrati<span class="glyphicon glyphicon-user"></span></a>

@@ -97,7 +97,8 @@ public class moderatoreCtrl extends HttpServlet {
                                     //sto bloccando il gruppo
                                     MyUtil.bloccaGruppo(user, idgruppo, manager);
                                 } else {
-                                    MyUtil.attivaGruppo(idgruppo, manager); //sto sbloccando il gruppo
+                                    //sto sbloccando il gruppo
+                                    MyUtil.attivaGruppo(idgruppo, manager); 
                                 }
                             }
                         } catch (SQLException e) {

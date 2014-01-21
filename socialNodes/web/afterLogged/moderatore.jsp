@@ -15,39 +15,9 @@
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
-            <script type="text/javascript" src='<c:url value="./js/jquery.js"/>'></script>
-            <script type="text/javascript" src='<c:url value="./js/jquery.dataTables.min.js"/>'></script>    
+
             <title>Pannelo di controllo</title>
-            <script type="text/javascript">
-                function submitForm(element)
-                {
-                    element.type = 'hidden';
 
-                    while (element.className != 'form')
-                        element = element.parentNode;
-
-                    var form = document.getElementById('poster');
-
-                    var inputs = element.getElementsByTagName('input');
-                    while (inputs.length > 0)
-                        form.appendChild(inputs[0]);
-
-                    var selects = element.getElementsByTagName('select');
-                    while (selects.length > 0)
-                        form.appendChild(selects[0]);
-
-                    var textareas = element.getElementsByTagName('textarea');
-                    while (textareas.length > 0)
-                        form.appendChild(textareas[0]);
-
-                    form.submit();
-                }
-            </script>
-            <script>
-                $(document).ready(function() {
-                    $("#tablemoderatore").dataTable();
-                });
-            </script>
 
 
             <style type="text/css"></style>
@@ -87,65 +57,76 @@
                             <c:forEach items="${allgruppi}" var="gruppo">
 
 
-                                <tr class="form" style="background: ">
-                                    <td>
-                                        <input type="hidden" name="groupid" value="<c:out value="${gruppo.getIdgruppo()}" />">
-                                            <c:out value="${gruppo.nome}" />
-                                    </td>
-                                    <td>
-                                        <!--Qua dovremmo pubblicare il numero di partecipanti di un gruppo-->
-                                        <c:out value="${gruppo.getNumPartecipanti()}" />
-                                    </td>
-                                    <td>
-                                        <c:set var="ispublic" scope="page" value="${gruppo.isPublic}" />
-                                        <c:choose>
-                                            <c:when test="${ispublic==0}">
-                                                <c:out value="Privato" />
-                                            </c:when>
-                                            <c:otherwise>
-                                                <c:out value="Pubblico" />
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <c:out value="${gruppo.numPost}" />
-                                    </td>
-                                    <td>
-                                        <div style="padding: 0.1em; padding-left: 4em;">
-                                            <c:choose>
-                                                <c:when test="${gruppo.isAttivo==1}">
-                                                    <input type="checkbox" name="isAttivo" id="checkboxes-0" value=1 checked>
+                                <tr>
+                                    <form id="poster" action="/socialNodes/afterLogged/moderatoreCtrl" method="POST" style="display: none;">
+                                        <input type="hidden" name="op" value="actionmoderatore">
+                                            <td>
+                                                <input type="hidden" name="groupid" value="<c:out value="${gruppo.getIdgruppo()}" />">
+                                                    <c:out value="${gruppo.nome}" />
+                                            </td>
+                                            <td>
+                                                <!--Qua dovremmo pubblicare il numero di partecipanti di un gruppo-->
+                                                <c:out value="${gruppo.getNumPartecipanti()}" />
+                                            </td>
+                                            <td>
+                                                <c:set var="ispublic" scope="page" value="${gruppo.isPublic}" />
+                                                <c:choose>
+                                                    <c:when test="${ispublic==0}">
+                                                        <c:out value="Privato" />
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <input type="checkbox" name="isAttivo" id="checkboxes-0" value=1 >
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                    </div>
-                                                    </td>
-                                                    <td>
-                                                        <input class="btn btn-success" type="submit" name="update" value="Update" onclick="submitForm(this);">
-                                                    </td>
-                                                    </tr>
-                                                </c:forEach>
+                                                        <c:out value="Pubblico" />
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
+                                                <c:out value="${gruppo.numPost}" />
+                                            </td>
+                                            <td>
+                                                <div style="padding: 0.1em; padding-left: 4em;">
+                                                    <c:choose>
+                                                        <c:when test="${gruppo.isAttivo==1}">
+                                                            <input type="checkbox" name="isAttivo" id="checkboxes-0" value=1 checked>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <input type="checkbox" name="isAttivo" id="checkboxes-0" value=1 >
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                            </div>
+                                                            </td>
+                                                            <td>
+                                                                <input class="btn btn-success" type="submit" name="update" value="Update" onclick="submitForm(this);">
+                                                            </td>
+                                                            </form>
+                                                            </tr>
+                                                        </c:forEach>
 
-                                                <!--tr class="form">
-                                                    <td><input type="text" name="name" value="John Doe"></td>
-                                                    <td><input type="text" name="email" value="john@doe.com"></td>
-                                                    <td><input type="submit" name="update" value="Update" onclick="submitForm(this);"></td>
-                                                </tr>
-                                                <tr class="form">
-                                                    <td><input type="text" name="name" value="Joe Bob"></td>
-                                                    <td><input type="text" name="email" value="joe@bob.com"></td>
-                                                    <td><input type="submit" name="update" value="Update" onclick="submitForm(this);"></td>
-                                                </tr-->
+                                                        <!--tr class="form">
+                                                            <td><input type="text" name="name" value="John Doe"></td>
+                                                            <td><input type="text" name="email" value="john@doe.com"></td>
+                                                            <td><input type="submit" name="update" value="Update" onclick="submitForm(this);"></td>
+                                                        </tr>
+                                                        <tr class="form">
+                                                            <td><input type="text" name="name" value="Joe Bob"></td>
+                                                            <td><input type="text" name="email" value="joe@bob.com"></td>
+                                                            <td><input type="submit" name="update" value="Update" onclick="submitForm(this);"></td>
+                                                        </tr-->
 
 
-                                                </tbody>
-                                                </table>
-                                                </div>
-                                                </div>
-                                                </div>
+                                                        </tbody>
+                                                        </table>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+
+                                                        <script type="text/javascript" src='<c:url value="./js/jquery.js"/>'></script>
+                                                        <script type="text/javascript" src='<c:url value="./js/jquery.dataTables.min.js"/>'></script>
+                                                        <script>
+                                                                    $(document).ready(function() {
+                                                                        $("#tablemoderatore").dataTable();
+                                                                    });
+                                                        </script>
 
 
-                                                </body>
-                                                </html>
+                                                        </body>
+                                                        </html>

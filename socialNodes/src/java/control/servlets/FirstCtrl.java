@@ -76,6 +76,11 @@ public class FirstCtrl extends HttpServlet {
 
         if (operazione != null) {
             switch (operazione) {
+
+                case "postnonloggato":
+                    response.sendRedirect(request.getContextPath());
+                    return;
+                // break;
                 case "gotocrea":
                     dispatcher = request.getRequestDispatcher("/createAccount.jsp");
 
@@ -202,13 +207,12 @@ public class FirstCtrl extends HttpServlet {
 
                         dispatcher = request.getRequestDispatcher("/index.jsp");
                         messaggioBean.setMessaggio("Attenzione: L'e-mail o la password inserita non e' corretta");
-                        //request.setAttribute("messaggioBean", messaggioBean);
-                        //dispatcher.forward(request, response);
-                        response.sendRedirect(request.getContextPath());
+                        request.setAttribute("messaggioBean", messaggioBean);
+                        dispatcher.forward(request, response);
+                        //response.sendRedirect(request.getContextPath());
                         return;
                     } else {
 
-                   
                         HttpSession sessione = request.getSession(true);
 
                         Timestamp last_access = user.getLast_access();
@@ -234,11 +238,10 @@ public class FirstCtrl extends HttpServlet {
                         manager.setNewdate(data_acc, user.getId());
                         // request.setAttribute("user",user);
                         sessione.setAttribute("user", user);
-                        
 
                         // HttpSession sessione = request.getSession(true);
                         // sessione.setAttribute("user", user);
-                         response.sendRedirect(request.getContextPath() + "/afterLogged/afterLogin?op=main");
+                        response.sendRedirect(request.getContextPath() + "/afterLogged/afterLogin?op=main");
                     }
                     break;
                 case ""://caso in cui sto creando un account
@@ -358,6 +361,7 @@ public class FirstCtrl extends HttpServlet {
                     //response.sendRedirect(request.getContextPath() + "/logIn.jsp");
                     dispatcher = request.getRequestDispatcher("/index.jsp");
                     messaggioBean.setValue(email);
+                    messaggioBean.setMessaggio("Registrazione effettuata con successo!\n");
                     request.setAttribute("messaggioBean", messaggioBean);
                     dispatcher.forward(request, response);
                     break;

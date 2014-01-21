@@ -182,7 +182,7 @@ public class groupCtrl extends HttpServlet {
                     ok_radio = false;
                 }
 
-                if (ok_crea_gruppo && !"".equals(inviti2parse) && !"".equals(creazione_gruppoNome) && creazione_gruppoNome != null) {
+                if (ok_crea_gruppo && !"".equals(creazione_gruppoNome) && creazione_gruppoNome != null) {
                     try {
                         Utente ownernewgroup = (Utente) ((HttpServletRequest) request).getSession().getAttribute("user");
                         try {
@@ -200,17 +200,20 @@ public class groupCtrl extends HttpServlet {
                         }
 
                     } catch (Exception e) {
-                        System.err.println("Groupctrl: errore! " + e.getMessage());
+                        System.err.println("Groupctrl: errore! però il codice è robusto e regge, stai sciallo" + e.getMessage());
                     }
                 } else {
-                    dispatcher = request.getRequestDispatcher("/errorpage.jsp");
+                    //bisognerebbe mettere qualche messaggio di avviso errore
+                    dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
                     dispatcher.forward(request, response);
                 }
+
                 //se tutto è andato bene
                 //response.sendRedirect(request.getContextPath()+"/afterLogged/main.jsp");
                 dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
                 dispatcher.forward(request, response);
             }
+
             break;
 
             case "accettainviti": //codice per gestire gli inviti accettati dall'utente
@@ -242,6 +245,7 @@ public class groupCtrl extends HttpServlet {
                 dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
                 dispatcher.forward(request, response);
             }
+
             break;
 
             case "modificagruppo": {
@@ -332,7 +336,7 @@ public class groupCtrl extends HttpServlet {
                             ArrayList<String> username_invitati = MyUtil.parseFromString(inviti2parse);
                             ArrayList<String> utentiSbagliati = new ArrayList<>();
                             utentiSbagliati = MyUtil.sendinviti(username_invitati, gruppo.getIdgruppo(), manager);
-                            if (!utentiSbagliati.isEmpty()) {
+                            if (!utentiSbagliati.isEmpty() && utentiSbagliati != null) {
                                 //prepara un messaggio bean degli invitati a cui non si è potuto mandare l'invito
                             }
                         } catch (Exception ex) {
@@ -462,8 +466,10 @@ public class groupCtrl extends HttpServlet {
         if (messageDigest == null) {
             try {
                 messageDigest = MessageDigest.getInstance("MD5");
+
             } catch (NoSuchAlgorithmException ex) {
-                Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, "Non va il cypher", ex);
+                Logger.getLogger(groupCtrl.class
+                        .getName()).log(Level.SEVERE, "Non va il cypher", ex);
             }
         }
         byte[] mdbytes = messageDigest.digest(gen.getBytes());
