@@ -30,8 +30,11 @@
             <div class="row clearfix">
                 <div class="col-md-12 column">
                     <h3 style="padding-bottom: 2em">
-                        Ora controlla la posta su <%=request.getParameter("email_to_recover") %>
+                        Ora controlla la posta su <%=request.getParameter("email_to_recover")%>
                     </h3>
+                    <br>
+                    <br>
+                    <a href="<%=request.getContextPath()%>" class="btn btn-success">Torna al login</a>
                 </div>
             </div>
     </body>

@@ -9,21 +9,18 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.activation.MimetypesFileTypeMap;
-import java.security.Security;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletContext;
 import modelDB.Gruppo;
 import modelDB.Utente;
 import modelDB.DBmanager;
@@ -33,6 +30,8 @@ import modelDB.DBmanager;
  * @author Giulian
  */
 public class MyUtil {
+
+    public static ServletContext sc = null;
 
     public static ArrayList<String> parseFromString(String phrase_inviti) {
         ArrayList<String> retval = new ArrayList<String>();
@@ -119,30 +118,12 @@ public class MyUtil {
 
     }
 
-    public static void sendMailGoogle(String from_mail, String to, String from_password, String subject, String text) throws AddressException, MessagingException {
-        Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
-        final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
-// Get a Properties object
-        Properties props = System.getProperties();
-        props.setProperty("mail.smtp.host", "smtp.gmail.com");
-        props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
-        props.setProperty("mail.smtp.socketFactory.fallback", "false");
-        props.setProperty("mail.smtp.port", "465");
-        props.setProperty("mail.smtp.socketFactory.port", "465");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.debug", "true");
-
-        final String username = "socialnodes@gmail.com";
-        final String password = "socialnodes123";
-
-        Session session = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
+    public static void sendMailGoogle(String to, String subject, String text) throws AddressException, MessagingException {
+        Session defaultsession = (Session) sc.getAttribute("MailSession");
         // — Create a new message –
-        Message msg = new MimeMessage(session);
+        Message msg = new MimeMessage(defaultsession);
 // — Set the FROM and TO fields –
+        final String username = "socialnodes@gmail.com";
         msg.setFrom(
                 new InternetAddress(username + ""));
         msg.setRecipients(Message.RecipientType.TO,

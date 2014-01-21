@@ -3,17 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package ascoltatore;
 
+import java.security.Security;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.logging.Logger;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import modelDB.DBmanager;
 import modelDB.Gruppo;
 import modelDB.Message;
+import util.MyUtil;
 
 /**
  * Web application lifecycle listener.
@@ -22,7 +27,7 @@ import modelDB.Message;
  */
 public class WebAppContextListener implements ServletContextListener {
 
-      @Override
+    @Override
     public void contextInitialized(ServletContextEvent sce) {
         String dburl = sce.getServletContext().getInitParameter("dburl");
 
@@ -40,6 +45,33 @@ public class WebAppContextListener implements ServletContextListener {
             throw new RuntimeException(ex);
 
         }
+
+        //inizializzazione della defaultsession
+        System.out.println("Inizializzazione della defaultsession");
+        Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+        final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+        // Get a Properties object
+        Properties props = System.getProperties();
+        props.setProperty("mail.smtp.host", "smtp.gmail.com");
+        props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
+        props.setProperty("mail.smtp.socketFactory.fallback", "false");
+        props.setProperty("mail.smtp.port", "465");
+        props.setProperty("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.debug", "true");
+
+        final String username = "socialnodes@gmail.com";
+        final String password = "socialnodes123";
+
+        Session session = Session.getDefaultInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+        sce.getServletContext().setAttribute("MailSession", session);
+        MyUtil.sc = sce.getServletContext();
+
+        System.out.println("Inizializzazione della defaultsession terminata");
     }
 
     @Override
@@ -47,4 +79,5 @@ public class WebAppContextListener implements ServletContextListener {
 
         DBmanager.shutdown();
     }
+
 }

@@ -79,7 +79,7 @@
             </c:choose>
 
             <c:choose>
-                <c:when test="${isAttivo == 1}">
+                <c:when test="${isAttivo == 1 && isloggato>=1}">
                     <textarea class="form-control" name="messaggio"></textarea>
                 </c:when>
 
@@ -94,27 +94,23 @@
 
 
                     <c:choose>
-                        <c:when test="${isAttivo == 1}">
+                        <c:when test="${isAttivo == 1 && isloggato>=1}">
                             <input class="btn btn-default" name="submit" type="submit" value="send">
-                            <c:if test="${isloggato>=1}">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><input  type="file" name="file"> </li>
-                                </ul>
-                            </c:if>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><input  type="file" name="file"> </li>
+                            </ul>
                         </c:when>
                         <c:otherwise>
                             <input class="btn btn-default" name="submit" type="submit" value="send" disabled>
-                            <c:if test="${isloggato>=1}">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" disabled>
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><input  type="file" name="file"> </li>
-                                </ul>
-                            </c:if>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" disabled>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><input  type="file" name="file"> </li>
+                            </ul>
                         </c:otherwise>
                     </c:choose>
 
