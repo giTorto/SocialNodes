@@ -15,6 +15,8 @@
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+            <script type="text/javascript" src='<c:url value="./js/jquery.js"/>'></script>
+            <script type="text/javascript" src='<c:url value="./js/jquery.dataTables.min.js"/>'></script>    
             <title>Pannelo di controllo</title>
             <script type="text/javascript">
                 function submitForm(element)
@@ -41,7 +43,11 @@
                     form.submit();
                 }
             </script>
-
+            <script>
+                $(document).ready(function() {
+                    $("#tablemoderatore").dataTable();
+                });
+            </script>
 
 
             <style type="text/css"></style>
@@ -139,15 +145,7 @@
                                                 </div>
                                                 </div>
                                                 </div>
-                            
-                                                <script src="https://dl.dropboxusercontent.com/u/43318531/jquery.dataTables.js"></script>
-                                                <script src="https://dl.dropboxusercontent.com/u/43318531/jquery.dataTables.min.js"></script>
-                                                <script src="https://dl.dropboxusercontent.com/u/43318531/jquery.js"></script>
 
-                                                <script>
-                                                            $(document).ready(function() {
-                                                                $("#tablemoderatore").dataTable();
-                                                            });
-                                                </script>
+
                                                 </body>
                                                 </html>
