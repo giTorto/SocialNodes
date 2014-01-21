@@ -23,7 +23,7 @@
     </head>
 
     <body>
-        <div style="left:74%;position:absolute;top:1%;" ><!---- allora questo if bruttissimo va eliminato -->
+        <div style="left:74%;position:absolute;top:1%;" >
 
 
 

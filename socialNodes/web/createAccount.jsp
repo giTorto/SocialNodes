@@ -14,7 +14,7 @@
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
         <title>Registrazione a Socialnodes</title>
     </head>
-    <body>
+    <body background="./stile.css/images/nuvole_blu.jpg">
 
         <div class="container">
             <div class="row clearfix">
