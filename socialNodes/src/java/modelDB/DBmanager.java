@@ -441,7 +441,7 @@ public class DBmanager {
             while (rs.next()) {
                 Message p = new Message();
                 p.setMessaggio("C'è un nuovo post nel gruppo: <b>" + rs.getString("nome")+"</b>");
-                p.setLink("afterLogin?op=showGroups&groupid=" + (rs.getInt("idgruppo")));
+                p.setLink("groupCtrl?op=displaygroup&groupid=" + (rs.getInt("idgruppo")));
                
                 news.add(p);
             }
