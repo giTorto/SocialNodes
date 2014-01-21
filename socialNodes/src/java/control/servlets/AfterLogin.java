@@ -299,8 +299,9 @@ public class AfterLogin extends HttpServlet {
                 } catch (FileUploadException ex) {
                     Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-                response.sendRedirect(request.getContextPath() + "/afterLogged/afterLogin?op=showgroups");
+                
+                
+                response.sendRedirect(request.getContextPath() + "/afterLogged/afterLogin?op=main");
                 break;
             default:
 
