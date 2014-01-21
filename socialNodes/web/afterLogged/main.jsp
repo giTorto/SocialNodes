@@ -100,7 +100,7 @@
                                                     <c:out value="${post.messaggio}"/>
                                                 </td>
                                                 <td>
-                                                    <c:out value="${post.link}" />
+                                                    <a href="<c:url value="${post.link}" />" > Vai al gruppo</a>
                                                 </td>
                                             </tr>
                                     </c:forEach>
@@ -132,7 +132,7 @@
                                                     <c:out value="${inviti.messaggio}"/>
                                                 </td>
                                                 <td>
-                                                    <c:out value="${inviti.link}" />
+                                                     <a href="<c:url value="${inviti.link}" />" > Vai al gruppo</a>
                                                 </td>
                                             </tr>
                                     </c:forEach>

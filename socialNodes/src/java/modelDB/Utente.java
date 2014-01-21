@@ -93,7 +93,7 @@ public class Utente {
     public ArrayList<Gruppo> getGruppiParte() {
         ArrayList<Gruppo> all = new ArrayList<>();
         try {
-            all = getManager().getGruppiParte(this.getId());
+            all = manager.getGruppiParte(this.getId());
         } catch (SQLException ex) {
             Logger.getLogger(Utente.class.getName()).log(Level.SEVERE, null, ex);
         }

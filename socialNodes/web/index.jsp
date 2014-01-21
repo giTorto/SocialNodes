@@ -40,7 +40,7 @@
                             Per scambiare idee sugli argomenti trattati a lezione e condividere le soluzioni degli esercizi più difficili!
                         </p>
 
-                        <c:out value="${messaggioBean.messaggio}" />
+                        <%=messaggioBean.getMessaggio() %>
                         <p>
 
                         </p>

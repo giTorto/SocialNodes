@@ -282,7 +282,7 @@ public class DBmanager {
     public ArrayList<Gruppo> getGruppiParte(int id) throws SQLException {
         ArrayList<Gruppo> gruppi = new ArrayList<Gruppo>();
         
-        PreparedStatement stm = con.prepareStatement("SELECT * FROM gruppi_partecipanti g natural join (gruppo gr inner join utente u on gr.idowner = u.idowner)  where g.idutente =? and invito_acc>0");
+        PreparedStatement stm = con.prepareStatement("select * from gruppi_partecipanti g inner join gruppo gr on gr.idgruppo=g.idgruppo inner join utente u on gr.idowner = u.idutente  where g.idutente =? and invito_acc>0");
         
         try {
             stm.setInt(1, id);
@@ -409,8 +409,8 @@ public class DBmanager {
             
             while (rs.next()) {
                 Message p = new Message();
-                p.setMessaggio("Sei stato invitato al gruppo " + rs.getString("nome"));
-                p.setLink("<a href=afterLogged/afterLogin?op=showinviti\">Guarda gli inviti</a> ");
+                p.setMessaggio("Sei stato invitato al gruppo <b>" + rs.getString("nome")+"</b>");
+                p.setLink("afterLogin?op=showinviti");
                 p.setValue((rs.getTimestamp("data_invio")).toString());
                 news.add(p);
             }
@@ -428,9 +428,9 @@ public class DBmanager {
         PreparedStatement stm;
         stm = con.prepareStatement("SELECT DISTINCT g.nome,g.idgruppo "
                 + "FROM gruppo g inner join post p on g.idgruppo=p.idgruppo "
-                + "where p.data_ora>? and g.idgruppo in " +
+                + "where p.data_ora>? and  (g.idgruppo in " +
         "( SELECT g.idgruppo from gruppo g inner join utente u on u.idutente=g.idowner where u.idutente=?) " +
-        "OR g.idgruppo in (SELECT g.idgruppo from gruppo g inner join gruppi_partecipanti gr on g.idgruppo=gr.idgruppo where gr.idutente = ? and invito_acc=1 )");
+        "OR g.idgruppo in (SELECT g.idgruppo from gruppo g inner join gruppi_partecipanti gr on g.idgruppo=gr.idgruppo where gr.idutente = ? and invito_acc=1 ) )");
         stm.setTimestamp(1, data_last_access);
         stm.setInt(2, id); 
         stm.setInt(3, id);
@@ -440,8 +440,8 @@ public class DBmanager {
         try {
             while (rs.next()) {
                 Message p = new Message();
-                p.setMessaggio("C'è un nuovo post nel gruppo " + rs.getString("nome"));
-                p.setLink("<a href=afterLogged/afterLogin?op=showGroups?id=" + (rs.getInt("idgruppo")) + ">" + "Guarda i nuovi post</a> ");
+                p.setMessaggio("C'è un nuovo post nel gruppo: <b>" + rs.getString("nome")+"</b>");
+                p.setLink("afterLogin?op=showGroups&groupid=" + (rs.getInt("idgruppo")));
                
                 news.add(p);
             }
@@ -524,12 +524,16 @@ public class DBmanager {
     public void insertInvito(int groupid, int idutente) throws SQLException {
         PreparedStatement stm = con.prepareStatement("INSERT INTO gruppi_partecipanti (idgruppo,idutente,invito_acc,data_invio) values(?,?,?,?)");
         int zero = 0;
-        Date data = new Date(Calendar.getInstance().getTimeInMillis());
+        java.util.Date data;
+        Calendar calendar = Calendar.getInstance();
+        data =  calendar.getTime();
+        Timestamp data_acc = new Timestamp(data.getTime());
+                       
         try {
             stm.setInt(1, groupid);
             stm.setInt(2, idutente);
             stm.setInt(3, zero);
-            stm.setDate(4, data);
+            stm.setTimestamp(4, data_acc);
             
             int executeUpdate = stm.executeUpdate();
         } catch (Exception e) {
