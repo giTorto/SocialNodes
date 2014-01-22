@@ -6,6 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:useBean id="user" class="modelDB.Utente" scope="session"/>
+<%@page import="modelDB.Utente"%>
+<%@page import="modelDB.Message"%>
 <jsp:useBean id="messaggioBean" class="modelDB.Message" scope="request"/>
 <!DOCTYPE html>
 <html><head>
@@ -34,10 +36,10 @@
                     </p>
                     <p>
                     </p><h3 style="color: red">  
-                        <c:set var="messaggio" scope="page" value="<%=messaggioBean.getMessaggio()%>" />
-                        <c:if test="${messaggio != null}">
-                            <c:out value="${messaggioBean.messaggio}"/> 
-                        </c:if>
+                     
+                        <jsp:getProperty name="messaggioBean" property="messaggio" />
+                    
+                         
                     </h3>
 
                     <p></p>

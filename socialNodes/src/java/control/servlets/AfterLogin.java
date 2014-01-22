@@ -140,6 +140,7 @@ public class AfterLogin extends HttpServlet {
                 break;
             case "topersonalsettings":
                 Message mess = new Message();
+                mess.setMessaggio(" ");
                 request.setAttribute("messaggioBean", mess);
                 dispatcher = request.getRequestDispatcher("/afterLogged/showPersonalSettings.jsp");
                 dispatcher.forward(request, response);
@@ -313,7 +314,7 @@ public class AfterLogin extends HttpServlet {
                 }
 
                 if (messaggioBean.getMessaggio() == null  || messaggioBean.getMessaggio().equals("")) {
-                    response.sendRedirect(request.getContextPath() + "/afterLogin?op=main");
+                    response.sendRedirect(request.getContextPath() + "/afterLogged/afterLogin?op=main");
                 } else {
                     RequestDispatcher dispatcher = request.getRequestDispatcher("showPersonalSettings.jsp");
                     request.setAttribute("messaggioBean", messaggioBean);
