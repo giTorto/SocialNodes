@@ -36,7 +36,17 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Socialnodes  <img src="<c:out value="${user.avatar_link}" />" style="width: 70px; height:70px " > </a>
+                    <a class="navbar-brand" href="#">Socialnodes  
+                        <c:set var="istandard" scope="page" value="${user.avatar_link}" />
+                      <c:choose>
+                          <c:when test="${istandard=='££standard_avatar$$.png'}" >
+                            <img src="<%=request.getContextPath()%>/standard_image/<c:out value="${user.avatar_link}"/>" style="width: 70px; height:70px " >
+                        </c:when>
+                        <c:otherwise>
+                            <img src="<%=request.getContextPath()%>/media/avatar/<c:out value="${user.avatar_link}" />" style="width: 70px; height:70px " >
+                        </c:otherwise>
+                      </c:choose>
+                    </a>
                 </div>
 
                 <div class="collapse navbar-collapse">

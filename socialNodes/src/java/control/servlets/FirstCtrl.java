@@ -239,11 +239,11 @@ public class FirstCtrl extends HttpServlet {
                         session.setAttribute("messaggio_main", data_accesso);
                         ServletContext ctx = getServletContext();
                         //la parte qui sotto setta il link all'inizio ;)
-                        if (user.getAvatar_link().equals("££standard_avatar$$.png")) {
+                       /* if (user.getAvatar_link().equals("££standard_avatar$$.png")) {
                             user.setAvatar_link(request.getContextPath() + "/standard_image/££standard_avatar$$.png");
                         } else {
                             user.setAvatar_link(request.getContextPath() + "/media/avatar/" + user.getAvatar_link());
-                        }
+                        }*/
                         manager.setNewdate(data_acc, user.getId());
                         // request.setAttribute("user",user);
                         sessione.setAttribute("user", user);

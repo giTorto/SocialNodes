@@ -26,16 +26,10 @@
         <div style="left:74%;position:absolute;top:1%;" >
 
             <c:set var="isloggato" scope="page" value="<%=user.getId()%>" />
-            <c:choose>
-                <c:when test="${isloggato >= 1}">
-                    <a href="/socialNodes/afterLogged/afterLogin?op=showgroups" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-left"></span> Indietro</a>
-                    <a href="/socialNodes/afterLogged/afterLogin?op=logout" class="btn btn-primary"><span class="glyphicon glyphicon-new-window"></span> Logout</a>
-                </c:when>
-
-                <c:otherwise>
-
-                </c:otherwise>
-            </c:choose>
+            <c:if test="${isloggato >= 1}">
+                <a href="/socialNodes/afterLogged/afterLogin?op=showgroups" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-left"></span> Indietro</a>
+                <a href="/socialNodes/afterLogged/afterLogin?op=logout" class="btn btn-primary"><span class="glyphicon glyphicon-new-window"></span> Logout</a>
+            </c:if>
 
 
         </div>
@@ -56,7 +50,16 @@
             <div class="panel message msg1">
                 <div class="said ">    
                     <c:out value="${post.writer.username}" />  alle <c:out value="${post.data_ora}" />
-                    <img src="<c:out value="${post.writer.avatar_link}" escapeXml="false" />" style="width: 20px; height:20px " >
+                    <c:set var="istandard" scope="page" value="${post.writer.avatar_link}" />
+                    <c:choose>
+                        <c:when test="${istandard=='££standard_avatar$$.png'}" >
+                            <img src="<%=request.getContextPath()%>/standard_image/<c:out value="${post.writer.avatar_link}"/>" style="width: 20px; height:20px " >
+                        </c:when>
+                        <c:otherwise>
+                            <img src="<%=request.getContextPath()%>/media/avatar/<c:out value="${post.writer.avatar_link}" />" style="width: 20px; height:20px " >
+                        </c:otherwise>
+                    </c:choose>
+                    
 
                 </div>
                 <c:out value="${post.testo}" escapeXml="false"/></br>
