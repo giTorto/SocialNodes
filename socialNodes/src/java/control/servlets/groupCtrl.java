@@ -601,7 +601,7 @@ public class groupCtrl extends HttpServlet {
             }
         } else {
 
-            return "<a href='groupCtrl/fileDownload?fileId=" + tmp + "'>" + text + "</a>";
+            return "<a href='/socialNodes/fileDownload?fileId=" + tmp + "'>" + text + "</a>";
         }
     }
 

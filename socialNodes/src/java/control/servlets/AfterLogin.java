@@ -83,7 +83,7 @@ public class AfterLogin extends HttpServlet {
 
         switch (operazione) {
             case "main":
-             
+
                 Timestamp last_access = user.getLast_access();
                 Message data_accesso = new Message();
                 if (last_access != null) {
@@ -92,18 +92,17 @@ public class AfterLogin extends HttpServlet {
                     data_accesso.setMessaggio("Benvenuto " + user.getUsername() + " è il tuo primo accesso");
                 }
                 session.setAttribute("data_accesso", data_accesso);
-                
-                
-                try{
-                ArrayList<Message> newInviti = new ArrayList<>();
-                newInviti = manager.getNewsInviti(last_access,user.getId());
-                ArrayList<Message> newPosts = new ArrayList<>();
-                newPosts = manager.getNewsPost(last_access, user.getId());
-                request.setAttribute("nuovInviti", newInviti);
-                request.setAttribute("nuoviPosts", newPosts);
-                }catch (SQLException e){                  
+
+                try {
+                    ArrayList<Message> newInviti = new ArrayList<>();
+                    newInviti = manager.getNewsInviti(last_access, user.getId());
+                    ArrayList<Message> newPosts = new ArrayList<>();
+                    newPosts = manager.getNewsPost(last_access, user.getId());
+                    request.setAttribute("nuovInviti", newInviti);
+                    request.setAttribute("nuoviPosts", newPosts);
+                } catch (SQLException e) {
                 }
-                
+
                 //recupero dal bb e metto tra i request attribute gli oggetti che servono per creare correttamente la pagina main
                 //servono i gruppi dell'utente e le cose del quickdisplay
                 dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
@@ -140,6 +139,8 @@ public class AfterLogin extends HttpServlet {
                 dispatcher.forward(request, response);
                 break;
             case "topersonalsettings":
+                Message mess = new Message();
+                request.setAttribute("messaggioBean", mess);
                 dispatcher = request.getRequestDispatcher("/afterLogged/showPersonalSettings.jsp");
                 dispatcher.forward(request, response);
                 break;
@@ -147,7 +148,7 @@ public class AfterLogin extends HttpServlet {
 
                 session.removeAttribute("user");
                 session.invalidate();
-                
+
                 Cookie[] cookies = request.getCookies();
                 for (Cookie cookie : cookies) {
                     cookie.setMaxAge(0);
@@ -192,7 +193,7 @@ public class AfterLogin extends HttpServlet {
         String new_username = null;
         String new_password = null;
         String op = request.getParameter("op");
-        RequestDispatcher dispatcher;
+
         if (op == null) {
             op = "personalsetting";
         }
@@ -208,6 +209,7 @@ public class AfterLogin extends HttpServlet {
          */
         switch (op) {
             case "personalsetting"://caso in cui sto modificando le impostazioni personali
+
                 boolean imgyes = false;
                 String tmp = null;
                 try {
@@ -249,17 +251,17 @@ public class AfterLogin extends HttpServlet {
                                     while ((data = is.read()) != -1) {
                                         output.write(data);
                                     }
-                                    
+
                                     output.close();
                                     imgyes = true;
-                                    user.setAvatar_link(request.getContextPath()+"/media/avatar/"+tmp);
+                                    user.setAvatar_link(tmp);
                                     manager.setNewImage(user.getId(), tmp);
 
                                 } catch (IOException ioe) {
                                     throw new ServletException(ioe.getMessage());
                                     //System.err.println("Errore nello scrivere il file appena caricato all'interno del filesystem: " + ioe.getLocalizedMessage());
-                                } catch (SQLException s){
-                                    
+                                } catch (SQLException s) {
+
                                 } finally {
                                     is.close();
                                     if (output != null) {
@@ -274,7 +276,12 @@ public class AfterLogin extends HttpServlet {
                                     //recupero nuovousername e salvataggio nel db
                                     if (new_username != null && !new_username.equals("")) {
                                         try {
-                                            manager.updateUserName(user.getId(), new_username);
+                                            if (!new_username.contains("£") && !new_username.contains(" ")) {
+                                                manager.updateUserName(user.getId(), new_username);
+                                            } else {
+                                                messaggioBean.setMessaggio("L'username scelto non è valido");
+
+                                            }
                                         } catch (SQLException ex) {
                                             Logger.getLogger(AfterLogin.class.getName()).log(Level.SEVERE, null, ex);
                                             System.err.println("Afterlogin: personalsettings, errore nell'aggiornare username dell'utente " + user.getUsername());
@@ -286,7 +293,12 @@ public class AfterLogin extends HttpServlet {
                                     //recupero nuovapassword e salvataggio nel db
                                     if (new_password != null && !new_password.equals("")) {
                                         try {
-                                            manager.updateUserPassword(user.getId(), new_password);
+                                            if (!new_password.contains(" ")) {
+                                                manager.updateUserPassword(user.getId(), new_password);
+                                            } else {
+                                                messaggioBean.setMessaggio("La password scelta non è valida");
+
+                                            }
                                         } catch (SQLException ex) {
                                             Logger.getLogger(AfterLogin.class.getName()).log(Level.SEVERE, null, ex);
                                             System.err.println("Afterlogin: personalsettings, errore nell'aggiornare password dell'utente " + user.getUsername());
@@ -299,61 +311,17 @@ public class AfterLogin extends HttpServlet {
                 } catch (FileUploadException ex) {
                     Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            
-                
-                response.sendRedirect(request.getContextPath() + "/afterLogged/afterLogin?op=main");
+
+                if (messaggioBean.getMessaggio() == null  || messaggioBean.getMessaggio().equals("")) {
+                    response.sendRedirect(request.getContextPath() + "/afterLogin?op=main");
+                } else {
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("showPersonalSettings.jsp");
+                    request.setAttribute("messaggioBean", messaggioBean);
+                    dispatcher.forward(request, response);
+                }
+
                 break;
-            default:
-
         }
-
-        /* 
-         switch (operazione) {
-         case "personalsettings":
-         //processameto dei dati in arrivo dal form di modifica nel quale è possibilie cambiare username, password, avatar
-         String new_username = null;
-         String new_password = null;
-
-         //recupero nuovousername e salvataggio nel db
-         boolean ok_new_username = true;
-         try {
-         new_username = request.getParameter("new_username");
-         } catch (Exception e) {
-         ok_new_username = false;
-         }
-         if (ok_session_user && new_username != null && !new_username.equals("") && ok_new_username) {
-         try {
-         manager.updateUserName(user.getId(), new_username);
-         } catch (SQLException ex) {
-         Logger.getLogger(AfterLogin.class.getName()).log(Level.SEVERE, null, ex);
-         System.err.println("Afterlogin: personalsettings, errore nell'aggiornare username dell'utente " + user.getUsername());
-         }
-         }
-
-         //recupero nuovapassword e salvataggio nel db
-         boolean ok_new_password = true;
-         try {
-         new_password = request.getParameter("new_password");
-         } catch (Exception e) {
-         ok_new_password = false;
-         }
-        
-         if (ok_session_user && new_password != null && !new_password.equals("") && ok_new_password) {
-         try {
-         manager.updateUserPassword(user.getId(), new_password);
-         } catch (SQLException ex) {
-         Logger.getLogger(AfterLogin.class.getName()).log(Level.SEVERE, null, ex);
-         System.err.println("Afterlogin: personalsettings, errore nell'aggiornare password dell'utente " + user.getUsername());
-         }
-         }
-
-         break;
-    
-
-         default:
-         //fare qlcs
-         }
-         */
     }
 
     /**

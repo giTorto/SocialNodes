@@ -94,7 +94,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>FileDownload</servlet-name>
-        <url-pattern>/afterLogged/groupCtrl/fileDownload</url-pattern>
+        <url-pattern>/fileDownload</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

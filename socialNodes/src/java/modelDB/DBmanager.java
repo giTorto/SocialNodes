@@ -1016,7 +1016,7 @@ public class DBmanager {
                     p.setWriter(getMoreUtente(rs.getInt("idwriter")));
                     p.setRealname(rs.getString("realname"));
                     if (rs.getString("dbname") != null) {
-                        link = "/afterLogged/groupCtrl/fileDownload?fileId=" + rs.getInt("idpost");
+                        link = "/fileDownload?fileId=" + rs.getInt("idpost");
                         p.setLink(link);
                     };
                     posts.add(p);

@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:useBean id="user" class="modelDB.Utente" scope="session"/>
+<jsp:useBean id="messaggioBean" class="modelDB.Message" scope="request"/>
 <!DOCTYPE html>
 <html><head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -32,13 +33,20 @@
                         Usa il modulo sottostante per cambiare le tue impostazioni
                     </p>
                     <p>
-                    </p><h3 style="color: red">  </h3>
-                    <!--eventuale messaggio in bean-->
+                    </p><h3 style="color: red">  
+                        <c:set var="messaggio" scope="page" value="<%=messaggioBean.getMessaggio()%>" />
+                        <c:if test="${messaggio != null}">
+                            <c:out value="${messaggioBean.messaggio}"/> 
+                        </c:if>
+                    </h3>
+
                     <p></p>
 
                 </div>
             </div>
             <div class="row clearfix">
+
+
                 <div class="col-md-12 column">
                     <form role="form" action="/socialNodes/afterLogged/afterLogin" method="post" enctype="multipart/form-data">
                         <div class="form-group">

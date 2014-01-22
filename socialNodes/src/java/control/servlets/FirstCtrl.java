@@ -321,12 +321,12 @@ public class FirstCtrl extends HttpServlet {
                                 switch (item.getFieldName()) {
                                     case "username":
                                         username = Streams.asString(item.openStream());
-                                        if (manager.nameAlreadyExist(username) || username == null || username.equals("")) {
+                                        if (manager.nameAlreadyExist(username) || username == null || username.equals("") || username.contains("£") || username.contains(" ")) {
                                             //qui devo passare attraverso un bean o something like that per segnalare
                                             //che username è già nel sistema
                                             //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
                                             dispatcher = request.getRequestDispatcher("/createAccount.jsp");
-                                            messaggioBean.setMessaggio("Attenzione Username già in uso");
+                                            messaggioBean.setMessaggio("Attenzione Username già in uso o non valido");
                                             request.setAttribute("messaggioBean", messaggioBean);
                                             dispatcher.forward(request, response);
                                         }
@@ -338,16 +338,16 @@ public class FirstCtrl extends HttpServlet {
                                             //che email è già nel sistema
                                             //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
                                             dispatcher = request.getRequestDispatcher("/createAccount.jsp");
-                                            messaggioBean.setMessaggio("Attenzione email già in uso");
+                                            messaggioBean.setMessaggio("Attenzione email già in uso o non corretta");
                                             request.setAttribute("messaggioBean", messaggioBean);
                                             dispatcher.forward(request, response);
                                         }
                                         break;
                                     case "password":
                                         password = Streams.asString(item.openStream());
-                                        if (password == null || password.equals("")) {
+                                        if (password == null || password.equals("") || password.contains(" ")) {
                                             dispatcher = request.getRequestDispatcher("/createAccount.jsp");
-                                            messaggioBean.setMessaggio("Attenzione Scegliere una password");
+                                            messaggioBean.setMessaggio("Attenzione Scegliere una password valida(no blank spaces)");
                                             request.setAttribute("messaggioBean", messaggioBean);
                                             dispatcher.forward(request, response);
                                         }

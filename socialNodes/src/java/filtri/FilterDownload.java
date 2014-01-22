@@ -72,7 +72,7 @@ public class FilterDownload implements Filter {
             user = (Utente) session.getAttribute("user");
         }
 
-        if (fileId != null && file_group != null) {
+        if (fileId != null && file_group != null && file_group.getIsPublic()!=1) {
             try {
                 ArrayList<Integer> ListidsPartecipanti = (ArrayList<Integer>) manager.getUtenti(file_group.getIdgruppo());
                 Utente owner = manager.getMoreByUserName(file_group.getNomeOwner());
@@ -85,7 +85,9 @@ public class FilterDownload implements Filter {
                 ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
                 return;
             }
-        } else {
+        } else if(file_group.getIsPublic()==1){
+              ok_download = true;
+        }else{          
             ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
             return;
         }
