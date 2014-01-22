@@ -12,6 +12,14 @@
         <filter-name>FilterGroupCtrl</filter-name>
         <filter-class>filtri.FilterGroupCtrl</filter-class>
     </filter>
+    <filter>
+        <filter-name>FilterDownload</filter-name>
+        <filter-class>filtri.FilterDownload</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>FilterDownload</filter-name>
+        <servlet-name>FileDownload</servlet-name>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>FilterGroupCtrl</filter-name>
         <servlet-name>groupCtrl</servlet-name>

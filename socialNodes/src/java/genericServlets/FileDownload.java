@@ -65,7 +65,7 @@ DBmanager manager;
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String fileId = request.getParameter("fileId").toString();
-        String groupId = "2";
+        
         if (fileId == null) {
             showError();
         }

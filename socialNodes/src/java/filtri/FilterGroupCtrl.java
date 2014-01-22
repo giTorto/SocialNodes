@@ -102,11 +102,13 @@ public class FilterGroupCtrl implements Filter {
 
                 } catch (SQLException ex) {
                     Logger.getLogger(FilterGroupCtrl.class.getName()).log(Level.SEVERE, null, ex);
-                    //((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
+                    ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
+                    return;
                 }
 
                 if (!userpuòaccedere) {
-                    //  ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
+                    ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
+                    return;
                 }
 
                 break;
