@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -282,8 +284,8 @@ public class FirstCtrl extends HttpServlet {
                                         makeDir(path);
                                         fileName = MyUtil.formatName(item.getName());;
                                         //seed è il seme per l'algoritmo di hashing, per renderlo unico è composto dal nome del file, l'id utente e il tempo preciso al millisecondo (che garantisce)
-
-                                        tmp = username;
+                                        String seed = email + new Timestamp(new java.util.Date().getTime()).toString();
+                                        tmp = md5(seed);
                                         tipo = MyUtil.getExtension(fileName);
 
                                         tmp = tmp + tipo;
@@ -397,5 +399,27 @@ public class FirstCtrl extends HttpServlet {
             }
         }
 
+    }
+    
+    MessageDigest messageDigest = null;
+   
+    
+     public String md5(String gen) {
+        if (messageDigest == null) {
+            try {
+                messageDigest = MessageDigest.getInstance("MD5");
+
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(groupCtrl.class
+                        .getName()).log(Level.SEVERE, "Non va il cypher", ex);
+            }
+        }
+        byte[] mdbytes = messageDigest.digest(gen.getBytes());
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < mdbytes.length; i++) {
+            sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        return sb.toString();
     }
 }

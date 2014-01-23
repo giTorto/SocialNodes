@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.logging.Level;
@@ -239,8 +241,13 @@ public class AfterLogin extends HttpServlet {
                                     makeDir(path);
                                     fileName = MyUtil.formatName(item.getName());;
                                     //seed è il seme per l'algoritmo di hashing, per renderlo unico è composto dal nome del file, l'id utente e il tempo preciso al millisecondo (che garantisce)
-
-                                    tmp = user.getUsername();
+                                    if(user.getAvatar_link().equals("££standard_avatar$$.png")){
+                                        String seed = user.getEmail() + new Timestamp(new java.util.Date().getTime()).toString();
+                                        tmp = md5(seed);
+                                    }else{
+                                                tmp = user.getAvatar_link();
+                                    }
+                                    
                                     tipo = MyUtil.getExtension(fileName);
 
                                     tmp = tmp + tipo;
@@ -279,7 +286,12 @@ public class AfterLogin extends HttpServlet {
                                     if (new_username != null && !new_username.equals("")) {
                                         try {
                                             if (!new_username.contains("£") && !new_username.contains(" ")) {
-                                                manager.updateUserName(user.getId(), new_username);
+                                                if( manager.nameAlreadyExist(username)){
+                                                    messaggioBean.setMessaggio("L'username scelto non è già in uso");
+                                                }else{
+                                                    manager.updateUserName(user.getId(), new_username);
+                                                }
+                                                
                                             } else {
                                                 messaggioBean.setMessaggio("L'username scelto non è valido");
 
@@ -345,6 +357,28 @@ public class AfterLogin extends HttpServlet {
             }
         }
 
+    }
+    
+    MessageDigest messageDigest = null;
+   
+    
+     public String md5(String gen) {
+        if (messageDigest == null) {
+            try {
+                messageDigest = MessageDigest.getInstance("MD5");
+
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(groupCtrl.class
+                        .getName()).log(Level.SEVERE, "Non va il cypher", ex);
+            }
+        }
+        byte[] mdbytes = messageDigest.digest(gen.getBytes());
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < mdbytes.length; i++) {
+            sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        return sb.toString();
     }
 
 }
