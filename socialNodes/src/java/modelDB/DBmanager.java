@@ -1000,7 +1000,7 @@ public class DBmanager {
         String link = "";
         PreparedStatement stm
                 = con.prepareStatement("SELECT * FROM post "
-                        + "WHERE idgruppo = ? ORDER BY data_ora DESC");
+                        + "WHERE idgruppo = ? ORDER BY data_ora ASC");
 
         try {
             stm.setInt(1, id);
