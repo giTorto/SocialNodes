@@ -99,6 +99,11 @@ public class FilterGroupCtrl implements Filter {
                         userpuòaccedere = true;
                         ok = true;
                     }
+                    
+                    if (user.getIsModeratore()==1){
+                        userpuòaccedere = true;
+                        ok = true;
+                    }
 
                 } catch (SQLException ex) {
                     Logger.getLogger(FilterGroupCtrl.class.getName()).log(Level.SEVERE, null, ex);

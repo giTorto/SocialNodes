@@ -141,6 +141,7 @@ public class groupCtrl extends HttpServlet {
         switch (operazione) {
             case "creagruppo": //codice per gestire la creazione di un gruppo
             {
+               
                 System.out.println("Analisi del form di creazione nuovo gruppo");
                 String inviti2parse = "";
                 String creazione_gruppoNome = "";
@@ -187,12 +188,16 @@ public class groupCtrl extends HttpServlet {
                         Utente ownernewgroup = (Utente) ((HttpServletRequest) request).getSession().getAttribute("user");
                         try {
                             manager.creaGruppo(user, creazione_gruppoNome, isPublic);
-
                             Gruppo gruppo_appena_creato = manager.getGruppo(creazione_gruppoNome);
+                            if (isPublic){
+                                ArrayList<Gruppo> g =  (new Gruppo()).listaGruppiPubblici();
+                                super.getServletContext().setAttribute("public_groups", g);
+                            }
+                            
                             ArrayList<String> username_invitati = MyUtil.parseFromString(inviti2parse);
                             utentiSbagliati = MyUtil.sendinviti(username_invitati, gruppo_appena_creato.getIdgruppo(), manager);
                             if (!utentiSbagliati.isEmpty()) {
-                                //prepara un messaggio bean degli invitati a cui non si è potuto mandare l'invito
+                                //prepara un messaggio bean degli invitati a cui non si è potuto mandare l'invito      
                             }
                         } catch (SQLException ex) {
                             Logger.getLogger(groupCtrl.class.getName()).log(Level.SEVERE, null, ex);
@@ -200,7 +205,7 @@ public class groupCtrl extends HttpServlet {
                         }
 
                     } catch (Exception e) {
-                        System.err.println("Groupctrl: errore! però il codice è robusto e regge, stai sciallo" + e.getMessage());
+                        
                     }
                 } else {
                     //bisognerebbe mettere qualche messaggio di avviso errore
@@ -315,7 +320,9 @@ public class groupCtrl extends HttpServlet {
                     } catch (SQLException e) {
                         System.err.println("groupCtrl: modificagruppo: errore nel cambio flag al gruppo");
                     }
-
+                    
+                    ArrayList<Gruppo> g =  (new Gruppo()).listaGruppiPubblici();
+                    super.getServletContext().setAttribute("public_groups", g);
                 }
 
                 //gestione degli eventuali inviti, da fare solo se il radios=privato

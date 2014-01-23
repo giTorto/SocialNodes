@@ -139,7 +139,7 @@
                                      <c:forEach items="${nuovInviti}" var="inviti">
                                             <tr>
                                                 <td>
-                                                    <c:out value="${inviti.messaggio}"/>
+                                                    <c:out value="${inviti.messaggio}" escapeXml="false"/>
                                                 </td>
                                                 <td>
                                                      <a href="<c:url value="${inviti.link}" />" > Vai al gruppo</a>

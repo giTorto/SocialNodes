@@ -67,12 +67,12 @@ public class FirstCtrl extends HttpServlet {
             throws ServletException, IOException {
         String operazione = null;
         operazione = request.getParameter("op");
-        Message messaggioBean = new Message();
-        messaggioBean.setMessaggio("");
-        messaggioBean.setTipoutente("");
-        messaggioBean.setValue("");
+        Message messaggioIni = new Message();
+        messaggioIni.setMessaggio(" ");
+        messaggioIni.setTipoutente("");
+        messaggioIni.setValue("");
         RequestDispatcher dispatcher;
-        request.setAttribute("messaggioBean", messaggioBean);
+        request.setAttribute("messaggioIni", messaggioIni);
 
         if (operazione != null) {
             switch (operazione) {
@@ -82,6 +82,7 @@ public class FirstCtrl extends HttpServlet {
                     return;
                 // break;
                 case "gotocrea":
+                    request.setAttribute("messaggioBean", messaggioIni);
                     dispatcher = request.getRequestDispatcher("/createAccount.jsp");
 
                     break;
@@ -112,7 +113,7 @@ public class FirstCtrl extends HttpServlet {
                 default:
                     //qua visto che il bean è nella request e poi però bisogna fare per forza il redirect per riscrivere l'url, il bean vien perso
                     //bisogna inventarsi qlcs per scrivere il messaggio, tipo bean con scope application
-                    messaggioBean.setMessaggio("Attenzione: Utilizza gli elementi disposti in questa pagina per compiere le operazioni che desideri");
+                    messaggioIni.setMessaggio("Attenzione: Utilizza gli elementi disposti in questa pagina per compiere le operazioni che desideri");
                     response.sendRedirect(request.getContextPath());
                     return;
 
@@ -240,10 +241,10 @@ public class FirstCtrl extends HttpServlet {
                         ServletContext ctx = getServletContext();
                         //la parte qui sotto setta il link all'inizio ;)
                        /* if (user.getAvatar_link().equals("££standard_avatar$$.png")) {
-                            user.setAvatar_link(request.getContextPath() + "/standard_image/££standard_avatar$$.png");
-                        } else {
-                            user.setAvatar_link(request.getContextPath() + "/media/avatar/" + user.getAvatar_link());
-                        }*/
+                         user.setAvatar_link(request.getContextPath() + "/standard_image/££standard_avatar$$.png");
+                         } else {
+                         user.setAvatar_link(request.getContextPath() + "/media/avatar/" + user.getAvatar_link());
+                         }*/
                         manager.setNewdate(data_acc, user.getId());
                         // request.setAttribute("user",user);
                         sessione.setAttribute("user", user);
@@ -298,16 +299,6 @@ public class FirstCtrl extends HttpServlet {
                                         output.close();
                                         imgyes = true;
 
-                                        /*  if (!MyUtil.isImage(new File(path))) { non funziona
-                                         //qui devo passare attraverso un bean o something like that per segnalare
-                                         //che il file non è un immagine
-                                         //response.sendRedirect(request.getContextPath() + "/createAccount.jsp");
-                                           
-                                         dispatcher = request.getRequestDispatcher("/createAccount.jsp");
-                                         messaggioBean.setMessaggio("Attenzione Per l'avatar è necessario scegliere un immagine");
-                                         request.setAttribute("messaggioBean", messaggioBean);
-                                         dispatcher.forward(request, response);
-                                         } */
                                     } catch (IOException ioe) {
                                         throw new ServletException(ioe.getMessage());
                                     } finally {
@@ -361,10 +352,12 @@ public class FirstCtrl extends HttpServlet {
                         Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     //dbmanager inseriscie riga nella tabella utente
-                    if (!imgyes) {
-                        manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
-                    } else {
-                        manager.addUtente(username, email, password, tmp);
+                    if ("".equals(messaggioBean.getMessaggio()) || " ".equals(messaggioBean.getMessaggio())) {
+                        if (!imgyes) {
+                            manager.addUtente(username, email, password); //qui volendo si potrebbe passare per utente ma non darebbe nessun vantaggio
+                        } else {
+                            manager.addUtente(username, email, password, tmp);
+                        }
                     }
 
                     //response.sendRedirect(request.getContextPath() + "/logIn.jsp");

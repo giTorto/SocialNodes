@@ -103,12 +103,13 @@ public class AfterLogin extends HttpServlet {
                 } catch (SQLException e) {
                 }
 
-                //recupero dal bb e metto tra i request attribute gli oggetti che servono per creare correttamente la pagina main
+                //recupero dal bb e metto tra i request attribute gli oggetti che servono per re correttamente la pagina main
                 //servono i gruppi dell'utente e le cose del quickdisplay
                 dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
                 dispatcher.forward(request, response);
                 break;
             case "tocreation":
+           
                 dispatcher = request.getRequestDispatcher("/afterLogged/createGruppo.jsp");
                 dispatcher.forward(request, response);
 

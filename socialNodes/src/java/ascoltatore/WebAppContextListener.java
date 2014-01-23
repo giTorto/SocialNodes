@@ -37,8 +37,8 @@ public class WebAppContextListener implements ServletContextListener {
             ArrayList<Gruppo> g = new ArrayList<>();
             g = (new Gruppo()).listaGruppiPubblici();
             Message mess = new Message();
-            mess.setMessaggio("");
-            sce.getServletContext().setAttribute("messaggioBean", dburl);
+            mess.setMessaggio(" ");
+            sce.getServletContext().setAttribute("messaggioBean", mess);
             sce.getServletContext().setAttribute("public_groups", g);
         } catch (SQLException ex) {
             Logger.getLogger(getClass().getName()).severe(ex.toString());

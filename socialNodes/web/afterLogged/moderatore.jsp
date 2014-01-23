@@ -61,12 +61,12 @@
                                     <form id="poster" action="/socialNodes/afterLogged/moderatoreCtrl" method="POST" style="display: none;">
                                         <input type="hidden" name="op" value="actionmoderatore">
                                             <td>
-                                                <input type="hidden" name="groupid" value="<c:out value="${gruppo.getIdgruppo()}" />">
-                                                    <c:out value="${gruppo.nome}" />
+                                                <input type="hidden" name="groupid" value="<c:out value="${gruppo.idgruppo}" />">
+                                                    <a href="/socialNodes/afterLogged/groupCtrl?op=displaygroup&groupid=<c:out value="${gruppo.idgruppo}"/>"> <c:out value="${gruppo.nome}" /> </a>
                                             </td>
                                             <td>
                                                 <!--Qua dovremmo pubblicare il numero di partecipanti di un gruppo-->
-                                                <c:out value="${gruppo.getNumPartecipanti()}" />
+                                                <c:out value="${gruppo.numPartecipanti}" />
                                             </td>
                                             <td>
                                                 <c:set var="ispublic" scope="page" value="${gruppo.isPublic}" />

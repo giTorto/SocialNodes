@@ -66,6 +66,8 @@
         <div class="container">
             <div class="row clearfix">
                 <div class="col-md-12 column">
+                    <jsp:getProperty name="messaggioBean" property="messaggio" />
+                    
                     <form class="form-horizontal" method="POST" action="/socialNodes/afterLogged/groupCtrl">
                         <input type="hidden" name="op" value="creagruppo">
                         <fieldset>

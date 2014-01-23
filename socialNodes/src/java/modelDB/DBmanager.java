@@ -215,7 +215,7 @@ public class DBmanager {
     }
 
     public boolean mailAlreadyExist(String email) throws SQLException {
-        PreparedStatement stm = con.prepareStatement("Select * from utente where username=?");
+        PreparedStatement stm = con.prepareStatement("Select * from utente where email=?");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
 
