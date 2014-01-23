@@ -434,7 +434,7 @@ public class groupCtrl extends HttpServlet {
                          dispatcher.forward(request, response);*/
                         response.sendRedirect("/socialNodes/afterLogged/groupCtrl?op=displaygroup&groupid=" + idgruppo);
                     } else {
-                        String resultament = checkText(messaggio, fileName, tmp, idgruppo);
+                        String resultament = checkText(messaggio, fileName, null, idgruppo);
                         manager.addPostFile(user, idgruppo, fileName, tmp, resultament);
                         response.sendRedirect("/socialNodes/afterLogged/groupCtrl?op=displaygroup&groupid=" + idgruppo);
                     }
@@ -566,6 +566,7 @@ public class groupCtrl extends HttpServlet {
      * @param text testo del link
      * @param name nome dell'utente uploader del file
      * @param id dell'eventuale file caricato dall'utente
+     * @param idgruppo
      * @return anchor tag aggiustata oppure il testo in input
      */
     public String createLink(String text, String name, String id, int idgruppo) {
