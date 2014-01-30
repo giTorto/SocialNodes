@@ -47,7 +47,10 @@ public class moderatoreCtrl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        //System.out.println("moderatoreCtrl: chiamata in get a questa servlet controller");
+        RequestDispatcher dispatcher;
+        dispatcher = request.getRequestDispatcher("/afterLogged/moderatore.jsp");
+        dispatcher.forward(request, response);
     }
 
     /**
@@ -98,11 +101,13 @@ public class moderatoreCtrl extends HttpServlet {
                                     MyUtil.bloccaGruppo(user, idgruppo, manager);
                                 } else {
                                     //sto sbloccando il gruppo
-                                    MyUtil.attivaGruppo(idgruppo, manager); 
+                                    MyUtil.attivaGruppo(idgruppo, manager);
                                 }
                             }
                         } catch (SQLException e) {
                             //merda!
+                            dispatcher = request.getRequestDispatcher("/afterLogged/moderatore.jsp");
+                            dispatcher.forward(request, response);
                         }
                     }
 
