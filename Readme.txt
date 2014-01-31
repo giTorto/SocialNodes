@@ -1,2 +1,1 @@
-Ricordiamoci sempre che il va rispettato il pattern MCV.
-E' fondamentale ai fini del voto del progetto, oggi è il primo giorno che il progetto ha inizio quindi al momento è in fase di set up.
+Questo progetto Ã¨ stato realizzato per il corso di programmazione web, cercando di rispettare il pattern MVC.
