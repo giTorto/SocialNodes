@@ -60,8 +60,9 @@ public class Generapdf extends HttpServlet {
             gruppo = manager.getGruppo(Integer.parseInt(request.getParameter("groupid")));
             numpost = manager.getNumPostPerGruppo(Integer.parseInt(request.getParameter("groupid")));
             datalastpost = manager.getDataUltimoPost(Integer.parseInt(request.getParameter("groupid")));
-        } catch (SQLException ex) {
+        } catch (SQLException | NullPointerException ex) {
             Logger.getLogger(Generapdf.class.getName()).log(Level.SEVERE, null, ex);
+            response.sendRedirect(request.getContextPath() + "/afterLogged/afterLogin?op=main");
         }
 
         try {
@@ -91,7 +92,7 @@ public class Generapdf extends HttpServlet {
                 document.add(new Paragraph("Gruppo sconosciuto"));
             }
 
-            Paragraph p = new Paragraph("Di seguito vengono riportati gli username degli utenti del gruppo \""+gruppo.getNome()+"\"\n");
+            Paragraph p = new Paragraph("Di seguito vengono riportati gli username degli utenti del gruppo \"" + gruppo.getNome() + "\"\n");
             p.setSpacingAfter(25);
             document.add(p);
 
@@ -137,6 +138,7 @@ public class Generapdf extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         processRequest(request, response);
     }
 

@@ -47,10 +47,35 @@ public class moderatoreCtrl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //System.out.println("moderatoreCtrl: chiamata in get a questa servlet controller");
+        String operazione = request.getParameter("op");
         RequestDispatcher dispatcher;
-        dispatcher = request.getRequestDispatcher("/afterLogged/moderatore.jsp");
-        dispatcher.forward(request, response);
+
+        HttpSession session = request.getSession(false);
+        Utente user = (Utente) session.getAttribute("user");
+
+        if (operazione == null) {
+            dispatcher = request.getRequestDispatcher("/afterLogged/moderatore.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+
+        switch (operazione) {
+            case "tomoderatore":
+                ArrayList<Gruppo> allgruppi = null;
+                try {
+                    allgruppi = user.getAllGruppi();
+                } catch (Exception e) {
+                    //merda!
+                    response.sendRedirect(request.getContextPath() + "/afterLogged/afterLogin?op=main");
+                }
+                request.setAttribute("allgruppi", allgruppi);
+                dispatcher = request.getRequestDispatcher("/afterLogged/moderatore.jsp");
+                dispatcher.forward(request, response);
+                break;
+            default:
+                dispatcher = request.getRequestDispatcher("/afterLogged/moderatore.jsp");
+                dispatcher.forward(request, response);
+        }
     }
 
     /**

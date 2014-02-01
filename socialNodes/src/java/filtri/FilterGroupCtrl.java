@@ -62,8 +62,8 @@ public class FilterGroupCtrl implements Filter {
         String operazione = request.getParameter("op");
         RequestDispatcher dispatcher;
 
-        if (operazione==null){
-            operazione="";
+        if (operazione == null) {
+            operazione = "";
         }
         HttpSession session = ((HttpServletRequest) request).getSession(false);
         Utente user = (Utente) session.getAttribute("user");
@@ -77,7 +77,13 @@ public class FilterGroupCtrl implements Filter {
                 if (debug) {
                     log("CheckAccessUser2Group:doFilter()");
                 }
-                String ingruppo = (request.getParameter("groupid"));
+                String ingruppo;
+                try {
+                    ingruppo = (request.getParameter("groupid"));
+                } catch (Exception e) {
+                    ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
+                    return;
+                }
 
                 int idgruppo = Integer.parseInt(ingruppo);
 
@@ -99,14 +105,18 @@ public class FilterGroupCtrl implements Filter {
                         userpuòaccedere = true;
                         ok = true;
                     }
-                    
-                    if (user.getIsModeratore()==1){
+
+                    if (user.getIsModeratore() == 1) {
                         userpuòaccedere = true;
                         ok = true;
                     }
 
-                } catch (SQLException ex) {
+                } catch (SQLException | NullPointerException ex) {
                     Logger.getLogger(FilterGroupCtrl.class.getName()).log(Level.SEVERE, null, ex);
+                    ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
+                    return;
+                } catch (Exception e) {
+                    Logger.getLogger(FilterGroupCtrl.class.getName()).log(Level.SEVERE, null, e);
                     ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
                     return;
                 }
@@ -124,7 +134,14 @@ public class FilterGroupCtrl implements Filter {
                 if (debug) {
                     log("CheckAccessUser2Group:doFilter()");
                 }
-                String gruppoparam = (request.getParameter("groupid"));
+
+                String gruppoparam;
+                try {
+                    gruppoparam = (request.getParameter("groupid"));
+                } catch (Exception e) {
+                    ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
+                    return;
+                }
 
                 int gruppoid = Integer.parseInt(gruppoparam);
 
@@ -139,10 +156,13 @@ public class FilterGroupCtrl implements Filter {
                         userisowner = true;
                         ok = true;
                     }
-                } catch (SQLException ex) {
+                } catch (SQLException | NullPointerException ex) {
                     Logger.getLogger(FilterGroupCtrl.class.getName()).log(Level.SEVERE, null, ex);
                     ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
                     return;
+                } catch (Exception e) {
+                    Logger.getLogger(FilterGroupCtrl.class.getName()).log(Level.SEVERE, null, e);
+                    ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
                 }
 
                 if (!userisowner) {

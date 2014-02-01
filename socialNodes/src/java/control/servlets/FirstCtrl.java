@@ -69,12 +69,12 @@ public class FirstCtrl extends HttpServlet {
             throws ServletException, IOException {
         String operazione = null;
         operazione = request.getParameter("op");
-        Message messaggioIni = new Message();
-        messaggioIni.setMessaggio(" ");
-        messaggioIni.setTipoutente("");
-        messaggioIni.setValue("");
+        Message messaggioBean = new Message();
+        messaggioBean.setMessaggio("");
+        messaggioBean.setValue("");
+        messaggioBean.setTipoutente("");
         RequestDispatcher dispatcher;
-        request.setAttribute("messaggioIni", messaggioIni);
+        request.setAttribute("messaggioIni", messaggioBean);
 
         if (operazione != null) {
             switch (operazione) {
@@ -84,7 +84,7 @@ public class FirstCtrl extends HttpServlet {
                     return;
                 // break;
                 case "gotocrea":
-                    request.setAttribute("messaggioBean", messaggioIni);
+                    request.setAttribute("messaggioBean", messaggioBean);
                     dispatcher = request.getRequestDispatcher("/createAccount.jsp");
 
                     break;
@@ -113,10 +113,10 @@ public class FirstCtrl extends HttpServlet {
                     break;
 
                 default:
-                    //qua visto che il bean è nella request e poi però bisogna fare per forza il redirect per riscrivere l'url, il bean vien perso
-                    //bisogna inventarsi qlcs per scrivere il messaggio, tipo bean con scope application
-                    messaggioIni.setMessaggio("Attenzione: Utilizza gli elementi disposti in questa pagina per compiere le operazioni che desideri");
-                    response.sendRedirect(request.getContextPath());
+                    dispatcher = request.getRequestDispatcher("/index.jsp");
+                    messaggioBean.setMessaggio("Socialnodes non è stata in grado di gestire la tua ultima azione...Stai forse giocando un po' troppo con la barra di ricerca del tuo browser?");
+                    request.setAttribute("messaggioBean", messaggioBean);
+                    dispatcher.forward(request, response);
                     return;
 
             }
@@ -400,11 +400,10 @@ public class FirstCtrl extends HttpServlet {
         }
 
     }
-    
+
     MessageDigest messageDigest = null;
-   
-    
-     public String md5(String gen) {
+
+    public String md5(String gen) {
         if (messageDigest == null) {
             try {
                 messageDigest = MessageDigest.getInstance("MD5");

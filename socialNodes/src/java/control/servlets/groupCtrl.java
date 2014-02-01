@@ -69,6 +69,12 @@ public class groupCtrl extends HttpServlet {
         HttpSession session = request.getSession(false);
         Utente user = (Utente) session.getAttribute("user");
 
+        if (operazione == null) {
+            dispatcher = request.getRequestDispatcher("/afterLogged/showGroups.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+
         switch (operazione) {
             case "displaygroup":
                 Gruppo gruppo_disp = null;
@@ -107,8 +113,7 @@ public class groupCtrl extends HttpServlet {
                 break;
 
             default:
-                //da decidere cosa fare
-                response.sendRedirect(request.getContextPath());
+                response.sendRedirect(request.getContextPath() + "/afterLogged/afterLogin?op=showgroups");
                 return;
         }
 
@@ -141,7 +146,7 @@ public class groupCtrl extends HttpServlet {
         switch (operazione) {
             case "creagruppo": //codice per gestire la creazione di un gruppo
             {
-               
+
                 System.out.println("Analisi del form di creazione nuovo gruppo");
                 String inviti2parse = "";
                 String creazione_gruppoNome = "";
@@ -189,11 +194,11 @@ public class groupCtrl extends HttpServlet {
                         try {
                             manager.creaGruppo(user, creazione_gruppoNome, isPublic);
                             Gruppo gruppo_appena_creato = manager.getGruppo(creazione_gruppoNome);
-                            if (isPublic){
-                                ArrayList<Gruppo> g =  (new Gruppo()).listaGruppiPubblici();
+                            if (isPublic) {
+                                ArrayList<Gruppo> g = (new Gruppo()).listaGruppiPubblici();
                                 super.getServletContext().setAttribute("public_groups", g);
                             }
-                            
+
                             ArrayList<String> username_invitati = MyUtil.parseFromString(inviti2parse);
                             utentiSbagliati = MyUtil.sendinviti(username_invitati, gruppo_appena_creato.getIdgruppo(), manager);
                             if (!utentiSbagliati.isEmpty()) {
@@ -205,7 +210,7 @@ public class groupCtrl extends HttpServlet {
                         }
 
                     } catch (Exception e) {
-                        
+
                     }
                 } else {
                     //bisognerebbe mettere qualche messaggio di avviso errore
@@ -320,8 +325,8 @@ public class groupCtrl extends HttpServlet {
                     } catch (SQLException e) {
                         System.err.println("groupCtrl: modificagruppo: errore nel cambio flag al gruppo");
                     }
-                    
-                    ArrayList<Gruppo> g =  (new Gruppo()).listaGruppiPubblici();
+
+                    ArrayList<Gruppo> g = (new Gruppo()).listaGruppiPubblici();
                     super.getServletContext().setAttribute("public_groups", g);
                 }
 

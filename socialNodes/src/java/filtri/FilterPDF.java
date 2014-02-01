@@ -70,17 +70,18 @@ public class FilterPDF implements Filter {
 
         try {
             gruppo = manager.getGruppo(Integer.parseInt(request.getParameter("groupid")));
-        } catch (NumberFormatException | SQLException e) {
+        } catch (NumberFormatException | SQLException | NullPointerException e) {
             ok_pdf = false;
+        }
+        if (gruppo != null && user != null) {
+            if (gruppo.getIdOwner() == user.getId() && gruppo.getNomeOwner().equals(user.getUsername())) {
+                ok_pdf = true;
+            } else {
+                ok_pdf = false;
+            }
         }
 
-        if (gruppo.getIdOwner() == user.getId() && gruppo.getNomeOwner().equals(user.getUsername())) {
-            ok_pdf = true;
-        } else {
-            ok_pdf = false;
-        }
-        
-         if (ok_pdf) {
+        if (ok_pdf) {
             chain.doFilter(request, response);
         } else {
             ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=main");

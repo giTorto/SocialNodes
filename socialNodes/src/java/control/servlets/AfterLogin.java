@@ -83,6 +83,12 @@ public class AfterLogin extends HttpServlet {
         HttpSession session = request.getSession(false);
         Utente user = (Utente) session.getAttribute("user");
 
+        if (operazione == null) {
+            dispatcher = request.getRequestDispatcher("/afterLogged/main.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+
         switch (operazione) {
             case "main":
 
@@ -111,7 +117,7 @@ public class AfterLogin extends HttpServlet {
                 dispatcher.forward(request, response);
                 break;
             case "tocreation":
-           
+
                 dispatcher = request.getRequestDispatcher("/afterLogged/createGruppo.jsp");
                 dispatcher.forward(request, response);
 
@@ -163,17 +169,10 @@ public class AfterLogin extends HttpServlet {
                 //dispatcher.forward(request, response);
                 response.sendRedirect(request.getContextPath());
                 break;
-            case "tomoderatore":
-                ArrayList<Gruppo> allgruppi = null;
-                try {
-                    allgruppi = user.getAllGruppi();
-                } catch (Exception e) {
-                    //merda!
-                }
-                request.setAttribute("allgruppi", allgruppi);
-                dispatcher = request.getRequestDispatcher("/afterLogged/moderatore.jsp");
-                dispatcher.forward(request, response);
-                break;
+            default:
+                response.sendRedirect(request.getContextPath() + "/afterLogged/afterLogin?op=main");
+                return;
+
         }
 
     }
@@ -241,13 +240,13 @@ public class AfterLogin extends HttpServlet {
                                     makeDir(path);
                                     fileName = MyUtil.formatName(item.getName());;
                                     //seed è il seme per l'algoritmo di hashing, per renderlo unico è composto dal nome del file, l'id utente e il tempo preciso al millisecondo (che garantisce)
-                                    if(user.getAvatar_link().equals("££standard_avatar$$.png")){
+                                    if (user.getAvatar_link().equals("££standard_avatar$$.png")) {
                                         String seed = user.getEmail() + new Timestamp(new java.util.Date().getTime()).toString();
                                         tmp = md5(seed);
-                                    }else{
-                                                tmp = user.getAvatar_link();
+                                    } else {
+                                        tmp = user.getAvatar_link();
                                     }
-                                    
+
                                     tipo = MyUtil.getExtension(fileName);
 
                                     tmp = tmp + tipo;
@@ -286,12 +285,12 @@ public class AfterLogin extends HttpServlet {
                                     if (new_username != null && !new_username.equals("")) {
                                         try {
                                             if (!new_username.contains("£") && !new_username.contains(" ")) {
-                                                if( manager.nameAlreadyExist(username)){
+                                                if (manager.nameAlreadyExist(username)) {
                                                     messaggioBean.setMessaggio("L'username scelto non è già in uso");
-                                                }else{
+                                                } else {
                                                     manager.updateUserName(user.getId(), new_username);
                                                 }
-                                                
+
                                             } else {
                                                 messaggioBean.setMessaggio("L'username scelto non è valido");
 
@@ -326,7 +325,7 @@ public class AfterLogin extends HttpServlet {
                     Logger.getLogger(FirstCtrl.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                if (messaggioBean.getMessaggio() == null  || messaggioBean.getMessaggio().equals("")) {
+                if (messaggioBean.getMessaggio() == null || messaggioBean.getMessaggio().equals("")) {
                     response.sendRedirect(request.getContextPath() + "/afterLogged/afterLogin?op=main");
                 } else {
                     RequestDispatcher dispatcher = request.getRequestDispatcher("showPersonalSettings.jsp");
@@ -358,11 +357,10 @@ public class AfterLogin extends HttpServlet {
         }
 
     }
-    
+
     MessageDigest messageDigest = null;
-   
-    
-     public String md5(String gen) {
+
+    public String md5(String gen) {
         if (messageDigest == null) {
             try {
                 messageDigest = MessageDigest.getInstance("MD5");

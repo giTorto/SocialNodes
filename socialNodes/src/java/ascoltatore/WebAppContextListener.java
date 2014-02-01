@@ -46,6 +46,7 @@ public class WebAppContextListener implements ServletContextListener {
 
         }
 
+        
         //inizializzazione della defaultsession
         System.out.println("Inizializzazione della defaultsession");
         Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
@@ -63,7 +64,8 @@ public class WebAppContextListener implements ServletContextListener {
         final String username = "socialnodes@gmail.com";
         final String password = "socialnodes123";
 
-        Session session = Session.getDefaultInstance(props, new Authenticator() {
+        //Session session = Session.getDefaultInstance(props, new Authenticator() {
+        Session session = Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
