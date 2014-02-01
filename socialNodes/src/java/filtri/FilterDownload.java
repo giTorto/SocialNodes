@@ -55,7 +55,11 @@ public class FilterDownload implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
         //recupero fileid
-        String fileId = request.getParameter("fileId").toString();
+        String fileId = request.getParameter("fileId");
+        if (fileId==null){
+             ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
+            return;
+        }
         Gruppo file_group = null;
 
         //recupero gruppo relativo a file
@@ -85,7 +89,7 @@ public class FilterDownload implements Filter {
                 ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
                 return;
             }
-        } else if(file_group.getIsPublic()==1){
+        } else if(file_group!=null && file_group.getIsPublic()==1){
               ok_download = true;
         }else{          
             ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/afterLogged/afterLogin?op=showgroups");
